@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Employer_coverage_verified__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the prospect’s employer-sponsored coverage has been verified.</description>
+    <inlineHelpText>Select when employer-sponsored insurance coverage has been confirmed during eligibility review.</inlineHelpText>
+    <label>Employer coverage verified</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

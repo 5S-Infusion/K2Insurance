@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Plan_selected__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the prospect has selected a plan option.</description>
+    <inlineHelpText>Indicates whether the prospect has selected a plan option.</inlineHelpText>
+    <label>Plan selected</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

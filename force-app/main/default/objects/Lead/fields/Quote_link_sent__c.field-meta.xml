@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Quote_link_sent__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Tracks whether an automated or manual insurance quote link has been delivered to the lead for review.</description>
+    <inlineHelpText>this box once the personalized quote link has been sent to the prospect.</inlineHelpText>
+    <label>Quote link sent</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

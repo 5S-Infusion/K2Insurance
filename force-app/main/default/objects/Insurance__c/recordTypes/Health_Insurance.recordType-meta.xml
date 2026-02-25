@@ -80,6 +80,10 @@
     <picklistValues>
         <picklist>Payment_Frequency__c</picklist>
         <values>
+            <fullName>2 Pay</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Full</fullName>
             <default>true</default>
         </values>

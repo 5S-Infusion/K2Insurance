@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Group_Health_Insurances</fullName>
+    <columns>NAME</columns>
+    <columns>Company__c</columns>
+    <columns>Policy_Holder__c</columns>
+    <columns>Status__c</columns>
+    <columns>Type__c</columns>
+    <columns>Insurance_Start_Date__c</columns>
+    <columns>Insurance_Provider__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Insurance__c.Group_Health</value>
+    </filters>
+    <label>Group Health</label>
+</ListView>

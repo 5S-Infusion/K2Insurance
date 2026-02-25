@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Block_AB_Enrollment_Without_Preparation</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+  ISCHANGED(Status),
+  TEXT(Status) = &quot;A, B Enrollment&quot;,
+  OR(
+    NOT(Eligibility_reviewed__c),
+    NOT(Employer_coverage_verified__c),
+    NOT(SS_income_confirmed__c),
+    NOT(SSA_account_verified__c)
+  )
+)</errorConditionFormula>
+    <errorMessage>All eligibility review items must be completed before proceeding to A &amp; B Enrollment.</errorMessage>
+</ValidationRule>

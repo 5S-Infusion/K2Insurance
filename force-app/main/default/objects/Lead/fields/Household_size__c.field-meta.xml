@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Household_size__c</fullName>
+    <description>Captures the total number of individuals living in the lead&apos;s household for insurance eligibility and coverage scaling.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the total number of people residing in the household, including the primary applicant and any dependents.</inlineHelpText>
+    <label>Household size</label>
+    <length>64</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

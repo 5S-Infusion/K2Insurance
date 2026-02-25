@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SSA_account_verified__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the prospect has confirmed access to their Social Security Administration (SSA) account.</description>
+    <inlineHelpText>Select when the prospect confirms they have access to their SSA account. This does not represent direct verification with the SSA.</inlineHelpText>
+    <label>SSA account verified</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Block_Preparation_Without_Contact_Checks</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+  ISCHANGED(Status),
+  TEXT(Status) = &quot;Preparation&quot;,
+  OR(
+    NOT(Text_sent_4_months_prior__c),
+    NOT(Text_sent_6_months_prior__c),
+    NOT(Text_sent_8_months_prior__c),
+    NOT(Text_sent_12_months_prior__c)
+  )
+)</errorConditionFormula>
+    <errorMessage>Complete all text communication review fields before moving to Preparation.</errorMessage>
+</ValidationRule>

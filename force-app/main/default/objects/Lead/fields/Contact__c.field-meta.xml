@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>This process creates a new Contact record directly from an existing Lead, without requiring Account or Opportunity creation. It maps key Lead information (such as Name, Email, Phone, and Address) into the Contact record. The purpose is to simplify lead management when Accounts or Opportunities are not needed, ensuring sales/support teams can quickly work with Contacts generated from inbound leads.</description>
+    <inlineHelpText>When you use this option, Salesforce will:
+	•	Copy Lead details into a new Contact record.
+	•	Skip the creation of an Account and Opportunity.
+	•	Mark the Lead as “Processed” to avoid duplication.
+
+👉 Use this action if you only need to keep the Contact information from a Lead and don’t want to track Accounts or Opportunities.
+
+⚠️ Note: If your organization later requires Account/Opportunity records, you’ll need to manually associate the Contact.</inlineHelpText>
+    <label>Contact</label>
+    <referenceTo>Contact</referenceTo>
+    <relationshipLabel>Leads</relationshipLabel>
+    <relationshipName>Leads</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Lookup</type>
+</CustomField>

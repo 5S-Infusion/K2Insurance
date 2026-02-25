@@ -4,14 +4,12 @@
     <columns>FULL_NAME</columns>
     <columns>Korean_Name__c</columns>
     <columns>CONTACT.BIRTHDATE</columns>
-    <columns>Age__c</columns>
     <columns>Agent__c</columns>
     <columns>ACCOUNT.NAME</columns>
     <columns>CONTACT.PHONE1</columns>
     <columns>CONTACT.EMAIL</columns>
-    <columns>CONTACT.ADDRESS2_CITY</columns>
-    <columns>CONTACT.ADDRESS2_STATE</columns>
-    <columns>County__c</columns>
+    <columns>CONTACT.CREATED_DATE</columns>
+    <columns>CONTACT.LAST_UPDATE</columns>
     <filterScope>Everything</filterScope>
     <label>All Contacts</label>
 </ListView>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BSW</fullName>
+    <columns>NAME</columns>
+    <columns>Insurance_Provider__c</columns>
+    <columns>Payment_Period__c</columns>
+    <columns>Status__c</columns>
+    <columns>Total_Amount__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>CREATEDBY_USER</columns>
+    <columns>UPDATEDBY_USER</columns>
+    <columns>LAST_UPDATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Insurance_Provider__c</field>
+        <operation>equals</operation>
+        <value>BSW</value>
+    </filters>
+    <label>BSW</label>
+</ListView>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Application_submitted__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates that the formal health insurance application has been completed and submitted for processing.</description>
+    <inlineHelpText>Check this box once the lead&apos;s formal application has been successfully submitted.</inlineHelpText>
+    <label>Application submitted</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Part_B_premium_auto_draft_confirmed__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the prospect confirms that Medicare Part B premiums are set up for automatic deduction.</description>
+    <inlineHelpText>Select if the prospect reports that their Medicare Part B premium is automatically deducted (for example, from Social Security benefits or a linked payment method). This does not confirm enrollment or payment status.</inlineHelpText>
+    <label>Part B premium auto-draft confirmed</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

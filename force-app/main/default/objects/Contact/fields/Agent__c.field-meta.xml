@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Agent__c</fullName>
     <deleteConstraint>Restrict</deleteConstraint>
-    <label>Agent</label>
+    <label>Subagent</label>
     <lookupFilter>
         <active>true</active>
         <filterItems>

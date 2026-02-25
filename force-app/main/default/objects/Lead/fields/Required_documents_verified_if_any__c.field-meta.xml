@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Required_documents_verified_if_any__c</fullName>
+    <description>Stores the verification status or tracking information for mandatory enrollment documentation required for health plan processing.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the verification status or notes regarding the required documentation for this lead.</inlineHelpText>
+    <label>Required documents verified (if any)</label>
+    <length>255</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

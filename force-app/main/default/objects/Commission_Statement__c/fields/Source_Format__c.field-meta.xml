@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Source_Format__c</fullName>
+    <description>Declares the file format/mapping used by the parser.</description>
+    <inlineHelpText>Select the file profile that matches the uploaded file.</inlineHelpText>
+    <label>Source Format</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>CSV</fullName>
+                <default>false</default>
+                <label>CSV</label>
+            </value>
+            <value>
+                <fullName>XLSX</fullName>
+                <default>false</default>
+                <label>XLSX</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

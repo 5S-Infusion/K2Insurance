@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Eligibility_reviewed__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the prospect’s eligibility has been reviewed and verified.</description>
+    <inlineHelpText>Select when eligibility review has been completed according to internal guidelines.</inlineHelpText>
+    <label>Eligibility reviewed</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

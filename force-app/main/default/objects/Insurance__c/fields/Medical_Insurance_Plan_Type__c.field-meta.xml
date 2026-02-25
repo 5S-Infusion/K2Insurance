@@ -32,6 +32,26 @@ Use this field to categorize the structure of the health coverage provided.</inl
                 <default>false</default>
                 <label>POS</label>
             </value>
+            <value>
+                <fullName>EPO</fullName>
+                <default>false</default>
+                <label>EPO</label>
+            </value>
+            <value>
+                <fullName>EPO HSA</fullName>
+                <default>false</default>
+                <label>EPO HSA</label>
+            </value>
+            <value>
+                <fullName>HMO HSA</fullName>
+                <default>false</default>
+                <label>HMO HSA</label>
+            </value>
+            <value>
+                <fullName>PPO HSA</fullName>
+                <default>false</default>
+                <label>PPO HSA</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

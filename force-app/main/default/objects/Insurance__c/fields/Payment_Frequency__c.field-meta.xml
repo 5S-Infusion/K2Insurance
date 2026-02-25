@@ -42,6 +42,11 @@
                 <default>false</default>
                 <label>Quarterly(Auto Renewal)</label>
             </value>
+            <value>
+                <fullName>2 Pay</fullName>
+                <default>false</default>
+                <label>2 Pay</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

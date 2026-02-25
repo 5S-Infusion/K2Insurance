@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PCP_selected__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the prospect has successfully selected a Primary Care Physician as part of their health plan enrollment.</description>
+    <inlineHelpText>Check this box once the lead has confirmed their choice of a Primary Care Physician.</inlineHelpText>
+    <label>PCP selected</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

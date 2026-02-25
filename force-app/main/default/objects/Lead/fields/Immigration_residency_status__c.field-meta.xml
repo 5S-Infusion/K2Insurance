@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Immigration_residency_status__c</fullName>
+    <description>Captures the legal residency or immigration status of the lead to ensure compliance with insurance enrollment regulations.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indicate the lead&apos;s current residency or immigration status (e.g., Citizen, Permanent Resident, etc.).</inlineHelpText>
+    <label>Immigration / residency status</label>
+    <length>64</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

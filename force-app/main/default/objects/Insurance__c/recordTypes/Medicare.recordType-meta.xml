@@ -79,6 +79,10 @@
     <picklistValues>
         <picklist>Payment_Frequency__c</picklist>
         <values>
+            <fullName>2 Pay</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Full</fullName>
             <default>true</default>
         </values>
@@ -144,6 +148,14 @@
     <picklistValues>
         <picklist>Subtype__c</picklist>
         <values>
+            <fullName>Cigna Healthcare Saver Rx</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cigna Saver RX</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>F</fullName>
             <default>false</default>
         </values>
@@ -200,6 +212,10 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>H1278-015</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>H1889 014</fullName>
             <default>false</default>
         </values>
@@ -212,7 +228,27 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Humana Value Choice  PPO</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Humana gold Plus %28HMO D-SNP%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Humana_Value RX</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>S5921 403</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>UHC_ RX Preferred</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wellcare_ Value RX</fullName>
             <default>false</default>
         </values>
     </picklistValues>

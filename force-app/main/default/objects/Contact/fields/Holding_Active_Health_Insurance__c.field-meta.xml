@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Holding_Active_Health_Insurance__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the Contact currently holds an active health insurance policy.
+This field is automatically updated by Flow based on related Insurance__c records where Status__c = &apos;Active&apos;.
+Used for reporting, eligibility validation, and automated communication processes.
+Do not update manually.</description>
+    <inlineHelpText>This value is set automatically when the Contact has at least one active health insurance record.
+You don’t need to edit this field — it will update when the insurance status changes.</inlineHelpText>
+    <label>Holding Active Health Insurance?</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

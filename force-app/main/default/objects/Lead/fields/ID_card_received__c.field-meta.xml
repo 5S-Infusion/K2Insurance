@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ID_card_received__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the prospect has provided a copy of a government-issued identification card.</description>
+    <inlineHelpText>Select when the prospect has submitted a copy of a valid government-issued ID for identification purposes. This does not represent identity verification or approval.</inlineHelpText>
+    <label>ID card received</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enrollment_completed__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the enrollment process has been completed and submitted.</description>
+    <inlineHelpText>Select when the enrollment application has been fully completed and submitted. This does not confirm approval or coverage activation.</inlineHelpText>
+    <label>Enrollment completed</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

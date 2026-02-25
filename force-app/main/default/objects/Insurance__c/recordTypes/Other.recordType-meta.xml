@@ -79,6 +79,10 @@
     <picklistValues>
         <picklist>Payment_Frequency__c</picklist>
         <values>
+            <fullName>2 Pay</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Full</fullName>
             <default>true</default>
         </values>
@@ -147,6 +151,22 @@
     </picklistValues>
     <picklistValues>
         <picklist>Subtype__c</picklist>
+        <values>
+            <fullName>Cigna Healthcare Saver Rx</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cigna Saver RX</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Humana Value Choice  PPO</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Humana gold Plus %28HMO D-SNP%29</fullName>
+            <default>false</default>
+        </values>
         <values>
             <fullName>Off Market</fullName>
             <default>false</default>

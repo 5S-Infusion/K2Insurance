@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PCP_drug_list_collected__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the prospect’s primary care provider information and current medication list have been collected.</description>
+    <inlineHelpText>Select when the prospect has provided their primary care provider details and a list of current medications. This does not represent clinical review or validation.</inlineHelpText>
+    <label>PCP, drug list collected</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

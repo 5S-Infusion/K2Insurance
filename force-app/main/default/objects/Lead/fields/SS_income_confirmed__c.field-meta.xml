@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SS_income_confirmed__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the prospect’s Social Security income has been reviewed and confirmed.</description>
+    <inlineHelpText>Select when Social Security income information has been reviewed during eligibility assessment.</inlineHelpText>
+    <label>SS income confirmed</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

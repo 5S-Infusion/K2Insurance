@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Text_sent_12_months_prior__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the prospect has received marketing text messages within the past 12 months.</description>
+    <inlineHelpText>Select if the prospect has been sent any marketing text messages within the last 12 months. Used for communication compliance validation.</inlineHelpText>
+    <label>Text sent (12 months prior)</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

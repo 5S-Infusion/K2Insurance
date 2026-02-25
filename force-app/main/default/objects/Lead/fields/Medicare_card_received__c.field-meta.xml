@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Medicare_card_received__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the prospect reports having received their Medicare card.</description>
+    <inlineHelpText>Select if the prospect confirms they have received their Medicare card. This does not confirm coverage status or eligibility.</inlineHelpText>
+    <label>Medicare card received</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

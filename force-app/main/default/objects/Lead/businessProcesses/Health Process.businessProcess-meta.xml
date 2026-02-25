@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BusinessProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Health Process</fullName>
+    <description>Defines the specific lifecycle stages and picklist values for health insurance and medical service leads, from initial intake to conversion.</description>
+    <isActive>true</isActive>
+    <values>
+        <fullName>Eligibility</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Enrollment</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>New</fullName>
+        <default>true</default>
+    </values>
+    <values>
+        <fullName>Post-Enrollment</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Qualified</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Quote</fullName>
+        <default>false</default>
+    </values>
+</BusinessProcess>

@@ -25,6 +25,11 @@
                 <label>Father</label>
             </value>
             <value>
+                <fullName>Father in Law</fullName>
+                <default>false</default>
+                <label>Father in Law</label>
+            </value>
+            <value>
                 <fullName>Grandfather</fullName>
                 <default>false</default>
                 <label>Grandfather</label>
@@ -40,9 +45,9 @@
                 <label>Mother</label>
             </value>
             <value>
-                <fullName>Other</fullName>
+                <fullName>Mother in Law</fullName>
                 <default>false</default>
-                <label>Other</label>
+                <label>Mother in Law</label>
             </value>
             <value>
                 <fullName>Sister</fullName>
@@ -58,6 +63,11 @@
                 <fullName>Spouse</fullName>
                 <default>false</default>
                 <label>Spouse</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
             </value>
         </valueSetDefinition>
     </valueSet>

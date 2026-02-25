@@ -2,16 +2,17 @@
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>All_Health_Insurances</fullName>
     <columns>NAME</columns>
-    <columns>Agent__c</columns>
     <columns>Policy_Holder__c</columns>
     <columns>Type__c</columns>
     <columns>Subtype__c</columns>
     <columns>Insurance_Provider__c</columns>
+    <columns>Insurance_Start_Date__c</columns>
+    <columns>Insurance_End_Date__c</columns>
     <filterScope>Everything</filterScope>
     <filters>
         <field>RECORDTYPE</field>
         <operation>equals</operation>
         <value>Insurance__c.Health_Insurance</value>
     </filters>
-    <label>All Health Insurances</label>
+    <label>Health</label>
 </ListView>

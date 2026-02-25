@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auto_pay_set_up__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the lead has successfully configured automatic recurring payments for their premium.</description>
+    <inlineHelpText>Check this box if the prospect has completed the setup for automatic payments.</inlineHelpText>
+    <label>Auto-pay set up</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

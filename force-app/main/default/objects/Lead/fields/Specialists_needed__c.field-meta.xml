@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Specialists_needed__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the lead requires consultation with a medical specialist to determine plan eligibility or specific network coverage.</description>
+    <inlineHelpText>Check this box if the prospect mentioned a need for specific specialists (e.g., Cardiologist, Oncologist) to be included in their provider network.</inlineHelpText>
+    <label>Specialists needed</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

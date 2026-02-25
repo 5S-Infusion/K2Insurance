@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prescription_drug_list__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates if the lead has provided a specific list of required prescription medications to verify coverage under the proposed health plan.</description>
+    <inlineHelpText>Check this box if the prospect has a list of current medications that need to be checked against the plan&apos;s formulary.</inlineHelpText>
+    <label>Prescription drug list</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

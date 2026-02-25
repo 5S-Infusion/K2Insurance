@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Agent_For_Insurance__c</fullName>
+    <description>Provides a clickable link to the Agent associated with the related insurance policy.</description>
+    <externalId>false</externalId>
+    <formula>IF(
+  !ISBLANK(Policy_Number__r.Agent__c),  
+    	HYPERLINK(
+    &apos;/lightning/r/Account/&apos; &amp; Policy_Number__r.Agent__c &amp; &apos;/view&apos;,
+     Policy_Number__r.Agent__r.FirstName &amp; &apos; &apos; &amp;  Policy_Number__r.Agent__r.LastName 
+  )
+			,
+  NULL
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Displays the Agent linked to the insurance policy for this commission line. Click the link to open the Agent record. This field is system-generated and read-only.</inlineHelpText>
+    <label>Agent For Insurance</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

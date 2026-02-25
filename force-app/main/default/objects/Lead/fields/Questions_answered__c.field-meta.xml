@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Questions_answered__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether all preliminary or mandatory intake questions have been addressed by the lead during the discovery phase.</description>
+    <inlineHelpText>Check this box if the prospect has provided answers to all required discovery questions.</inlineHelpText>
+    <label>Questions answered</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

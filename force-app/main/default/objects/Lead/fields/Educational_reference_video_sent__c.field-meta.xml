@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Educational_reference_video_sent__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Tracks whether educational materials or reference videos regarding health plans and coverage have been shared with the lead.</description>
+    <inlineHelpText>Check this box if an educational or reference video has been sent to the prospect.</inlineHelpText>
+    <label>Educational / reference video sent</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

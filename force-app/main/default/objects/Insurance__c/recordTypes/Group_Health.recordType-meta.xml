@@ -26,7 +26,19 @@
     <picklistValues>
         <picklist>Medical_Insurance_Plan_Type__c</picklist>
         <values>
+            <fullName>EPO</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>EPO HSA</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>HMO</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>HMO HSA</fullName>
             <default>false</default>
         </values>
         <values>
@@ -35,6 +47,10 @@
         </values>
         <values>
             <fullName>PPO</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PPO HSA</fullName>
             <default>false</default>
         </values>
     </picklistValues>
@@ -78,6 +94,10 @@
     </picklistValues>
     <picklistValues>
         <picklist>Payment_Frequency__c</picklist>
+        <values>
+            <fullName>2 Pay</fullName>
+            <default>false</default>
+        </values>
         <values>
             <fullName>Full</fullName>
             <default>true</default>

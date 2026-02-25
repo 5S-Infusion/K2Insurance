@@ -1,0 +1,1223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Others</fullName>
+    <active>true</active>
+    <businessProcess>Others Lead Process</businessProcess>
+    <description>Primary lead record type for non-regulated, standard lead intake and processing.</description>
+    <label>Others</label>
+    <picklistValues>
+        <picklist>County__c</picklist>
+        <values>
+            <fullName>Anderson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Andrews County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Angelina County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Aransas County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Archer County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Armstrong County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Atascosa County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Austin County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bailey County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bandera County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bastrop County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Baylor County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bee County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bell County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bexar County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Blanco County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Borden County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bosque County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bowie County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Brazoria County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Brazos County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Brewster County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Briscoe County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Brooks County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Brown County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Burleson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Burnet County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Caldwell County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Calhoun County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Callahan County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cameron County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Camp County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Carson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cass County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Castro County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Chambers County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cherokee County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Childress County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Clay County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cochran County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Coke County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Coleman County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Collin County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Collingsworth County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Colorado County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Comal County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Comanche County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Concho County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cooke County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Coryell County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cottle County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Crane County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Crockett County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Crosby County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Culberson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dallam County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dallas County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dawson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>DeWitt County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Deaf Smith County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Delta County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Denton County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dickens County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dimmit County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Donley County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Duval County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Eastland County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ector County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Edwards County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>El Paso County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ellis County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Erath County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Falls County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fannin County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fayette County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fisher County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Floyd County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Foard County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fort Bend County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Franklin County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Freestone County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Frio County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gaines County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Galveston County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Garza County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gillespie County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Glasscock County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Goliad County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gonzales County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gray County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Grayson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gregg County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Grimes County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Guadalupe County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hale County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hall County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hamilton County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hansford County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hardeman County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hardin County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Harris County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Harrison County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hartley County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Haskell County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hays County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hemphill County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Henderson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hidalgo County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hill County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hockley County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hood County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hopkins County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Houston County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Howard County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hudspeth County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hunt County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hutchinson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Irion County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jack County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jackson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jasper County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jeff Davis County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jefferson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jim Hogg County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jim Wells County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Johnson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jones County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Karnes County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kaufman County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kendall County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kenedy County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kent County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kerr County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kimble County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>King County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kinney County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kleberg County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Knox County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>La Salle County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lamar County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lamb County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lampasas County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lavaca County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lee County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Leon County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Liberty County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Limestone County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lipscomb County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Live Oak County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Llano County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Loving County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lubbock County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lynn County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Madison County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Marion County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Martin County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mason County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Matagorda County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Maverick County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>McCulloch County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>McLennan County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>McMullen County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Medina County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Menard County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Midland County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Milam County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mills County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mitchell County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Montague County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Montgomery County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Moore County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Morris County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Motley County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Nacogdoches County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Navarro County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Newton County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Nolan County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Nueces County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ochiltree County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Oldham County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Orange County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Palo Pinto County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Panola County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Parker County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Parmer County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pecos County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Polk County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Potter County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Presidio County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rains County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Randall County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Reagan County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Real County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Red River County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Reeves County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Refugio County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Roberts County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Robertson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rockwall County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Runnels County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rusk County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sabine County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>San Augustine County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>San Jacinto County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>San Patricio County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>San Saba County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Schleicher County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Scurry County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shackelford County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shelby County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sherman County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Smith County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Somervell County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Starr County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Stephens County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sterling County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Stonewall County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sutton County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Swisher County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tarrant County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Taylor County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Terrell County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Terry County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Throckmorton County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Titus County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tom Green County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Travis County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Trinity County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tyler County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Upshur County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Upton County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Uvalde County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Val Verde County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Van Zandt County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Victoria County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Walker County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Waller County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ward County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Washington County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Webb County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wharton County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wheeler County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wichita County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wilbarger County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Willacy County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Williamson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wilson County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Winkler County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wise County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wood County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yoakum County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Young County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Zapata County</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Zavala County</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>GenderIdentity</picklist>
+        <values>
+            <fullName>Female</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Male</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Gender_Identity__c</picklist>
+        <values>
+            <fullName>Female</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Male</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Industry</picklist>
+        <values>
+            <fullName>Construction</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Consulting</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Electronics</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Finance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Food %26 Beverage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Healthcare</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Insurance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Manufacturing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Real Estate</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Retail</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shipping</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Technology</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Interested_Insurance__c</picklist>
+        <values>
+            <fullName>Group Health</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Health</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Life</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Medicare</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>LeadSource</picklist>
+        <values>
+            <fullName>Advertisement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Employee Referral</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>External Referral</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phone</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Web</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Name</picklist>
+        <values>
+            <fullName>Dr%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mr%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mrs%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ms%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mx%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Prof%2E</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Pronouns</picklist>
+        <values>
+            <fullName>He%2FHim</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>He%2FThey</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not Listed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>She%2FHer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>She%2FThey</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>They%2FThem</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Rating</picklist>
+        <values>
+            <fullName>Cold</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hot</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Warm</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

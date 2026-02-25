@@ -128,6 +128,46 @@
                 <default>false</default>
                 <label>H4527 002</label>
             </value>
+            <value>
+                <fullName>UHC_ RX Preferred</fullName>
+                <default>false</default>
+                <label>UHC_ RX Preferred</label>
+            </value>
+            <value>
+                <fullName>Wellcare_ Value RX</fullName>
+                <default>false</default>
+                <label>Wellcare_ Value RX</label>
+            </value>
+            <value>
+                <fullName>Humana_Value RX</fullName>
+                <default>false</default>
+                <label>Humana_Value RX</label>
+            </value>
+            <value>
+                <fullName>H1278-015</fullName>
+                <default>false</default>
+                <label>H1278-015</label>
+            </value>
+            <value>
+                <fullName>Cigna Saver RX</fullName>
+                <default>false</default>
+                <label>Cigna Saver RX</label>
+            </value>
+            <value>
+                <fullName>Cigna Healthcare Saver Rx</fullName>
+                <default>false</default>
+                <label>Cigna Healthcare Saver Rx</label>
+            </value>
+            <value>
+                <fullName>Humana Value Choice  PPO</fullName>
+                <default>false</default>
+                <label>Humana Value Choice  PPO</label>
+            </value>
+            <value>
+                <fullName>Humana gold Plus (HMO D-SNP)</fullName>
+                <default>false</default>
+                <label>Humana gold Plus (HMO D-SNP)</label>
+            </value>
         </valueSetDefinition>
         <valueSettings>
             <controllingFieldValue>Business</controllingFieldValue>
@@ -218,8 +258,16 @@
             <valueName>H1278 013</valueName>
         </valueSettings>
         <valueSettings>
+            <controllingFieldValue>PPO</controllingFieldValue>
+            <valueName>H1278-015</valueName>
+        </valueSettings>
+        <valueSettings>
             <controllingFieldValue>DSNP w QMB</controllingFieldValue>
             <valueName>H0609 052</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>DSNP w QMB</controllingFieldValue>
+            <valueName>Humana gold Plus (HMO D-SNP)</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>R-MAPD</controllingFieldValue>
@@ -240,6 +288,10 @@
         <valueSettings>
             <controllingFieldValue>R-MAPD</controllingFieldValue>
             <valueName>H4527 002</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>R-MAPD</controllingFieldValue>
+            <valueName>Humana Value Choice  PPO</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Med Supp</controllingFieldValue>
@@ -268,6 +320,26 @@
         <valueSettings>
             <controllingFieldValue>PDP</controllingFieldValue>
             <valueName>S5921 403</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PDP</controllingFieldValue>
+            <valueName>UHC_ RX Preferred</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PDP</controllingFieldValue>
+            <valueName>Wellcare_ Value RX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PDP</controllingFieldValue>
+            <valueName>Humana_Value RX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PDP</controllingFieldValue>
+            <valueName>Cigna Saver RX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PDP</controllingFieldValue>
+            <valueName>Cigna Healthcare Saver Rx</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>CSNP</controllingFieldValue>

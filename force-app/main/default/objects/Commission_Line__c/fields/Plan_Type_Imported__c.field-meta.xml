@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Plan_Type_Imported__c</fullName>
+    <description>Captures the plan type value exactly as provided in the carrier’s commission CSV file. This field is populated only during CSV imports and is used to classify the commission line according to the carrier’s plan or product naming conventions.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field shows the plan type from the commission CSV upload. It reflects the carrier’s terminology and may differ from Salesforce’s internal plan or product labels. Use it to confirm that the commission line is associated with the correct plan as reported by the carrier.</inlineHelpText>
+    <label>Plan Type</label>
+    <length>80</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

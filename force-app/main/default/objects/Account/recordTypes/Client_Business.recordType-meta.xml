@@ -11,10 +11,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Customer Event</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Employee Referral</fullName>
             <default>false</default>
         </values>
@@ -23,31 +19,11 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Google AdWords</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Other</fullName>
             <default>false</default>
         </values>
         <values>
-            <fullName>Partner</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Purchased List</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Trade Show</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Webinar</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Website</fullName>
+            <fullName>Phone</fullName>
             <default>false</default>
         </values>
     </picklistValues>

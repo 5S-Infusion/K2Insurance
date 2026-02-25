@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Plan_options_reviewed__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether available plan options have been reviewed with the prospect.</description>
+    <inlineHelpText>Select when plan options have been discussed and reviewed with the prospect. This does not indicate plan selection or enrollment.</inlineHelpText>
+    <label>Plan options reviewed</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

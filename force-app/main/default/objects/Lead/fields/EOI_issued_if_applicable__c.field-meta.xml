@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>EOI_issued_if_applicable__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates that a Evidence of Insurability (EOI) has been generated and provided, if applicable to the specific policy type.</description>
+    <inlineHelpText>Check this box if Evidence of Insurability was required and has been issued to the policyholder.</inlineHelpText>
+    <label>EOI issued (if applicable)</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>
