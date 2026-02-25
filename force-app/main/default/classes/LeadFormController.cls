@@ -7,6 +7,8 @@
  * @date 2025-11-29
  */
 public without sharing class LeadFormController {
+    // Cache lead record type lookups to avoid repeated describe calls
+    private static Map<String, Id> leadRecordTypeCache = new Map<String, Id>();
     
     /**
      * @description Wrapper class for Lead form data
@@ -252,6 +254,14 @@ public without sharing class LeadFormController {
         // Set multi-select picklist (semicolon-separated)
         if (formData.interestedInsurance != null && !formData.interestedInsurance.isEmpty()) {
             newLead.Interested_Insurance__c = String.join(formData.interestedInsurance, ';');
+
+            // Medicare selection should use the Medicare lead record type
+            if (containsValueIgnoreCase(formData.interestedInsurance, 'Medicare')) {
+                Id medicareRecordTypeId = getLeadRecordTypeId('Medicare');
+                if (medicareRecordTypeId != null) {
+                    newLead.RecordTypeId = medicareRecordTypeId;
+                }
+            }
         }
         
         // Set default values        
@@ -273,5 +283,48 @@ public without sharing class LeadFormController {
             errorMessages.add(err.getMessage());
         }
         return String.join(errorMessages, ' ');
+    }
+
+    /**
+     * @description Checks if list contains a value ignoring case
+     */
+    private static Boolean containsValueIgnoreCase(List<String> values, String targetValue) {
+        if (values == null || String.isBlank(targetValue)) {
+            return false;
+        }
+        for (String value : values) {
+            if (value != null && value.trim().equalsIgnoreCase(targetValue)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @description Retrieves Lead record type Id by name or developer name using Schema, with caching
+     */
+    private static Id getLeadRecordTypeId(String recordTypeName) {
+        if (String.isBlank(recordTypeName)) {
+            return null;
+        }
+
+        if (leadRecordTypeCache.containsKey(recordTypeName)) {
+            return leadRecordTypeCache.get(recordTypeName);
+        }
+
+        Schema.DescribeSObjectResult leadDescribe = Lead.SObjectType.getDescribe();
+        Map<String, Schema.RecordTypeInfo> byName = leadDescribe.getRecordTypeInfosByName();
+        Map<String, Schema.RecordTypeInfo> byDeveloperName = leadDescribe.getRecordTypeInfosByDeveloperName();
+
+        Schema.RecordTypeInfo info = null;
+        if (byName != null && byName.containsKey(recordTypeName)) {
+            info = byName.get(recordTypeName);
+        } else if (byDeveloperName != null && byDeveloperName.containsKey(recordTypeName)) {
+            info = byDeveloperName.get(recordTypeName);
+        }
+
+        Id recordTypeId = info == null ? null : info.getRecordTypeId();
+        leadRecordTypeCache.put(recordTypeName, recordTypeId);
+        return recordTypeId;
     }
 }
