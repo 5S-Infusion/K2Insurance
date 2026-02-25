@@ -1,0 +1,244 @@
+<template>
+    <lightning-card>
+        <div class="slds-p-around_medium form-container">
+            <!-- Language Selector -->
+            <div class="language-selector slds-m-bottom_medium">
+                <lightning-button-group>
+                    <template for:each={languageOptions} for:item="lang">
+                        <lightning-button
+                            key={lang.value}
+                            label={lang.label}
+                            value={lang.value}
+                            variant={lang.variant}
+                            onclick={handleLanguageChange}
+                            data-value={lang.value}
+                            class="lang-btn">
+                        </lightning-button>
+                    </template>
+                </lightning-button-group>
+            </div>
+
+            <!-- Thank You Page -->
+            <template if:true={showThankYou}>
+                <div class="thank-you-container slds-text-align_center slds-p-around_large">
+                    <div class="thank-you-icon slds-m-bottom_medium">
+                        <lightning-icon icon-name="action:approval" size="large" alternative-text="Success"></lightning-icon>
+                    </div>
+                    <h1 class="slds-text-heading_large slds-m-bottom_medium">{labels.thankYouTitle}</h1>
+                    <p class="slds-text-body_regular slds-m-bottom_large thank-you-message">{labels.thankYouMessage}</p>
+                    <lightning-button
+                        variant="brand"
+                        label={labels.submitAnother}
+                        onclick={handleNewForm}
+                        class="new-form-button">
+                    </lightning-button>
+                </div>
+            </template>
+
+            <!-- Form Section -->
+            <template if:true={showForm}>
+                <!-- Error Banner -->
+                <template if:true={errorMessage}>
+                    <div class="error-banner slds-notify slds-notify_alert slds-alert_error slds-m-bottom_medium" role="alert">
+                        <span class="slds-assistive-text">{labels.error}</span>
+                        <lightning-icon icon-name="utility:error" alternative-text="Error" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                        <h2>{errorMessage}</h2>
+                        <button class="slds-button slds-button_icon slds-notify__close" onclick={clearError}>
+                            <lightning-icon icon-name="utility:close" alternative-text="Close" size="x-small"></lightning-icon>
+                        </button>
+                    </div>
+                </template>
+
+                <!-- Success Banner -->
+                <template if:true={successMessage}>
+                    <div class="success-banner slds-notify slds-notify_alert slds-alert_success slds-m-bottom_medium" role="alert">
+                        <span class="slds-assistive-text">{labels.success}</span>
+                        <lightning-icon icon-name="utility:success" alternative-text="Success" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                        <h2>{successMessage}</h2>
+                    </div>
+                </template>
+
+                <!-- Logo and Title -->
+                <div class="header-section slds-m-bottom_medium">
+                    <img src={logoUrl} alt="K2 Insurance" class="company-logo" if:true={logoUrl}>
+                    <h1 class="slds-text-heading_large form-title">{labels.title}</h1>
+                </div>
+
+                <!-- Form Content -->
+            <div class="form-content">
+                <!-- Name Fields -->
+                <div class="name-fields-container slds-m-bottom_medium">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_1-of-3">
+                            <lightning-input
+                                type="text"
+                                label={labels.firstName}
+                                name="firstName"
+                                value={firstName}
+                                required
+                                message-when-value-missing={labels.firstNameRequired}
+                                onchange={handleInputChange}
+                                class="form-input">
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-3">
+                            <lightning-input
+                                type="text"
+                                label={labels.middleName}
+                                name="middleName"
+                                value={middleName}
+                                onchange={handleInputChange}
+                                class="form-input">
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-3">
+                            <lightning-input
+                                type="text"
+                                label={labels.lastName}
+                                name="lastName"
+                                value={lastName}
+                                required
+                                message-when-value-missing={labels.lastNameRequired}
+                                onchange={handleInputChange}
+                                class="form-input">
+                            </lightning-input>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="slds-form-element slds-m-bottom_medium">
+                    <lightning-input
+                        type="date"
+                        label={labels.dob}
+                        name="birthdate"
+                        value={birthdate}
+                        max={maxDate}
+                        date-style="short"
+                        required
+                        message-when-value-missing={labels.dobRequired}
+                        onchange={handleInputChange}
+                        class="form-input">
+                    </lightning-input>
+                </div>
+
+                <!-- Gender Identity -->
+                <div class="slds-form-element slds-m-bottom_medium">
+                    <lightning-combobox
+                        label={labels.genderIdentity}
+                        name="genderIdentity"
+                        value={genderIdentity}
+                        placeholder={labels.selectGenderIdentity}
+                        options={genderOptions}
+                        required
+                        message-when-value-missing={labels.genderIdentityRequired}
+                        onchange={handleInputChange}
+                        class="form-input">
+                    </lightning-combobox>
+                </div>
+
+                <!-- Address Field with Google Lookup -->
+                <div class="slds-form-element slds-m-bottom_medium">
+                    <lightning-input-address
+                        address-label={labels.address}
+                        street-label={labels.street}
+                        city-label={labels.city}
+                        country-label={labels.country}
+                        province-label={labels.stateProvince}
+                        postal-code-label={labels.postalCode}
+                        street={street}
+                        city={city}
+                        province={state}
+                        country={country}
+                        postal-code={postalCode}
+                        required
+                        show-address-lookup
+                        onchange={handleAddressChange}
+                        class="form-input">
+                    </lightning-input-address>
+                </div>
+
+                <!-- Email -->
+                <div class="slds-form-element slds-m-bottom_medium">
+                    <lightning-input
+                        type="email"
+                        label={labels.email}
+                        name="email"
+                        value={email}
+                        required
+                        message-when-value-missing={labels.emailRequired}
+                        message-when-type-mismatch={labels.emailInvalid}
+                        onchange={handleInputChange}
+                        class="form-input">
+                    </lightning-input>
+                </div>
+
+                <!-- Phone -->
+                <div class="slds-form-element slds-m-bottom_medium">
+                    <label class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">*</abbr>
+                        {labels.phone}
+                    </label>
+                    <div class="phone-input-container">
+                        <lightning-combobox
+                            name="countryCode"
+                            value={countryCode}
+                            options={countryCodeOptions}
+                            onchange={handleInputChange}
+                            variant="label-hidden"
+                            class="country-code-select">
+                        </lightning-combobox>
+                        <lightning-input
+                            type="tel"
+                            name="phone"
+                            value={phone}
+                            required
+                            message-when-value-missing={labels.phoneRequired}
+                            pattern="[0-9]{10,15}"
+                            message-when-pattern-mismatch={labels.phoneInvalid}
+                            onchange={handleInputChange}
+                            variant="label-hidden"
+                            class="phone-number-input">
+                        </lightning-input>
+                    </div>
+                </div>
+
+                <!-- Interested Insurance (Multi-select) -->
+                <div class="slds-form-element slds-m-bottom_large">
+                    <lightning-dual-listbox
+                        label={labels.insuranceQuestion}
+                        name="interestedInsurance"
+                        source-label={labels.available}
+                        selected-label={labels.selected}
+                        options={insuranceOptions}
+                        value={selectedInsurance}
+                        required
+                        message-when-value-missing={labels.insuranceRequired}
+                        onchange={handleInsuranceChange}
+                        size="4"
+                        class="form-input">
+                    </lightning-dual-listbox>
+                    <p class="insurance-help-text slds-m-top_x-small">{labels.insuranceHelpText}</p>
+                </div>
+
+                    <!-- Submit Button -->
+                    <div class="slds-text-align_center slds-m-top_large">
+                        <lightning-button
+                            variant="brand"
+                            label={labels.submit}
+                            title={labels.submitTitle}
+                            onclick={handleSubmit}
+                            disabled={isSubmitting}
+                            class="submit-button">
+                        </lightning-button>
+                    </div>
+                </div>
+
+                <!-- Loading Spinner -->
+                <template if:true={isSubmitting}>
+                    <lightning-spinner alternative-text={labels.submitting} size="medium"></lightning-spinner>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>
