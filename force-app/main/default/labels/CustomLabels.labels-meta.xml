@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>LeadFormCapture_Address</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Address Label</shortDescription>
+        <value>Address</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_AddressRequired</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Address Required Message</shortDescription>
+        <value>Address is required</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_Available</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Available Options Label</shortDescription>
+        <value>Available</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_City</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>City Label</shortDescription>
+        <value>City</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_CompleteThisField</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Complete This Field Message</shortDescription>
+        <value>Complete this field.</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_Country</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Country Label</shortDescription>
+        <value>Country</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_DOB</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Date of Birth Label</shortDescription>
+        <value>DOB</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_DOBRequired</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>DOB Required Message</shortDescription>
+        <value>Date of Birth is required</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_DuplicateEmail</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Duplicate Email Message</shortDescription>
+        <value>This email address is already registered. Please use a different email or wait for us to contact you.</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_Email</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Email Label</shortDescription>
+        <value>Email</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_EmailInvalid</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid Email Message</shortDescription>
+        <value>Please enter a valid email address</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_EmailRequired</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Email Required Message</shortDescription>
+        <value>Email is required</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_Error</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error Title</shortDescription>
+        <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_FirstName</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>First Name Label</shortDescription>
+        <value>First Name</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_FirstNameRequired</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>First Name Required Message</shortDescription>
+        <value>First Name is required</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_FormDataRequired</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Form Data Required Message</shortDescription>
+        <value>Form data is required.</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_GenderIdentity</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Gender Identity Label</shortDescription>
+        <value>Gender Identity</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_GenderIdentityRequired</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Gender Identity Required Message</shortDescription>
+        <value>Gender Identity is required</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_GenderOptionsError</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Gender Options Error Message</shortDescription>
+        <value>Error retrieving gender options</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_InsuranceHelpText</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Help Text</shortDescription>
+        <value>Select one or more insurance products from the list on the left, use the arrow button to move them into the &quot;Selected&quot; box, and click &quot;Submit&quot; to save your choices.</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_InsuranceOptionsError</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Options Error Message</shortDescription>
+        <value>Error retrieving insurance options</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_InsuranceQuestion</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Question Label</shortDescription>
+        <value>What Insurance do you need?</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_InsuranceRequired</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Required Message</shortDescription>
+        <value>Please select at least one insurance product</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_InvalidFormData</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid Form Data Message</shortDescription>
+        <value>Invalid form data format. Please try again.</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_Language</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Language Label</shortDescription>
+        <value>Language</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_LastName</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Last Name Label</shortDescription>
+        <value>Last Name</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_LastNameRequired</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Last Name Required Message</shortDescription>
+        <value>Last Name is required</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_MiddleName</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Middle Name Label</shortDescription>
+        <value>Middle Name</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_Phone</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Phone Label</shortDescription>
+        <value>Phone</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_PhoneInvalid</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Invalid Phone Message</shortDescription>
+        <value>Please enter a valid phone number</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_PhoneRequired</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Phone Required Message</shortDescription>
+        <value>Phone is required</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_PostalCode</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Postal Code Label</shortDescription>
+        <value>Postal Code</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_SelectGenderIdentity</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Select Gender Identity Placeholder</shortDescription>
+        <value>Select Gender Identity</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_Selected</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Selected Options Label</shortDescription>
+        <value>Selected</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_StateProvince</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>State/Province Label</shortDescription>
+        <value>State/Province</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_Street</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Street Label</shortDescription>
+        <value>Street</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_Submit</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Submit Button Label</shortDescription>
+        <value>Submit</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_SubmitAnother</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Submit Another Form Button</shortDescription>
+        <value>Submit Another Form</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_SubmitTitle</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Submit Button Title</shortDescription>
+        <value>Submit Lead Form</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_Submitting</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Submitting Message</shortDescription>
+        <value>Submitting...</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_Success</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Success Title</shortDescription>
+        <value>Success</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_SuccessMessage</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Lead Created Success Message</shortDescription>
+        <value>Lead created successfully!</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_ThankYouMessage</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Thank You Message</shortDescription>
+        <value>Your information has been submitted successfully. We will contact you soon.</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_ThankYouTitle</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Thank You Title</shortDescription>
+        <value>Thank You!</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_Title</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Lead Form Title</shortDescription>
+        <value>Leads</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_UnexpectedError</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Unexpected Error Message</shortDescription>
+        <value>An unexpected error occurred</value>
+    </labels>
+    <labels>
+        <fullName>LeadFormCapture_ValidationError</fullName>
+        <categories>LeadFormCapture</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Validation Error Title</shortDescription>
+        <value>Validation Error</value>
+    </labels>
+    <labels>
+        <fullName>TRIGGER_ACTIVATION</fullName>
+        <categories>Development</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>TRIGGER ACTIVATION</shortDescription>
+        <value>ON</value>
+    </labels>
+</CustomLabels>
