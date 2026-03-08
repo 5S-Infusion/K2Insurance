@@ -1,0 +1,167 @@
+<template>
+    <div class="page">
+        <template if:true={errorMessage}>
+            <div class="alert alertError">
+                {errorMessage}
+            </div>
+        </template>
+
+        <template if:true={successMessage}>
+            <div class="alert alertSuccess">
+                {successMessage}
+            </div>
+        </template>
+
+        <template if:true={isLoaded}>
+            <div class="heroCard">
+                <div class="heroLeft">
+                    <h1 class="pageTitle">Mass Email</h1>
+                    <p class="pageSubtitle">
+                        Send one email per selected Insurance record to its related Policy Holder.
+                    </p>
+                </div>
+
+                <div class="heroRight">
+                    <div class="heroStats">
+                        <div class="heroStat">
+                            <div class="heroStatLabel">Selected</div>
+                            <div class="heroStatValue">{selectedCount}</div>
+                        </div>
+                        <div class="heroStat">
+                            <div class="heroStatLabel">Ready</div>
+                            <div class="heroStatValue">{validCount}</div>
+                        </div>
+                        <div class="heroStat">
+                            <div class="heroStatLabel">Skipped</div>
+                            <div class="heroStatValue">{skippedCount}</div>
+                        </div>
+                    </div>
+
+                    <div class="topActionBar">
+                        <lightning-button variant="brand" label="Send Emails" onclick={handleSend}
+                            disabled={sendDisabled}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mainGrid">
+                <div class="leftColumn">
+                    <div class="card">
+                        <div class="cardHeader">
+                            <div class="cardTitle">Email Setup</div>
+                            <div class="cardSubtitle">
+                                Choose a template and review the content before sending.
+                            </div>
+                        </div>
+
+                        <div class="fieldBlock">
+                            <lightning-combobox name="templateSelect" label="Email Template" value={selectedTemplateId}
+                                placeholder="Select an email template" options={templateOptions}
+                                onchange={handleTemplateChange}>
+                            </lightning-combobox>
+                        </div>
+
+                        <div class="fieldBlock">
+                            <lightning-input type="checkbox" label="Save each email to Activity History"
+                                checked={saveAsActivity} onchange={handleSaveAsActivityChange}>
+                            </lightning-input>
+                        </div>
+
+                        <div class="infoNote">
+                            One email will be sent per selected Insurance record to its related Policy Holder.
+                            Records without a Policy Holder or email address are skipped automatically.
+                        </div>
+                    </div>
+
+                    <template if:true={showPreviewSection}>
+                        <div class="card previewCard">
+                            <div class="cardHeader">
+                                <div class="cardTitle">Template Preview</div>
+                                <div class="cardSubtitle">
+                                    Original template content is shown with merge fields preserved.
+                                </div>
+                            </div>
+
+                            <template if:true={isPreviewLoading}>
+                                <div class="loadingRow">
+                                    <lightning-spinner alternative-text="Loading preview"
+                                        size="small"></lightning-spinner>
+                                </div>
+                            </template>
+
+                            <template if:true={previewMessage}>
+                                <div class="messageBox">
+                                    {previewMessage}
+                                </div>
+                            </template>
+
+                            <template if:true={showPreviewContent}>
+                                <div class="metaPillRow">
+                                    <div class="metaPill">
+                                        <span class="metaPillLabel">Template</span>
+                                        <span class="metaPillValue">{previewTemplateName}</span>
+                                    </div>
+                                </div>
+
+                                <div class="previewReadPane">
+                                    <div class="previewSection">
+                                        <div class="previewLabel">Subject</div>
+                                        <div class="previewSubjectBox">{previewSubject}</div>
+                                    </div>
+
+                                    <div class="previewSection">
+                                        <div class="previewLabel">Body</div>
+
+                                        <template if:true={hasPreviewHtml}>
+                                            <div class="previewBodyRich">
+                                                <lightning-formatted-rich-text
+                                                    value={previewBodyToDisplay}></lightning-formatted-rich-text>
+                                            </div>
+                                        </template>
+
+                                        <template if:false={hasPreviewHtml}>
+                                            <div class="previewBodyPlainWrap">
+                                                <pre class="previewPlainText">{previewBodyToDisplay}</pre>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="rightColumn">
+                    <div class="card recipientsCard">
+                        <div class="cardHeader">
+                            <div class="cardTitle">Recipients</div>
+                            <div class="cardSubtitle">
+                                Showing the first 20 recipients for review. All selected records will still be processed
+                                when you send.
+                            </div>
+                        </div>
+
+                        <div class="recipientSummary">
+                            <div class="recipientBadge readyBadge">Ready: {validCount}</div>
+                            <div class="recipientBadge skippedBadge">Skipped: {skippedCount}</div>
+                            <div class="recipientBadge neutralBadge">Showing: {displayedRecipientCount}</div>
+                        </div>
+
+                        <div class="tableWrap">
+                            <lightning-datatable key-field="insuranceId" data={displayedRecipients} columns={columns}
+                                hide-checkbox-column>
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template if:false={isLoaded}>
+            <div class="loadingPage">
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </div>
+        </template>
+    </div>
+</template>
