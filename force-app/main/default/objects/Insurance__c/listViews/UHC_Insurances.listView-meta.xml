@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>UHC_Insurances</fullName>
+    <columns>NAME</columns>
+    <columns>Policy_Holder__c</columns>
+    <columns>Type__c</columns>
+    <columns>Status__c</columns>
+    <columns>Subtype__c</columns>
+    <columns>Insurance_Provider__c</columns>
+    <columns>Insurance_Start_Date__c</columns>
+    <columns>Insurance_End_Date__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Insurance_Provider__c</field>
+        <operation>equals</operation>
+        <value>UHC</value>
+    </filters>
+    <filters>
+        <field>Status__c</field>
+        <operation>equals</operation>
+        <value>Active</value>
+    </filters>
+    <filters>
+        <field>Type__c</field>
+        <operation>equals</operation>
+        <value>Individual</value>
+    </filters>
+    <label>UHC Insurances</label>
+</ListView>

@@ -4,14 +4,14 @@
     <active>false</active>
     <description>Enter the first month of Medicare eligibility in MM/YYYY format (for example, 03/2026).</description>
     <errorConditionFormula>AND(
-    NOT(ISBLANK(Eligibility_Start_Month__c)),
+    NOT(ISBLANK(Eligibility_Start_Date__c)),
     NOT(
         REGEX(
-            Eligibility_Start_Month__c,
+            Eligibility_Start_Date__c,
             &quot;^(0[1-9]|1[0-2])\\/(19|20)[0-9]{2}$&quot;
         )
     )
 )</errorConditionFormula>
-    <errorDisplayField>Eligibility_Start_Month__c</errorDisplayField>
+    <errorDisplayField>Eligibility_Start_Date__c</errorDisplayField>
     <errorMessage>Enter the first month of Medicare eligibility in MM/YYYY format (for example, 03/2026).</errorMessage>
 </ValidationRule>

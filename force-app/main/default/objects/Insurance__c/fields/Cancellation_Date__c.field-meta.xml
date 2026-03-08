@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cancellation_Date__c</fullName>
+    <description>The date when the insurance policy or interest was cancelled.
+Used for reporting, compliance tracking, and lifecycle management.</description>
+    <inlineHelpText>Populate when the policy is cancelled or when the client requests cancellation.</inlineHelpText>
+    <label>Cancellation Date</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

@@ -27,4 +27,8 @@
         <fullName>Quote</fullName>
         <default>false</default>
     </values>
+    <values>
+        <fullName>Unqualified</fullName>
+        <default>false</default>
+    </values>
 </BusinessProcess>

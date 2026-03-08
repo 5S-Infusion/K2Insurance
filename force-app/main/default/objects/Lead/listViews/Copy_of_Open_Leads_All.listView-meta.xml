@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Health_Leads</fullName>
+    <fullName>Copy_of_Open_Leads_All</fullName>
     <columns>Eligibility_Start_Date__c</columns>
     <columns>LEAD.STATUS</columns>
-    <columns>Agent__c</columns>
     <columns>FULL_NAME</columns>
     <columns>Korean_Name__c</columns>
     <columns>LEAD.PHONE</columns>
@@ -11,14 +10,14 @@
     <columns>LEAD.LAST_UPDATE</columns>
     <filterScope>Everything</filterScope>
     <filters>
-        <field>LEAD.RECORDTYPE</field>
-        <operation>equals</operation>
-        <value>Lead.Health</value>
-    </filters>
-    <filters>
         <field>LEAD.STATUS</field>
         <operation>notEqual</operation>
-        <value>Unqualified,Qualified</value>
+        <value>Qualified,Unqualified</value>
     </filters>
-    <label>Health Leads</label>
+    <filters>
+        <field>Interested_Insurance__c</field>
+        <operation>notEqual</operation>
+        <value>Medicare,Health</value>
+    </filters>
+    <label>Other Leads</label>
 </ListView>
