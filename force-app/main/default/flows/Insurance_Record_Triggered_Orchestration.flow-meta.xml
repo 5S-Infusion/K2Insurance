@@ -8,7 +8,7 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Record_Type</targetReference>
+            <targetReference>After_Update_for_All_Record_Types_of_Insurance</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Updated</defaultConnectorLabel>
         <rules>
@@ -22,7 +22,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Record_Type</targetReference>
+                <targetReference>AllRecordTypesofInsurance</targetReference>
             </connector>
             <label>Created</label>
         </rules>
@@ -72,7 +72,7 @@
             <label>Group Health</label>
         </rules>
     </decisions>
-    <description>Only when Group Health is being inactivated.</description>
+    <description>Engrave Status to the Name</description>
     <environments>Default</environments>
     <formulas>
         <name>varIsNEW</name>
@@ -82,13 +82,84 @@
     <interviewLabel>Insurance {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Insurance Record-Triggered Orchestration</label>
     <orchestratedStages>
+        <name>After_Update_for_All_Record_Types_of_Insurance</name>
+        <label>After Update for All Record Types of Insurance</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>AllRecordTypesofInsurance</targetReference>
+        </connector>
+        <exitConditionLogic>and</exitConditionLogic>
+        <stageSteps>
+            <name>Capture_Cancellation_Date</name>
+            <actionName>Capture_Cancellation_Date</actionName>
+            <actionType>stepBackground</actionType>
+            <assignees>
+                <assignee>
+                    <elementReference>$User.Username</elementReference>
+                </assignee>
+                <assigneeType>User</assigneeType>
+            </assignees>
+            <canAssigneeEdit>false</canAssigneeEdit>
+            <debugSimulateStep>false</debugSimulateStep>
+            <entryConditionLogic>and</entryConditionLogic>
+            <exitConditionLogic>and</exitConditionLogic>
+            <inputParameters>
+                <name>varNewInsuranceRecord</name>
+                <value>
+                    <elementReference>$Record</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>varOldInsuranceRecord</name>
+                <value>
+                    <elementReference>$Record__Prior</elementReference>
+                </value>
+            </inputParameters>
+            <label>Capture Cancellation Date</label>
+            <requiresAsyncProcessing>false</requiresAsyncProcessing>
+            <runAsUser>true</runAsUser>
+            <shouldLock>false</shouldLock>
+            <stepSubtype>BackgroundStep</stepSubtype>
+        </stageSteps>
+    </orchestratedStages>
+    <orchestratedStages>
+        <name>AllRecordTypesofInsurance</name>
+        <label>All Record Types of Insurance</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Record_Type</targetReference>
+        </connector>
+        <exitConditionLogic>and</exitConditionLogic>
+        <stageSteps>
+            <name>Engrave_Status_to_the_Name</name>
+            <actionName>Insurance_Status_Name_Engraver</actionName>
+            <actionType>stepBackground</actionType>
+            <canAssigneeEdit>false</canAssigneeEdit>
+            <debugSimulateStep>false</debugSimulateStep>
+            <entryConditionLogic>and</entryConditionLogic>
+            <exitConditionLogic>and</exitConditionLogic>
+            <inputParameters>
+                <name>varInsuranceRecord</name>
+                <value>
+                    <elementReference>$Record</elementReference>
+                </value>
+            </inputParameters>
+            <label>Engrave Status to the Name</label>
+            <requiresAsyncProcessing>false</requiresAsyncProcessing>
+            <runAsUser>false</runAsUser>
+            <shouldLock>false</shouldLock>
+            <stepSubtype>BackgroundStep</stepSubtype>
+        </stageSteps>
+    </orchestratedStages>
+    <orchestratedStages>
         <name>Inactivation</name>
         <label>Inactivation</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <exitConditionLogic>and</exitConditionLogic>
         <exitConditions>
-            <conditionType>ExitCondition</conditionType>
             <leftValueReference>$Record__Prior.Status__c</leftValueReference>
             <operator>EqualTo</operator>
             <rightValue>
@@ -96,7 +167,6 @@
             </rightValue>
         </exitConditions>
         <exitConditions>
-            <conditionType>ExitCondition</conditionType>
             <leftValueReference>$Record.Status__c</leftValueReference>
             <operator>EqualTo</operator>
             <rightValue>

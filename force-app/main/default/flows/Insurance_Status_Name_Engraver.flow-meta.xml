@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Engrave_Status_to_the_Name</name>
+        <label>Engrave Status to the Name</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>varInsuranceRecord.Name</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>fxNamePlusStatus</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_the_Insurance</targetReference>
+        </connector>
+    </assignments>
+    <description>Autolaunched flow that converts the Insurance Status picklist to text and appends it to the Insurance Policy value for display or labeling purposes. Designed for reuse in orchestration or record processing.</description>
+    <environments>Default</environments>
+    <formulas>
+        <description>Returns the Insurance Status as text in parentheses when a status value exists; otherwise returns blank.</description>
+        <name>fxNamePlusStatus</name>
+        <dataType>String</dataType>
+        <expression>IF(
+    ISBLANK(TEXT({!varInsuranceRecord.Status__c})),
+    &quot;&quot;,
+    &quot;varInsuranceRecord.Name&quot; &amp; &quot; (&quot; &amp; TEXT({!varInsuranceRecord.Status__c}) &amp; &quot;)&quot;
+)</expression>
+    </formulas>
+    <interviewLabel>Insurance Status Name Engraver {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Insurance Status Name Engraver</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_the_Insurance</name>
+        <label>Update the Insurance</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputReference>varInsuranceRecord</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Engrave_Status_to_the_Name</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>varInsuranceRecord</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Insurance__c</objectType>
+    </variables>
+</Flow>
