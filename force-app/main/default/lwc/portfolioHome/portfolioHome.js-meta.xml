@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Portfolio Home</masterLabel>
+    <description>A comprehensive home page component featuring hero section, certifications showcase, differentiators, testimonial carousel, and navigation links. WCAG 2.1 AA compliant.</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <!-- Hero Section Configuration -->
+            <property 
+                name="name" 
+                type="String" 
+                label="Name"
+                description="Your name displayed in the hero section"
+                default="Liam Jeong"
+            />
+            <property 
+                name="title" 
+                type="String" 
+                label="Professional Title"
+                description="Your professional title (e.g., Senior Salesforce Developer)"
+                default="Senior Salesforce Developer &amp; Engineer"
+            />
+            <property 
+                name="tagline" 
+                type="String" 
+                label="Tagline"
+                description="Brief professional summary or objective"
+                default="Salesforce professional with 8 years in development and consulting, experienced in building scalable architectures, modernizing legacy systems, and leading cross-functional delivery."
+            />
+            <property 
+                name="yearsExperience" 
+                type="Integer" 
+                label="Years of Experience"
+                description="Number of years in Salesforce"
+                default="8"
+                min="0"
+                max="50"
+            />
+            <property 
+                name="certificationCount" 
+                type="Integer" 
+                label="Certification Count"
+                description="Number of active Salesforce certifications"
+                default="7"
+                min="0"
+                max="50"
+            />
+            <property 
+                name="trailheadUrl" 
+                type="String" 
+                label="Trailhead URL"
+                description="URL to your Trailhead profile (certifications will link here)"
+                default=""
+            />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

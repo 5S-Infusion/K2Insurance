@@ -1,0 +1,725 @@
+/**
+ * Portfolio Navigation Component Styles
+ * 
+ * Responsive Design Best Practices:
+ * - Mobile-first approach (base styles for mobile, enhance for larger screens)
+ * - Fluid typography and spacing using clamp()
+ * - Breakpoints in em for accessibility (respects user font preferences)
+ * - Logical properties for RTL support
+ * - Safe area insets for notched devices
+ * - Dynamic viewport units for mobile browsers
+ * 
+ * WCAG 2.1 AA Compliance:
+ * - Minimum 4.5:1 contrast ratio for text
+ * - Visible focus indicators (minimum 2px outline)
+ * - Touch targets minimum 44x44px (48px on mobile)
+ * - Reduced motion support
+ * - High contrast mode support
+ */
+
+/* ============================================
+   CSS Custom Properties (Design Tokens)
+   Mobile-first values, enhanced in media queries
+   ============================================ */
+:host {
+    /* Colors - WCAG AA compliant contrast ratios */
+    --nav-bg: #ffffff;
+    --nav-bg-transparent: rgba(255, 255, 255, 0.98);
+    --nav-text: #1f2937;
+    --nav-text-muted: #4b5563;
+    --nav-accent: #0066cc;
+    --nav-accent-hover: #004999;
+    --nav-accent-light: #e6f0ff;
+    --nav-border: #e5e7eb;
+    --nav-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --nav-shadow-elevated: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+    
+    /* Focus indicator - highly visible for accessibility */
+    --focus-outline: 2px solid #0066cc;
+    --focus-outline-offset: 2px;
+    --focus-ring: 0 0 0 3px rgba(0, 102, 204, 0.4);
+    
+    /* Fluid spacing using clamp(min, preferred, max) */
+    --nav-height: clamp(3.5rem, 8vw, 4rem); /* 56px - 64px */
+    --nav-padding-inline: clamp(1rem, 4vw, 1.5rem); /* 16px - 24px */
+    --nav-item-gap: clamp(0.25rem, 1vw, 0.5rem); /* 4px - 8px */
+    
+    /* Fluid typography */
+    --nav-font-size: clamp(0.875rem, 2vw, 0.9375rem); /* 14px - 15px */
+    --nav-brand-font-size: clamp(1.125rem, 3vw, 1.25rem); /* 18px - 20px */
+    --nav-font-weight: 500;
+    --nav-brand-font-weight: 600;
+    --nav-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    
+    /* Touch target sizes - 48px on mobile for better touch accuracy */
+    --touch-target-size: 48px;
+    
+    /* Transitions - respect user preferences */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+    
+    /* Z-index layers */
+    --z-skip-link: 9999;
+    --z-nav: 1000;
+    --z-overlay: 999;
+    
+    /* Safe area for notched devices */
+    --safe-area-inset-top: env(safe-area-inset-top, 0px);
+    --safe-area-inset-right: env(safe-area-inset-right, 0px);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-inset-left: env(safe-area-inset-left, 0px);
+
+    display: block;
+    width: 100%;
+    font-family: var(--nav-font-family);
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure all elements use border-box */
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+/* ============================================
+   Skip Link (WCAG 2.4.1)
+   ============================================ */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: var(--z-skip-link);
+    padding: 0.75rem 1.5rem;
+    background: var(--nav-accent);
+    color: #ffffff;
+    font-size: var(--nav-font-size);
+    font-weight: var(--nav-font-weight);
+    text-decoration: none;
+    border-radius: 0 0 0.5rem 0.5rem;
+    box-shadow: var(--nav-shadow-elevated);
+    transition: top var(--transition-fast);
+    white-space: nowrap;
+}
+
+.skip-link:focus {
+    top: var(--safe-area-inset-top);
+    outline: var(--focus-outline);
+    outline-offset: var(--focus-outline-offset);
+}
+
+/* ============================================
+   Screen Reader Only (Visually Hidden)
+   ============================================ */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ============================================
+   Navigation Header - Mobile First
+   Full-width background with aligned content
+   ============================================ */
+.nav-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-nav);
+    /* Extend background to full viewport width */
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--nav-border);
+    box-shadow: var(--nav-shadow);
+    /* Safe area padding for notched devices */
+    padding-top: var(--safe-area-inset-top);
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    /* Use Experience Cloud's max content width */
+    max-width: var(--dxp-s-body-max-content-width, 1800px);
+    min-height: var(--nav-height);
+    margin-inline: auto;
+    /* Padding matches Experience Cloud HorizontalRowPadding */
+    padding-inline: var(--dxp-g-spacing-horizontal-medium, 1rem);
+    padding-block: 0;
+    gap: 1rem;
+}
+
+/* ============================================
+   Brand / Logo - Mobile First
+   ============================================ */
+.nav-brand {
+    flex-shrink: 0;
+    min-width: 0; /* Allow text truncation if needed */
+}
+
+.brand-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    padding: 0.5rem 0.25rem;
+    color: var(--nav-text);
+    text-decoration: none;
+    border-radius: 0.375rem;
+    transition: color var(--transition-fast);
+    /* Touch target */
+    min-height: var(--touch-target-size);
+}
+
+.brand-link:hover {
+    color: var(--nav-accent);
+}
+
+.brand-link:focus {
+    outline: var(--focus-outline);
+    outline-offset: var(--focus-outline-offset);
+    box-shadow: var(--focus-ring);
+}
+
+.brand-link:focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: none;
+}
+
+.brand-link:focus-visible {
+    outline: var(--focus-outline);
+    outline-offset: var(--focus-outline-offset);
+    box-shadow: var(--focus-ring);
+}
+
+.brand-logo {
+    height: clamp(3rem, 8vw, 3.5rem); /* 48px - 56px */
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.brand-name {
+    font-size: var(--nav-brand-font-size);
+    font-weight: var(--nav-brand-font-weight);
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    /* Prevent long names from breaking layout */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ============================================
+   Hamburger Menu Button - Shown on Mobile
+   ============================================ */
+.hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--touch-target-size);
+    height: var(--touch-target-size);
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    /* Ensure it's above other elements */
+    position: relative;
+    z-index: calc(var(--z-nav) + 1);
+    flex-shrink: 0;
+}
+
+.hamburger:hover {
+    background-color: var(--nav-accent-light);
+}
+
+.hamburger:focus {
+    outline: var(--focus-outline);
+    outline-offset: var(--focus-outline-offset);
+    box-shadow: var(--focus-ring);
+}
+
+.hamburger:focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: none;
+}
+
+.hamburger:focus-visible {
+    outline: var(--focus-outline);
+    outline-offset: var(--focus-outline-offset);
+    box-shadow: var(--focus-ring);
+}
+
+.hamburger-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 1.5rem;
+    height: 1.125rem;
+}
+
+.hamburger-line {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--nav-text);
+    border-radius: 2px;
+    transition: 
+        transform var(--transition-normal),
+        opacity var(--transition-fast);
+    transform-origin: center;
+}
+
+/* Hamburger to X animation */
+.hamburger--active .hamburger-line:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger--active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger--active .hamburger-line:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* ============================================
+   Mobile Menu Overlay
+   ============================================ */
+.nav-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: var(--z-overlay);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    /* Improve touch scrolling */
+    -webkit-tap-highlight-color: transparent;
+}
+
+.nav-container--open .nav-overlay {
+    display: block;
+    opacity: 1;
+}
+
+/* ============================================
+   Navigation Menu - Mobile First (Off-canvas)
+   ============================================ */
+.nav-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(80vw, 20rem); /* 80% of viewport or 320px max */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding-block-start: calc(var(--nav-height) + var(--safe-area-inset-top) + 1rem);
+    padding-block-end: calc(var(--safe-area-inset-bottom) + 1rem);
+    padding-inline: 1rem;
+    background: var(--nav-bg);
+    box-shadow: var(--nav-shadow-elevated);
+    transform: translateX(100%);
+    transition: transform var(--transition-normal);
+    z-index: var(--z-nav);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* Use dynamic viewport height for mobile browsers */
+    height: 100dvh;
+    height: 100vh; /* Fallback */
+}
+
+@supports (height: 100dvh) {
+    .nav-menu {
+        height: 100dvh;
+    }
+}
+
+.nav-container--open .nav-menu {
+    transform: translateX(0);
+}
+
+.nav-list {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav-item {
+    position: relative;
+}
+
+/* ============================================
+   Navigation Links - Mobile First
+   ============================================ */
+.nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: var(--touch-target-size);
+    padding: 0.875rem 1rem;
+    color: var(--nav-text-muted);
+    font-size: var(--nav-font-size);
+    font-weight: var(--nav-font-weight);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: 
+        color var(--transition-fast),
+        background-color var(--transition-fast);
+}
+
+.nav-link:hover {
+    color: var(--nav-accent);
+    background-color: var(--nav-accent-light);
+}
+
+/* Focus styles (WCAG 2.4.7) */
+.nav-link:focus {
+    outline: var(--focus-outline);
+    outline-offset: var(--focus-outline-offset);
+    box-shadow: var(--focus-ring);
+}
+
+.nav-link:focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: none;
+}
+
+.nav-link:focus-visible {
+    outline: var(--focus-outline);
+    outline-offset: var(--focus-outline-offset);
+    box-shadow: var(--focus-ring);
+}
+
+/* Active state indicator - Mobile (left bar) */
+.nav-link-indicator {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 0;
+    transform: translateY(-50%) scaleY(0);
+    width: 0.25rem;
+    height: calc(100% - 1rem);
+    background: var(--nav-accent);
+    border-radius: 0 0.25rem 0.25rem 0;
+    transition: transform var(--transition-fast);
+}
+
+.nav-item--active .nav-link {
+    color: var(--nav-accent);
+    background-color: var(--nav-accent-light);
+}
+
+.nav-item--active .nav-link-indicator {
+    transform: translateY(-50%) scaleY(1);
+}
+
+/* ============================================
+   Tablet Breakpoint (48em / 768px)
+   ============================================ */
+@media (min-width: 48em) {
+    :host {
+        --touch-target-size: 44px; /* Standard touch target on tablet+ */
+    }
+
+    /* Hide hamburger on tablet and up */
+    .hamburger {
+        display: none;
+    }
+
+    /* Reset mobile menu to inline */
+    .nav-menu {
+        position: static;
+        width: auto;
+        height: auto;
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+        transform: none;
+        flex-direction: row;
+        align-items: center;
+        overflow: visible;
+    }
+
+    .nav-overlay {
+        display: none !important;
+    }
+
+    .nav-list {
+        flex-direction: row;
+        align-items: center;
+        gap: var(--nav-item-gap);
+    }
+
+    .nav-link {
+        flex-direction: column;
+        justify-content: center;
+        padding: 0.625rem 1rem;
+        border-radius: 0.375rem;
+    }
+
+    /* Active state indicator - Desktop (bottom bar) */
+    .nav-link-indicator {
+        inset-block-start: auto;
+        inset-block-end: 0;
+        inset-inline-start: 50%;
+        transform: translateX(-50%) scaleX(0);
+        width: calc(100% - 1rem);
+        height: 0.1875rem;
+        border-radius: 0.1875rem 0.1875rem 0 0;
+    }
+
+    .nav-item--active .nav-link {
+        background-color: transparent;
+    }
+
+    .nav-item--active .nav-link-indicator {
+        transform: translateX(-50%) scaleX(1);
+    }
+}
+
+/* ============================================
+   Desktop Breakpoint (64em / 1024px)
+   ============================================ */
+@media (min-width: 64em) {
+    .nav-list {
+        gap: 0.5rem;
+    }
+
+    .nav-link {
+        padding: 0.625rem 1.125rem;
+    }
+}
+
+/* ============================================
+   Hover Media Query (Pointer Devices)
+   Enhanced interactions for devices with hover capability
+   ============================================ */
+@media (hover: hover) and (pointer: fine) {
+    .nav-link {
+        transition: 
+            color var(--transition-fast),
+            background-color var(--transition-fast),
+            transform var(--transition-fast);
+    }
+
+    .nav-link:hover {
+        transform: translateY(-1px);
+    }
+
+    .brand-link:hover .brand-name {
+        text-decoration: underline;
+        text-underline-offset: 0.25em;
+    }
+}
+
+/* ============================================
+   Coarse Pointer (Touch Devices)
+   Ensure adequate touch targets
+   ============================================ */
+@media (pointer: coarse) {
+    .nav-link {
+        min-height: 48px;
+        padding: 0.875rem 1rem;
+    }
+
+    .hamburger {
+        width: 48px;
+        height: 48px;
+    }
+
+    .brand-link {
+        min-height: 48px;
+    }
+}
+
+/* ============================================
+   Reduced Motion (WCAG 2.3.3)
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .nav-menu {
+        transition: none;
+    }
+
+    .hamburger-line {
+        transition: none;
+    }
+
+    .nav-link-indicator {
+        transition: none;
+    }
+
+    /* Instant state changes instead of animations */
+    .hamburger--active .hamburger-line:nth-child(1),
+    .hamburger--active .hamburger-line:nth-child(3) {
+        transition: none;
+    }
+}
+
+/* ============================================
+   High Contrast Mode Support
+   ============================================ */
+@media (prefers-contrast: high) {
+    :host {
+        --nav-border: #000000;
+        --nav-text: #000000;
+        --nav-text-muted: #000000;
+        --focus-outline: 3px solid #000000;
+    }
+
+    .nav-link:hover,
+    .nav-item--active .nav-link {
+        background-color: #000000;
+        color: #ffffff;
+    }
+
+    .nav-link-indicator {
+        background: #000000;
+    }
+
+    .hamburger-line {
+        background-color: #000000;
+    }
+}
+
+/* ============================================
+   Forced Colors Mode (Windows High Contrast)
+   ============================================ */
+@media (forced-colors: active) {
+    .skip-link:focus {
+        outline: 3px solid CanvasText;
+    }
+
+    .nav-link:focus,
+    .hamburger:focus,
+    .brand-link:focus {
+        outline: 3px solid Highlight;
+    }
+
+    .nav-item--active .nav-link {
+        border: 2px solid CanvasText;
+    }
+
+    .hamburger-line {
+        background-color: CanvasText;
+    }
+
+    .nav-header {
+        border-bottom: 2px solid CanvasText;
+    }
+}
+
+/* ============================================
+   Dark Color Scheme Support
+   Commented out - Experience Cloud handles theming
+   Uncomment if you want automatic dark mode support
+   ============================================ */
+/*
+@media (prefers-color-scheme: dark) {
+    :host {
+        --nav-bg: #1f2937;
+        --nav-bg-transparent: rgba(31, 41, 55, 0.98);
+        --nav-text: #f9fafb;
+        --nav-text-muted: #d1d5db;
+        --nav-accent: #60a5fa;
+        --nav-accent-hover: #93c5fd;
+        --nav-accent-light: rgba(96, 165, 250, 0.15);
+        --nav-border: #374151;
+    }
+
+    .hamburger-line {
+        background-color: var(--nav-text);
+    }
+}
+*/
+
+/* ============================================
+   Print Styles
+   ============================================ */
+@media print {
+    .nav-header {
+        position: static;
+        box-shadow: none;
+        border-bottom: 1px solid #000;
+        background: #fff;
+    }
+
+    .hamburger,
+    .nav-overlay,
+    .skip-link {
+        display: none !important;
+    }
+
+    .nav-menu {
+        position: static;
+        transform: none;
+        width: auto;
+        height: auto;
+        padding: 0;
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .nav-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .nav-link {
+        color: #000 !important;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .nav-link::after {
+        content: " (" attr(href) ")";
+        font-size: 0.75em;
+        color: #666;
+    }
+
+    .nav-link-indicator {
+        display: none;
+    }
+}
+
+/* ============================================
+   Landscape Orientation on Mobile
+   Adjust layout for limited vertical space
+   ============================================ */
+@media (max-height: 30em) and (orientation: landscape) {
+    :host {
+        --nav-height: 3rem;
+    }
+
+    .nav-menu {
+        padding-block-start: calc(var(--nav-height) + 0.5rem);
+    }
+
+    .nav-link {
+        min-height: 2.75rem;
+        padding-block: 0.5rem;
+    }
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Portfolio Experience</masterLabel>
+    <description>A professional experience page component featuring career timeline, responsibilities, achievements, and skills. Displays work history with detailed information. WCAG 2.1 AA compliant.</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property 
+                name="linkedInProfileUrl" 
+                type="String" 
+                label="LinkedIn Profile URL"
+                description="URL to your LinkedIn profile"
+                default="https://www.linkedin.com/in/devliamjeong"
+            />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

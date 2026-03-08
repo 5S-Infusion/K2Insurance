@@ -1,0 +1,18 @@
+<template>
+	<section
+		class={projectClass}
+		aria-labelledby="project-heading-summary"
+		onclick={handleSelect}
+		onkeydown={handleKeydown}
+		role={computedRole}
+		tabindex={computedTabIndex}
+		aria-label={ariaLabel}
+	>
+		<div class="project-title-row">
+			<h2 id="project-heading-summary" class="project-title">{project.title}</h2>			
+		</div>
+		<p class="project-role">{project.role}</p>
+		<p class="project-meta">{project.meta}</p>
+		<p class="project-description project-description--summary">{project.description}</p>		
+	</section>
+</template>

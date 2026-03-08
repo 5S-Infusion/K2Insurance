@@ -1,0 +1,108 @@
+<template>
+    <!-- Skip Link for Keyboard Users (WCAG 2.4.1) -->
+    <a 
+        href="#main-content" 
+        class="skip-link"
+        onclick={handleSkipToMain}
+    >
+        Skip to main content
+    </a>
+
+    <!-- Screen Reader Live Region for Announcements (WCAG 4.1.3) -->
+    <div 
+        class="sr-only" 
+        role="status" 
+        aria-live="polite" 
+        aria-atomic="true"
+    >
+        {srAnnouncement}
+    </div>
+
+    <!-- Main Navigation -->
+    <header class="nav-header" role="banner">
+        <nav 
+            class={navContainerClass}
+            role="navigation" 
+            aria-label="Main navigation"
+        >
+            <!-- Brand / Logo -->
+            <div class="nav-brand">
+                <a 
+                    href="/"
+                    class="brand-link"
+                    onclick={handleBrandClick}
+                    aria-label="Go to homepage"
+                >
+                    <template lwc:if={hasLogo}>
+                        <img 
+                            src={logoUrl} 
+                            alt={logoAltText}
+                            class="brand-logo"
+                            loading="eager"
+                        />
+                    </template>
+                    <span class="brand-name">{brandName}</span>
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button 
+                type="button"
+                class={hamburgerClass}
+                aria-expanded={mobileMenuExpanded}
+                aria-controls="nav-menu"
+                aria-label="Toggle navigation menu"
+                onclick={handleMobileMenuToggle}
+            >
+                <span class="hamburger-box">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </span>
+                <span class="sr-only">Menu</span>
+            </button>
+
+            <!-- Navigation Menu -->
+            <div 
+                id="nav-menu"
+                class="nav-menu"
+                aria-hidden={mobileMenuHidden}
+            >
+                <ul 
+                    class="nav-list" 
+                    role="menubar"
+                    aria-label="Main menu"
+                >
+                    <template for:each={processedNavigationItems} for:item="item">
+                        <li 
+                            key={item.id}
+                            class={item.itemClass}
+                            role="none"
+                        >
+                            <a 
+                                href={item.url}
+                                class="nav-link"
+                                role="menuitem"
+                                data-url={item.url}
+                                data-index={item.index}
+                                aria-current={item.ariaCurrent}
+                                onclick={handleNavClick}
+                                onkeydown={handleKeyDown}
+                            >
+                                <span class="nav-link-text">{item.label}</span>
+                                <span class="nav-link-indicator" aria-hidden="true"></span>
+                            </a>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+
+            <!-- Mobile Menu Overlay -->
+            <div 
+                class="nav-overlay"
+                aria-hidden="true"
+                onclick={closeMobileMenu}
+            ></div>
+        </nav>
+    </header>
+</template>

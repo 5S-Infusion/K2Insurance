@@ -1,0 +1,60 @@
+<template>
+	<section
+		class={projectClass}
+		aria-labelledby="project-heading"
+		onclick={handleSelect}
+		onkeydown={handleKeydown}
+		role={computedRole}
+		tabindex={computedTabIndex}
+		aria-label={ariaLabel}
+	>
+		<div class="project-header">
+			<div class="project-title-row">
+				<h2 id="project-heading" class="project-title">{project.title}</h2>
+				<span class="project-badge">Featured</span>
+			</div>
+			<p class="project-role">{project.role}</p>
+			<p class="project-meta">{project.meta}</p>
+			<p class="project-description">{project.description}</p>
+		</div>
+
+		<div class="project-media" role="img" aria-label={screenshotLabel}>
+			<div class="project-media__placeholder">
+				<span class="placeholder-text">Screenshot placeholder</span>
+			</div>
+		</div>
+
+		<div class="project-body">
+			<template lwc:if={hasHighlights}>
+				<h3 class="detail-label">Highlights</h3>
+				<ul class="project-list" role="list">
+					<template for:each={project.highlights} for:item="highlight">
+						<li key={highlight} class="project-list-item">
+							<span class="project-bullet" aria-hidden="true">•</span>
+							<span>{highlight}</span>
+						</li>
+					</template>
+				</ul>
+			</template>
+
+			<template lwc:if={hasTags}>
+				<div class="project-skills">
+					<h3 class="detail-label">Tech &amp; Focus</h3>
+					<ul class="skills-list project-tags" role="list">
+						<template for:each={project.tags} for:item="tag">
+							<li key={tag} class="skill-tag">{tag}</li>
+						</template>
+					</ul>
+				</div>
+			</template>
+
+			<template lwc:if={hasCta}>
+				<div class="project-cta">
+					<a class="btn btn-primary" href={project.ctaUrl}>
+						{project.ctaLabel}
+					</a>
+				</div>
+			</template>
+		</div>
+	</section>
+</template>

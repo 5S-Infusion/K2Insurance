@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Portfolio Contact</masterLabel>
+    <description>A contact page component with an email form that routes submissions to a configurable recipient.</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property 
+                name="recipientEmail" 
+                type="String" 
+                label="Recipient Email" 
+                description="Destination address for contact form submissions" 
+                default="dev.liam.jeong@gmail.com"
+            />
+            <property 
+                name="pageTitle" 
+                type="String" 
+                label="Page Title" 
+                default="Contact"
+            />
+            <property 
+                name="pageSubtitle" 
+                type="String" 
+                label="Page Subtitle" 
+                default="Tell me about your Salesforce project, partnership idea, or team need."
+            />
+            <property 
+                name="linkedInProfileUrl" 
+                type="String" 
+                label="LinkedIn URL" 
+                default="https://www.linkedin.com/in/devliamjeong"
+            />
+            <property 
+                name="availabilityText" 
+                type="String" 
+                label="Availability Text" 
+                default="Currently accepting new projects and collaborations."
+            />
+            <property 
+                name="responseTime" 
+                type="String" 
+                label="Response Time" 
+                default="Typically responds within 1 business day."
+            />
+            <property 
+                name="locationText" 
+                type="String" 
+                label="Location Text" 
+                default="United States · Remote friendly"
+            />
+            <property 
+                name="statusLabel" 
+                type="String" 
+                label="Status Label" 
+                default="Open for new work"
+            />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -1,0 +1,50 @@
+<template>
+	<section class="projects-wrapper" aria-labelledby="projects-heading">
+		<div class="projects-container">
+			<div class="projects-header">
+				<p class="section-kicker">Featured work</p>
+				<h2 id="projects-heading" class="section-heading">Projects</h2>
+				<p class="projects-subtitle">Selected implementations with accessibility, design system leadership, and performance focus.</p>
+			</div>
+
+			<div class="projects-grid">
+				<template for:each={normalizedProjects} for:item="project">
+					<article key={project.id} class="projects-grid-item">
+						<div class="project-card-shell">
+							<div class="project-card-icon" aria-hidden="true">
+								<lightning-icon icon-name="utility:bookmark_alt" size="small" alternative-text=""></lightning-icon>
+							</div>
+							<c-portfolio-project
+								project={project}
+								status="summary"
+								selectable
+								onprojectselect={handleProjectSelect}
+							></c-portfolio-project>
+						</div>
+					</article>
+				</template>
+			</div>
+		</div>
+
+		<template lwc:if={showModal}>
+			<div class="modal-backdrop" onclick={closeModal} role="presentation"></div>
+			<div
+				class="modal"
+				role="dialog"
+				aria-modal="true"
+				aria-label="Project details"
+				onclick={stopClick}
+				onkeydown={handleModalKeydown}
+				tabindex="0"
+			>
+				<button class="modal-close" type="button" onclick={closeModal} aria-label="Close project details">
+					×
+				</button>
+				<c-portfolio-project
+					project={modalProject}
+					status="featured"
+				></c-portfolio-project>
+			</div>
+		</template>
+	</section>
+</template>

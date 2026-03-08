@@ -1,0 +1,159 @@
+/**
+ * Portfolio Projects (parent) styles
+ * Minimal container styling; child component handles most visuals.
+ */
+:host {
+	display: block;
+}
+
+.projects-wrapper {
+	padding: clamp(3rem, 6vw, 5rem) 0;
+	background: radial-gradient(circle at 20% 20%, rgba(0, 102, 204, 0.06), transparent 35%),
+		radial-gradient(circle at 80% 0%, rgba(16, 185, 129, 0.05), transparent 30%),
+		#f8fafc;
+}
+
+.projects-container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 1rem;
+}
+
+.projects-header {
+	text-align: center;
+	max-width: 720px;
+	margin: 0 auto 2.5rem;
+}
+
+.section-kicker {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 0.25rem 0.75rem;
+	background: #e6f0ff;
+	color: #0066cc;
+	border-radius: 999px;
+	font-size: 0.875rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	margin: 0 0 0.75rem 0;
+}
+
+.section-heading {
+	margin: 0;
+	font-size: clamp(1.6rem, 4vw, 2rem);
+	font-weight: 800;
+	letter-spacing: -0.01em;
+	color: #1f2937;
+}
+
+.projects-subtitle {
+	font-size: 1rem;
+	color: #4b5563;
+	margin: 0.5rem 0 0;
+	line-height: 1.6;
+}
+
+.projects-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 1.75rem;
+	justify-items: center;
+	align-items: stretch;
+}
+
+.projects-grid-item {
+	display: flex;
+	width: 100%;
+	max-width: 340px;
+}
+
+.project-card-shell {
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(135deg, #ffffff, #f7fbff);
+	border: 1px solid rgba(0, 0, 0, 0.05);
+	border-radius: 1rem;
+	box-shadow: 0 15px 35px rgba(15, 23, 42, 0.08);
+	padding: 0.9rem 0.9rem 0.65rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	transition:
+		transform 160ms ease,
+		box-shadow 160ms ease,
+		border-color 160ms ease;
+}
+
+.project-card-shell:hover {
+	transform: translateY(-6px);
+	box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+	border-color: rgba(0, 102, 204, 0.15);
+}
+
+.project-card-icon {
+	width: 2.85rem;
+	height: 2.85rem;
+	border-radius: 0.9rem;
+	background: linear-gradient(135deg, #0f52ba, #1d8cf8);
+	color: #ffffff;
+	display: grid;
+	place-items: center;
+	align-self: center;
+	box-shadow:
+		0 8px 20px rgba(15, 82, 186, 0.25),
+		inset 0 1px 2px rgba(255, 255, 255, 0.35);
+}
+
+.project-card-icon lightning-icon {
+	--sds-c-icon-color-foreground-default: #ffffff;
+	--sds-c-icon-color-foreground: #ffffff;
+	--sds-c-icon-color-background: transparent;
+	width: 1.25rem;
+	height: 1.25rem;
+}
+
+/* Modal */
+.modal-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(15, 23, 42, 0.35);
+	backdrop-filter: blur(4px);
+	z-index: 1000;
+}
+
+.modal {
+	position: fixed;
+	inset: 0;
+	margin: auto;
+	max-width: 1040px;
+	max-height: 90vh;
+	overflow: auto;
+	z-index: 1001;
+	padding: 1.5rem;
+	box-sizing: border-box;
+}
+
+.modal-close {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	background: #ffffff;
+	color: #111827;
+	border: 1px solid #e5e7eb;
+	border-radius: 999px;
+	width: 2.5rem;
+	height: 2.5rem;
+	font-size: 1.5rem;
+	font-weight: 700;
+	cursor: pointer;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.modal-close:focus,
+.modal-close:focus-visible {
+	outline: 2px solid #0066cc;
+	outline-offset: 2px;
+}

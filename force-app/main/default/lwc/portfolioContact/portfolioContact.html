@@ -1,0 +1,191 @@
+<template>
+    <!-- Page Header -->
+    <section class="page-header" aria-labelledby="page-heading">
+        <div class="section-container">
+            <p class="eyebrow">Let’s connect</p>
+            <h1 id="page-heading" class="page-title">{pageTitle}</h1>
+            <p class="page-subtitle">{pageSubtitle}</p>
+            <div class="cta-buttons">
+                <a 
+                    class="btn btn-primary" 
+                    href={linkedInProfileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Connect on LinkedIn
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" aria-labelledby="contact-heading">
+        <div class="section-container contact-layout">
+            <div class="contact-details">
+                <div class="section-heading">
+                    <span class="heading-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 11-3.8-11.4"/>
+                            <path d="M22 4L12 14.01l-3-3"/>
+                        </svg>
+                    </span>
+                    <div>
+                        <h2 id="contact-heading">Let’s build something great</h2>
+                        <p class="lead">{availabilityText}</p>
+                    </div>
+                </div>
+
+                <div class="detail-grid" role="list">
+                    <article class="detail-card" role="listitem">
+                        <div class="detail-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"/>
+                                <path d="M8 12l2.5 2.5L16 9"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="detail-label">Response time</p>
+                            <p class="detail-value">{responseTime}</p>
+                        </div>
+                    </article>
+
+                    <article class="detail-card" role="listitem">
+                        <div class="detail-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1118 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="detail-label">Location</p>
+                            <p class="detail-value">{locationText}</p>
+                        </div>
+                    </article>
+
+                    <article class="detail-card" role="listitem">
+                        <div class="detail-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/>
+                                <path d="M22 6l-10 7L2 6"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="detail-label">Direct email</p>
+                            <p class="detail-value">{recipientEmail}</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="form-card" aria-labelledby="form-heading">
+                <div class="form-header">
+                    <div>
+                        <p class="eyebrow">Send a message</p>
+                        <h3 id="form-heading">Share your project or idea</h3>
+                        <p class="form-subtitle">I read every message personally.</p>
+                    </div>
+                    <span class="status-chip">
+                        <span class="status-dot" aria-hidden="true"></span>
+                        {statusLabel}
+                    </span>
+                </div>
+
+                <form class="contact-form" onsubmit={handleSubmit} novalidate>
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label class="input-label" for="name">Full name</label>
+                            <div class={nameClass}>
+                                <input 
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    maxlength="120"
+                                    placeholder="Jane Doe"
+                                    value={form.name}
+                                    oninput={handleInputChange}
+                                    required
+                                />
+                                <template if:true={errors.name}>
+                                    <p class="input-error" role="alert">{errors.name}</p>
+                                </template>
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="input-label" for="email">Email</label>
+                            <div class={emailClass}>
+                                <input 
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    maxlength="150"
+                                    placeholder="you@example.com"
+                                    value={form.email}
+                                    oninput={handleInputChange}
+                                    required
+                                />
+                                <template if:true={errors.email}>
+                                    <p class="input-error" role="alert">{errors.email}</p>
+                                </template>
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="input-label" for="subject">Subject</label>
+                            <div class={subjectClass}>
+                                <input 
+                                    id="subject"
+                                    name="subject"
+                                    type="text"
+                                    maxlength="255"
+                                    placeholder="Project inquiry, mentorship, or collaboration"
+                                    value={form.subject}
+                                    oninput={handleInputChange}
+                                    required
+                                />
+                                <template if:true={errors.subject}>
+                                    <p class="input-error" role="alert">{errors.subject}</p>
+                                </template>
+                            </div>
+                        </div>
+
+                        <div class="form-field form-field--full">
+                            <label class="input-label" for="message">Message</label>
+                            <div class={messageClass}>
+                                <textarea 
+                                    id="message"
+                                    name="message"
+                                    maxlength="3900"
+                                    rows="5"
+                                    placeholder="Share context, goals, timelines, or links that help me understand how I can help."
+                                    value={form.message}
+                                    oninput={handleInputChange}
+                                    required
+                                ></textarea>
+                                <template if:true={errors.message}>
+                                    <p class="input-error" role="alert">{errors.message}</p>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-footer">
+                        <button 
+                            class="btn btn-primary" 
+                            type="submit"
+                            disabled={isSubmitting}
+                            aria-busy={isSubmitting}
+                        >
+                            {submitLabel}
+                        </button>
+                        <template if:true={statusMessage}>
+                            <p class={statusClass} role="status" aria-live="polite">
+                                {statusMessage}
+                            </p>
+                        </template>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</template>

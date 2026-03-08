@@ -1,0 +1,148 @@
+<template>
+    <!-- Page Header -->
+    <section class="page-header" aria-labelledby="page-heading">
+        <div class="section-container">
+            <h1 id="page-heading" class="page-title">Experience</h1>
+            <p class="page-subtitle">Professional journey and career achievements</p>
+        </div>
+    </section>
+
+    <!-- Experience Stats Section -->
+    <section class="stats-section" aria-labelledby="stats-heading">
+        <h2 id="stats-heading" class="visually-hidden">Career Statistics</h2>
+        <div class="section-container">
+            <div class="stats-grid">
+                <template for:each={experienceStats} for:item="stat">
+                    <div key={stat.id} class="stat-card">
+                        <span class="stat-value">{stat.value}</span>
+                        <span class="stat-label">{stat.label}</span>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- Professional Experience Section -->
+    <section class="experience-section" aria-labelledby="experience-heading">
+        <div class="section-container">
+            <h2 id="experience-heading" class="section-heading">
+                <span class="heading-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </span>
+                Professional Experience
+            </h2>
+            <div class="experience-timeline">
+                <template for:each={professionalExperience} for:item="exp">
+                    <article key={exp.id} class="experience-card">
+                        <div class="experience-card-header">
+                            <template lwc:if={exp.companyUrl}>
+                                <a 
+                                    href={exp.companyUrl}
+                                    class="company-logo company-logo--clickable"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={exp.companyLinkLabel}
+                                >
+                                    <template lwc:if={exp.logoUrl}>
+                                        <img src={exp.logoUrl} alt="" loading="lazy" />
+                                    </template>
+                                    <template lwc:else>
+                                        <span class="logo-placeholder">{exp.logoInitials}</span>
+                                    </template>
+                                </a>
+                            </template>
+                            <template lwc:else>
+                                <div class="company-logo" aria-hidden="true">
+                                    <template lwc:if={exp.logoUrl}>
+                                        <img src={exp.logoUrl} alt="" loading="lazy" />
+                                    </template>
+                                    <template lwc:else>
+                                        <span class="logo-placeholder">{exp.logoInitials}</span>
+                                    </template>
+                                </div>
+                            </template>
+                            <div class="company-info">
+                                <h3 class="role-name">{exp.role}</h3>
+                                <p class="company-name">{exp.company}</p>
+                                <div class="experience-meta">
+                                    <span class="employment-type">{exp.employmentType}</span>
+                                    <span class="meta-separator" aria-hidden="true">•</span>
+                                    <span class="experience-location">{exp.location}</span>
+                                </div>
+                                <p class="experience-period">
+                                    <time>{exp.startDate}</time>
+                                    <span aria-hidden="true">–</span>
+                                    <template lwc:if={exp.isCurrent}>
+                                        <span class="current-badge">Present</span>
+                                    </template>
+                                    <template lwc:else>
+                                        <time>{exp.endDate}</time>
+                                    </template>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="experience-card-body">
+                            <p class="experience-description">{exp.description}</p>
+                            
+                            <template lwc:if={exp.responsibilities.length}>
+                                <div class="responsibilities-container">
+                                    <h4 class="detail-label">Key Responsibilities</h4>
+                                    <ul class="responsibilities-list" role="list">
+                                        <template for:each={exp.responsibilities} for:item="resp">
+                                            <li key={resp} class="responsibility-item">{resp}</li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </template>
+                            
+                            <template lwc:if={exp.achievements.length}>
+                                <div class="achievements-container">
+                                    <h4 class="detail-label">Key Achievements</h4>
+                                    <ul class="achievements-list" role="list">
+                                        <template for:each={exp.achievements} for:item="achievement">
+                                            <li key={achievement} class="achievement-item">
+                                                <svg class="achievement-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                <span>{achievement}</span>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </template>
+                            
+                            <template lwc:if={exp.skills.length}>
+                                <div class="skills-container">
+                                    <h4 class="detail-label">Technologies &amp; Skills</h4>
+                                    <ul class="skills-list" role="list">
+                                        <template for:each={exp.skills} for:item="skill">
+                                            <li key={skill} class="skill-tag">{skill}</li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </template>
+                        </div>
+                    </article>
+                </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section" aria-labelledby="cta-heading">
+        <div class="section-container">
+            <h2 id="cta-heading" class="cta-title">Let's Work Together</h2>
+            <p class="cta-description">Looking for an experienced Salesforce developer? I'd love to hear about your project.</p>
+            <div class="cta-buttons">
+                <a href="/contact" class="btn btn-primary" onclick={handleNavigation} data-url="/contact">
+                    Get In Touch
+                </a>
+                <a href="/projects" class="btn btn-secondary" onclick={handleNavigation} data-url="/projects">
+                    View Projects
+                </a>
+            </div>
+        </div>
+    </section>
+</template>

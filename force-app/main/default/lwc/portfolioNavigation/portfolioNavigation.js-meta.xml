@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Portfolio Navigation</masterLabel>
+    <description>A WCAG 2.1 AA compliant navigation component for Experience Cloud portfolio sites.</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property 
+                name="brandName" 
+                type="String" 
+                label="Brand Name" 
+                description="The name displayed in the navigation header"
+                default="Liam Jeong"
+            />
+            <property 
+                name="navigationItems" 
+                type="String" 
+                label="Navigation Items (JSON)" 
+                description="JSON array of navigation items. Format: [{id, label, url}]"
+                default="[{&quot;id&quot;:&quot;home&quot;,&quot;label&quot;:&quot;Home&quot;,&quot;url&quot;:&quot;/&quot;},{&quot;id&quot;:&quot;experience&quot;,&quot;label&quot;:&quot;Experience&quot;,&quot;url&quot;:&quot;/experience&quot;},{&quot;id&quot;:&quot;projects&quot;,&quot;label&quot;:&quot;Projects&quot;,&quot;url&quot;:&quot;/projects&quot;},{&quot;id&quot;:&quot;education&quot;,&quot;label&quot;:&quot;Education&quot;,&quot;url&quot;:&quot;/education&quot;},{&quot;id&quot;:&quot;contact&quot;,&quot;label&quot;:&quot;Contact&quot;,&quot;url&quot;:&quot;/contact&quot;}]"
+            />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
