@@ -7,7 +7,7 @@ import { reduceErrors } from 'c/ldsUtils';
 import getEmployees from '@salesforce/apex/EmployeeRosterController.getEmployees';
 import getFieldOptions from '@salesforce/apex/EmployeeRosterController.getFieldOptions';
 import offboardEmployee from '@salesforce/apex/EmployeeRosterController.offboardEmployee';
-import saveRelationships from '@salesforce/apex/EmployeeRosterController.saveRelationships';
+import saveRelationships from '@salesforce/apex/EmployeeRosterController.saveRelationshipsJson';
 
 import LBL_TITLE from '@salesforce/label/c.EmployeeRoster_Title';
 import LBL_COL_NAME from '@salesforce/label/c.EmployeeRoster_ColName';
@@ -307,7 +307,17 @@ export default class EmployeeRoster extends NavigationMixin(LightningElement) {
     async handleSave() {
         this.isSaving = true;
         try {
-            await saveRelationships({ edits: Object.values(this.drafts) });
+            // Rebuild the payload as plain object literals. Draft values live on the reactive
+            // `drafts` field, so they are wrapped in LWC's reactive membrane; passing those
+            // proxies straight to Apex serializes each one to an empty object ({}), which the
+            // controller then skips (null acrId) — a silent, toast-says-success no-op save.
+            // Mapping to fresh literals detaches them so acrId/roles/family actually survive.
+            const edits = Object.values(this.drafts).map((draft) => ({
+                acrId: draft.acrId,
+                roles: draft.roles,
+                family: draft.family
+            }));
+            await saveRelationships({ editsJson: JSON.stringify(edits) });
             this.dispatchEvent(new ShowToastEvent({ title: LBL_SAVE_SUCCESS, variant: 'success' }));
             this.drafts = {};
             await refreshApex(this.wiredEmployees);

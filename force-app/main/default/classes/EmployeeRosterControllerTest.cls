@@ -134,6 +134,44 @@ private class EmployeeRosterControllerTest {
     }
 
     /**
+     * @description saveRelationshipsJson deserializes the JSON payload and applies the edits,
+     * matching the object-list path. This is the path the LWC uses.
+     */
+    @isTest
+    static void saveRelationshipsJsonDelegates() {
+        List<AccountContactRelation> relations = EmployeeRosterTestData.buildRoster(20);
+        Set<Id> acrIds = new Map<Id, AccountContactRelation>(relations).keySet();
+        List<Map<String, Object>> rows = new List<Map<String, Object>>();
+        for (AccountContactRelation acr : relations) {
+            rows.add(new Map<String, Object>{ 'acrId' => acr.Id, 'roles' => 'Employee', 'family' => 'ES' });
+        }
+
+        Test.startTest();
+        EmployeeRosterController.saveRelationshipsJson(JSON.serialize(rows));
+        Test.stopTest();
+
+        Assert.areEqual(20, [SELECT COUNT() FROM AccountContactRelation WHERE Id IN :acrIds AND Family__c = 'ES'],
+            'Controller should persist edits supplied as a JSON string');
+    }
+
+    /**
+     * @description saveRelationshipsJson surfaces a controlled error when the service fails.
+     */
+    @isTest
+    static void saveRelationshipsJsonSurfacesError() {
+        EmployeeRosterController.service =
+            (EmployeeRosterService) Test.createStub(EmployeeRosterService.class, new ThrowingServiceMock());
+        Test.startTest();
+        try {
+            EmployeeRosterController.saveRelationshipsJson('[{"acrId":null,"roles":"Employee","family":"EO"}]');
+            Assert.fail('saveRelationshipsJson should surface a controlled error');
+        } catch (AuraHandledException ex) {
+            Assert.isNotNull(ex, 'A controlled save error should be thrown');
+        }
+        Test.stopTest();
+    }
+
+    /**
      * @description Stub that fails every service call to exercise the controller fault paths.
      */
     private class ThrowingServiceMock implements System.StubProvider {

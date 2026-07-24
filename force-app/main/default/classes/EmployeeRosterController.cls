@@ -67,4 +67,24 @@ public with sharing class EmployeeRosterController {
             throw new AuraHandledException('Could not save your changes. Please try again or contact your admin.');
         }
     }
+
+    /**
+     * @description Saves inline edits supplied as a JSON string. Passing a serialized string
+     * (rather than a list of objects) sidesteps a serialization issue where reactive-proxy
+     * draft objects arrive at Apex as empty {} — the client's own JSON.stringify preserves the
+     * fields. This is the path the LWC uses for saves.
+     * @param editsJson JSON array of {acrId, roles, family} rows to update.
+     */
+    @AuraEnabled
+    public static void saveRelationshipsJson(String editsJson) {
+        try {
+            List<EmployeeRosterService.RosterEdit> edits =
+                (List<EmployeeRosterService.RosterEdit>) JSON.deserialize(
+                    editsJson, List<EmployeeRosterService.RosterEdit>.class);
+            service.saveRelationships(edits);
+        } catch (Exception ex) {
+            ExceptionLogger.log('EmployeeRosterController.saveRelationshipsJson', null, ex);
+            throw new AuraHandledException('Could not save your changes. Please try again or contact your admin.');
+        }
+    }
 }

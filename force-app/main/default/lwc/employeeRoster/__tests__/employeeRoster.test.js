@@ -2,7 +2,7 @@ import { createElement } from 'lwc';
 import EmployeeRoster from 'c/employeeRoster';
 import getEmployees from '@salesforce/apex/EmployeeRosterController.getEmployees';
 import offboardEmployee from '@salesforce/apex/EmployeeRosterController.offboardEmployee';
-import saveRelationships from '@salesforce/apex/EmployeeRosterController.saveRelationships';
+import saveRelationships from '@salesforce/apex/EmployeeRosterController.saveRelationshipsJson';
 
 // Imperative Apex is mocked; wire adapters (getEmployees, getObjectInfo, getPicklistValues) are
 // auto-mocked as test wire adapters by sfdx-lwc-jest.
@@ -12,7 +12,7 @@ jest.mock(
     { virtual: true }
 );
 jest.mock(
-    '@salesforce/apex/EmployeeRosterController.saveRelationships',
+    '@salesforce/apex/EmployeeRosterController.saveRelationshipsJson',
     () => ({ default: jest.fn() }),
     { virtual: true }
 );
@@ -75,8 +75,8 @@ describe('c-employee-roster', () => {
         getEmployees.emit(MOCK_ROWS);
         await flushPromises();
 
-        const familyCombobox = element.shadowRoot.querySelector('lightning-combobox[data-acr="0aa1"]');
-        familyCombobox.dispatchEvent(new CustomEvent('change', { detail: { value: 'EF' } }));
+        const rolesCombobox = element.shadowRoot.querySelector('lightning-combobox[data-acr="0aa1"]');
+        rolesCombobox.dispatchEvent(new CustomEvent('change', { detail: { value: 'Manager' } }));
         await flushPromises();
 
         const saveButton = element.shadowRoot.querySelector('lightning-button[variant="brand"]');
@@ -84,6 +84,16 @@ describe('c-employee-roster', () => {
         await flushPromises();
 
         expect(saveRelationships).toHaveBeenCalledTimes(1);
+        // Guard the regression where reactive-membrane proxies serialized to {} and Apex
+        // received null acrId. The edit is sent as a JSON string; parse it and verify the
+        // real acrId and the changed value survived.
+        const { editsJson } = saveRelationships.mock.calls[0][0];
+        const edits = JSON.parse(editsJson);
+        expect(edits).toHaveLength(1);
+        expect(edits[0]).toEqual(
+            expect.objectContaining({ acrId: '0aa1', roles: 'Manager' })
+        );
+        expect(edits[0].acrId).toBe('0aa1');
     });
 
     it('offboards a row through the controller', async () => {
