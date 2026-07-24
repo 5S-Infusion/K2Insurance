@@ -43,14 +43,20 @@ private class EmployeeRosterServiceTest {
         Id parentId = [SELECT AccountId FROM AccountContactRelation WHERE Id = :parentRelations[0].Id].AccountId;
         AccountContactRelation childAcr =
             EmployeeRosterTestData.addChildCompanyEmployee(parentId, 'Roster Child Co');
-        Id childId = [SELECT AccountId FROM AccountContactRelation WHERE Id = :childAcr.Id].AccountId;
+        AccountContactRelation childDetail =
+            [SELECT AccountId, ContactId FROM AccountContactRelation WHERE Id = :childAcr.Id];
+        Id childId = childDetail.AccountId;
+        // Indirect relationship of the sub-company employee back to the parent: it must NOT create
+        // a duplicate row in the parent roll-up (the roster shows direct employment only).
+        insert new AccountContactRelation(ContactId = childDetail.ContactId, AccountId = parentId);
 
         Test.startTest();
         List<EmployeeRosterService.EmployeeRow> parentRows = new EmployeeRosterService().getRoster(parentId);
         List<EmployeeRosterService.EmployeeRow> childRows = new EmployeeRosterService().getRoster(childId);
         Test.stopTest();
 
-        Assert.areEqual(4, parentRows.size(), 'Parent roster should roll up the sub-company employee');
+        Assert.areEqual(4, parentRows.size(),
+            'Parent roster should roll up the sub-company employee once, excluding the indirect relationship');
         Boolean sawChild = false;
         for (EmployeeRosterService.EmployeeRow row : parentRows) {
             Assert.isNotNull(row.company, 'Each row should carry its company name');

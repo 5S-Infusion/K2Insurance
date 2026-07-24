@@ -79,11 +79,14 @@ public with sharing class EmployeeRosterService {
     public List<EmployeeRow> getRoster(Id accountId) {
         Set<Id> accountIds = collectHierarchy(accountId);
         List<EmployeeRow> rows = new List<EmployeeRow>();
+        // IsDirect = true keeps the roster to people directly employed by each company; it also
+        // prevents a contact who was reparented to a sub-company (leaving an indirect relationship
+        // on the parent) from appearing twice in a parent's hierarchy roll-up.
         for (AccountContactRelation acr : [
             SELECT Id, ContactId, Contact.Name, Roles, Emp_Status__c, AccountId, Account.Name,
                    Family__c, Contact.Active_Insurance_Summary__c, Contact.Has_Active_Insurance__c
             FROM AccountContactRelation
-            WHERE AccountId IN :accountIds
+            WHERE AccountId IN :accountIds AND IsDirect = true
             WITH USER_MODE
             ORDER BY Account.Name, Contact.Name
         ]) {
