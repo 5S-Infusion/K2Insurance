@@ -465,6 +465,158 @@
         <value>Vision</value>
     </labels>
     <labels>
+        <fullName>InsuranceRenewal_Title</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - title</shortDescription>
+        <value>Renew Policy</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_CurrentTerm</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - current term label</shortDescription>
+        <value>Current Term</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_NewTerm</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - new term label</shortDescription>
+        <value>New Term</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_MembersCarry</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - members carry-over suffix</shortDescription>
+        <value>members will carry over</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_NewStartDate</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - new start date field</shortDescription>
+        <value>New Start Date</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_TermMonths</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - term months field</shortDescription>
+        <value>Term (months)</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_Provider</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - provider field</shortDescription>
+        <value>Insurance Provider</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_Premium</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - premium field</shortDescription>
+        <value>Premium</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_Deductible</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - deductible field</shortDescription>
+        <value>Deductible</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_PolicyNumber</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - policy number field</shortDescription>
+        <value>Policy Number</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_BuildingLimit</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - building coverage limit field</shortDescription>
+        <value>Building Coverage Limit</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_BPP</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - business personal property field</shortDescription>
+        <value>Business Personal Property</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_CarryMembers</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - carry members toggle</shortDescription>
+        <value>Carry active members to the new term</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_Renew</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - renew button</shortDescription>
+        <value>Renew Policy</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_Cancel</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - cancel button</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_SuccessTitle</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - success toast title</shortDescription>
+        <value>Policy renewed</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_SuccessMessage</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - success toast message</shortDescription>
+        <value>The new term was created.</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_ErrorTitle</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - error title</shortDescription>
+        <value>Renewal failed</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_LoadError</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - load error</shortDescription>
+        <value>Could not load the renewal form.</value>
+    </labels>
+    <labels>
         <fullName>EmployeeRoster_Inactive</fullName>
         <categories>EmployeeRoster</categories>
         <language>en_US</language>

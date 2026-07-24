@@ -1,0 +1,108 @@
+<template>
+    <div class="slds-p-around_medium form-root">
+        <template lwc:if={isSaving}>
+            <lightning-spinner alternative-text={label.renew} size="small"></lightning-spinner>
+        </template>
+
+        <template lwc:if={loadError}>
+            <c-flow-error-panel headline={label.loadError} message={loadError}></c-flow-error-panel>
+        </template>
+
+        <template lwc:if={hasContext}>
+            <!-- Header -->
+            <div class="slds-media slds-media_center slds-m-bottom_medium">
+                <div class="slds-media__figure">
+                    <lightning-icon icon-name="standard:contract" size="small"></lightning-icon>
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-text-heading_small header-name">{context.name}</h1>
+                    <p class="slds-text-body_small slds-text-color_weak">{context.recordTypeLabel}</p>
+                </div>
+            </div>
+
+            <!-- Current → New term -->
+            <div class="slds-grid slds-gutters_x-small slds-grid_vertical-align-center term-compare slds-m-bottom_medium">
+                <div class="slds-col term-box">
+                    <p class="term-label">{label.currentTerm}</p>
+                    <p class="term-dates">
+                        <lightning-formatted-date-time value={context.currentStartDate} year="numeric"
+                            month="short" day="2-digit"></lightning-formatted-date-time>
+                        <span class="term-sep"> – </span>
+                        <lightning-formatted-date-time value={context.currentEndDate} year="numeric"
+                            month="short" day="2-digit"></lightning-formatted-date-time>
+                    </p>
+                </div>
+                <div class="slds-col slds-grow-none term-arrow">
+                    <lightning-icon icon-name="utility:forward" size="x-small"
+                        alternative-text="to"></lightning-icon>
+                </div>
+                <div class="slds-col term-box term-box_new">
+                    <p class="term-label">{label.newTerm}</p>
+                    <p class="term-dates">
+                        <lightning-formatted-date-time value={startDate} year="numeric"
+                            month="short" day="2-digit"></lightning-formatted-date-time>
+                        <span class="term-sep"> – </span>
+                        <template lwc:if={newEndDate}>
+                            <lightning-formatted-date-time value={newEndDate} year="numeric"
+                                month="short" day="2-digit"></lightning-formatted-date-time>
+                        </template>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Member preview -->
+            <template lwc:if={hasMembers}>
+                <div class="slds-box slds-box_xx-small slds-grid slds-grid_vertical-align-center member-callout slds-m-bottom_medium">
+                    <lightning-icon icon-name="standard:groups" size="x-small"></lightning-icon>
+                    <span class="slds-m-left_x-small">{memberMessage}</span>
+                </div>
+            </template>
+
+            <!-- Inputs -->
+            <div class="slds-form slds-form_stacked">
+                <lightning-input type="date" label={label.newStartDate} value={startDate}
+                    onchange={handleStartDate} class="slds-m-bottom_x-small"></lightning-input>
+                <lightning-input type="number" label={label.termMonths} value={termMonths} min="0"
+                    onchange={handleTermMonths} class="slds-m-bottom_x-small"></lightning-input>
+                <lightning-record-picker label={label.provider} object-api-name="Account"
+                    value={providerId} onchange={handleProviderChange}
+                    class="slds-m-bottom_x-small"></lightning-record-picker>
+                <lightning-input type="number" formatter="currency" step="0.01" label={label.premium}
+                    value={premium} onchange={handlePremium} class="slds-m-bottom_x-small"></lightning-input>
+                <lightning-input type="number" formatter="currency" step="0.01" label={label.deductible}
+                    value={deductible} onchange={handleDeductible} class="slds-m-bottom_x-small"></lightning-input>
+                <lightning-input type="text" label={label.policyNumber} value={policyName}
+                    onchange={handlePolicyNumber} class="slds-m-bottom_x-small"></lightning-input>
+
+                <template lwc:if={isAutoHome}>
+                    <lightning-input type="number" formatter="currency" step="0.01"
+                        label={label.buildingLimit} value={buildingCoverageLimit}
+                        onchange={handleBuildingLimit} class="slds-m-bottom_x-small"></lightning-input>
+                    <lightning-input type="number" formatter="currency" step="0.01" label={label.bpp}
+                        value={businessPersonalProperty} onchange={handleBpp}
+                        class="slds-m-bottom_x-small"></lightning-input>
+                </template>
+
+                <template lwc:if={isGroupHealth}>
+                    <lightning-input type="toggle" label={label.carryMembers} checked={carryMembers}
+                        onchange={handleCarryToggle} class="slds-m-vertical_x-small"></lightning-input>
+                </template>
+            </div>
+
+            <!-- Errors -->
+            <template lwc:if={hasErrors}>
+                <div class="slds-m-top_small">
+                    <c-flow-error-panel headline={label.errorTitle} message={errorMessage}></c-flow-error-panel>
+                </div>
+            </template>
+
+            <!-- Footer -->
+            <div class="slds-grid slds-grid_align-end slds-m-top_medium">
+                <lightning-button label={label.cancel} onclick={handleCancel} disabled={isSaving}
+                    class="slds-m-right_x-small"></lightning-button>
+                <lightning-button variant="brand" label={label.renew} icon-name="utility:refresh"
+                    onclick={handleRenew} disabled={isSaving}></lightning-button>
+            </div>
+        </template>
+    </div>
+</template>

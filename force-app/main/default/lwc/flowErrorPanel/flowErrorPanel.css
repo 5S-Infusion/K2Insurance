@@ -1,0 +1,33 @@
+.panel {
+    border-radius: 0.25rem;
+}
+
+.headline {
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.next-action {
+    color: #ffffff;
+}
+
+.detail {
+    background-color: rgba(255, 255, 255, 0.92);
+    border-radius: 0.25rem;
+}
+
+.detail-label {
+    text-transform: uppercase;
+    letter-spacing: 0.0625rem;
+    color: #706e6b;
+}
+
+.detail-text {
+    color: #3e3e3c;
+    word-break: break-word;
+}
+
+.context {
+    color: #ffffff;
+    opacity: 0.9;
+}

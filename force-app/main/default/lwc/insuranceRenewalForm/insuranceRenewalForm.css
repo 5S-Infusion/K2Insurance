@@ -1,0 +1,47 @@
+.form-root {
+    max-width: 34rem;
+}
+
+.header-name {
+    font-weight: 700;
+}
+
+.term-compare {
+    text-align: center;
+}
+
+.term-box {
+    border: 1px solid var(--slds-g-color-border-base-1, #dddbda);
+    border-radius: var(--slds-g-radius-border-2, 0.25rem);
+    padding: var(--slds-g-spacing-2, 0.5rem);
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+}
+
+.term-box_new {
+    border-color: var(--slds-g-color-brand-base-50, #1b96ff);
+    background-color: var(--slds-g-color-brand-base-95, #eef4ff);
+}
+
+.term-label {
+    font-size: var(--slds-g-font-size-1, 0.75rem);
+    text-transform: uppercase;
+    letter-spacing: 0.0625rem;
+    color: var(--slds-g-color-neutral-base-30, #706e6b);
+}
+
+.term-dates {
+    font-weight: 700;
+}
+
+.term-sep {
+    color: var(--slds-g-color-neutral-base-50, #939393);
+}
+
+.term-arrow {
+    color: var(--slds-g-color-neutral-base-50, #939393);
+}
+
+.member-callout {
+    background-color: var(--slds-g-color-brand-base-95, #eef4ff);
+    border-color: var(--slds-g-color-brand-base-80, #aacbff);
+}

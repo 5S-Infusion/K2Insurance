@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Flow Error Panel</masterLabel>
+    <description>High-visibility SLDS error panel for Flow screen fault paths.</description>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="headline" type="String" label="Headline"
+                description="Bold headline stating what went wrong."/>
+            <property name="nextAction" type="String" label="Next Action"
+                description="The specific next action the user should take."/>
+            <property name="message" type="String" label="Fault Detail"
+                description="The raw fault detail, e.g. {!$Flow.FaultMessage}."/>
+            <property name="context" type="String" label="Record Context"
+                description="Optional record name/Id and the step that failed."/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

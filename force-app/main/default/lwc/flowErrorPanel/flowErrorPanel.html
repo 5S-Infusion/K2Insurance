@@ -1,0 +1,28 @@
+<template>
+    <div class="slds-box slds-box_x-small slds-theme_error slds-m-around_x-small panel" role="alert">
+        <div class="slds-media slds-media_center">
+            <div class="slds-media__figure">
+                <lightning-icon
+                    icon-name="utility:error"
+                    variant="inverse"
+                    size="small"
+                    alternative-text="Error"></lightning-icon>
+            </div>
+            <div class="slds-media__body">
+                <h2 class="slds-text-heading_small headline">{resolvedHeadline}</h2>
+                <p class="slds-m-top_xx-small next-action">{resolvedNextAction}</p>
+            </div>
+        </div>
+
+        <template lwc:if={message}>
+            <div class="slds-box slds-box_xx-small detail slds-m-top_x-small">
+                <p class="slds-text-title detail-label">What happened</p>
+                <p class="slds-text-body_small detail-text">{message}</p>
+            </div>
+        </template>
+
+        <template lwc:if={context}>
+            <p class="slds-text-body_small context slds-m-top_x-small">{context}</p>
+        </template>
+    </div>
+</template>
