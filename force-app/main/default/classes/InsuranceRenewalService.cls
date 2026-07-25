@@ -168,8 +168,13 @@ public with sharing class InsuranceRenewalService {
             oldToNew.put(oldOrdered[i].Id, newPolicies[i].Id);
         }
 
-        Map<Id, Integer> carriedByOldId = carryMembers(oldById, oldToNew, requestByOldId);
+        // Capture the members to carry BEFORE the old policies (and their coverage) are inactivated.
+        List<ContactInsuranceAssociation__c> membersToCarry = captureActiveMembers(requestByOldId);
+        inactivateOldMembers(membersToCarry);
         inactivateOld(oldById.values());
+        // Create the new-term coverage LAST — after every old-policy inactivation cascade has run —
+        // so no downstream automation can flip the new coverage inactive.
+        Map<Id, Integer> carriedByOldId = createNewMembers(membersToCarry, oldToNew, requestByOldId);
 
         List<RenewalResult> results = new List<RenewalResult>();
         for (RenewalRequest req : requests) {
@@ -260,17 +265,13 @@ public with sharing class InsuranceRenewalService {
     }
 
     /**
-     * @description Carries each source policy's active coverage junctions onto its new-term policy
-     * (copying Contact and M/D/V), unless the request opted out. Members offboarded mid-term are
-     * already inactive and so are naturally excluded.
-     * @param oldById The source policies by id (for the outgoing term end date).
-     * @param oldToNew Source policy id → new policy id.
-     * @param requestByOldId Source policy id → request (for dates and the carry-members flag).
-     * @return Count of members carried, by source policy id.
+     * @description Reads the active coverage members of the source policies (unless the request
+     * opted out), before those policies are inactivated. Members offboarded mid-term are already
+     * inactive and so are naturally excluded.
+     * @param requestByOldId Source policy id → request (for the carry-members flag).
+     * @return The active coverage junctions to carry.
      */
-    private Map<Id, Integer> carryMembers(
-        Map<Id, Insurance__c> oldById, Map<Id, Id> oldToNew, Map<Id, RenewalRequest> requestByOldId
-    ) {
+    private List<ContactInsuranceAssociation__c> captureActiveMembers(Map<Id, RenewalRequest> requestByOldId) {
         Set<Id> carryOldIds = new Set<Id>();
         for (Id oldId : requestByOldId.keySet()) {
             RenewalRequest req = requestByOldId.get(oldId);
@@ -278,24 +279,51 @@ public with sharing class InsuranceRenewalService {
                 carryOldIds.add(oldId);
             }
         }
-        Map<Id, Integer> carriedByOldId = new Map<Id, Integer>();
         if (carryOldIds.isEmpty()) {
-            return carriedByOldId;
+            return new List<ContactInsuranceAssociation__c>();
         }
-
-        List<ContactInsuranceAssociation__c> oldCias = [
+        return [
             SELECT Id, Contact__c, Insurance__c, Medical__c, Dental__c, Vision__c
             FROM ContactInsuranceAssociation__c
             WHERE Insurance__c IN :carryOldIds AND Active__c = true
             WITH USER_MODE
         ];
-        if (oldCias.isEmpty()) {
+    }
+
+    /**
+     * @description Inactivates the captured (outgoing-term) coverage members. Deterministic, so it
+     * does not depend on the Group Health status orchestration to cascade.
+     * @param members The outgoing coverage junctions.
+     */
+    private void inactivateOldMembers(List<ContactInsuranceAssociation__c> members) {
+        if (members.isEmpty()) {
+            return;
+        }
+        List<ContactInsuranceAssociation__c> updates = new List<ContactInsuranceAssociation__c>();
+        for (ContactInsuranceAssociation__c cia : members) {
+            updates.add(new ContactInsuranceAssociation__c(Id = cia.Id, Active__c = false));
+        }
+        Database.update(updates, AccessLevel.SYSTEM_MODE);
+    }
+
+    /**
+     * @description Clones the captured members onto their new-term policies (Contact and M/D/V
+     * copied, active, new dates). Called last so no downstream cascade flips the new rows inactive.
+     * @param members The coverage junctions captured from the source policies.
+     * @param oldToNew Source policy id → new policy id.
+     * @param requestByOldId Source policy id → request (for the new-term dates).
+     * @return Count of members carried, by source policy id.
+     */
+    private Map<Id, Integer> createNewMembers(
+        List<ContactInsuranceAssociation__c> members, Map<Id, Id> oldToNew,
+        Map<Id, RenewalRequest> requestByOldId
+    ) {
+        Map<Id, Integer> carriedByOldId = new Map<Id, Integer>();
+        if (members.isEmpty()) {
             return carriedByOldId;
         }
-
         List<ContactInsuranceAssociation__c> newCias = new List<ContactInsuranceAssociation__c>();
-        List<ContactInsuranceAssociation__c> oldToInactivate = new List<ContactInsuranceAssociation__c>();
-        for (ContactInsuranceAssociation__c cia : oldCias) {
+        for (ContactInsuranceAssociation__c cia : members) {
             RenewalRequest req = requestByOldId.get(cia.Insurance__c);
             Date newStart = req.startDate;
             Date newEnd = (newStart != null && req.termMonths != null)
@@ -308,16 +336,10 @@ public with sharing class InsuranceRenewalService {
             copy.Insurance_End_Date__c = newEnd;
             newCias.add(copy);
 
-            cia.Active__c = false;
-            cia.Insurance_End_Date__c = oldById.get(cia.Insurance__c).Insurance_End_Date__c;
-            oldToInactivate.add(cia);
-
             Integer running = carriedByOldId.get(cia.Insurance__c);
             carriedByOldId.put(cia.Insurance__c, running == null ? 1 : running + 1);
         }
-
         Database.insert(newCias, AccessLevel.SYSTEM_MODE);
-        Database.update(oldToInactivate, AccessLevel.SYSTEM_MODE);
         return carriedByOldId;
     }
 

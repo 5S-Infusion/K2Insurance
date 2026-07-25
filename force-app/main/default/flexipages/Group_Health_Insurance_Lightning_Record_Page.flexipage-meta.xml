@@ -21,6 +21,16 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.RecordTypeId</fieldItem>
+                <identifier>RecordRecordTypeIdField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.Subagent__c</fieldItem>
                 <identifier>RecordSubagent_cField2</identifier>
             </fieldInstance>
@@ -94,6 +104,9 @@
                 <componentInstanceProperties>
                     <name>actionNames</name>
                     <valueList>
+                        <valueListItems>
+                            <value>Insurance__c.Renewal</value>
+                        </valueListItems>
                         <valueListItems>
                             <value>Edit</value>
                         </valueListItems>

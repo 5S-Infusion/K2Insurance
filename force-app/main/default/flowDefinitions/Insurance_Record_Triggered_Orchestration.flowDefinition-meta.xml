@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FlowDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
-    <activeVersionNumber>10</activeVersionNumber>
+    <activeVersionNumber>11</activeVersionNumber>
     <description>2026-07-18: Added Recalculate_Contacts stage to recompute related Contact active-insurance fields on policy Status change (all record types); existing Group Health inactivation path unchanged.</description>
     <masterLabel>Insurance | After Save Record-Triggered Orchestration</masterLabel>
 </FlowDefinition>

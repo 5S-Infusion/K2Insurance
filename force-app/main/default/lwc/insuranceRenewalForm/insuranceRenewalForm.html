@@ -26,10 +26,10 @@
                     <p class="term-label">{label.currentTerm}</p>
                     <p class="term-dates">
                         <lightning-formatted-date-time value={context.currentStartDate} year="numeric"
-                            month="short" day="2-digit"></lightning-formatted-date-time>
+                            month="short" day="2-digit" time-zone="UTC"></lightning-formatted-date-time>
                         <span class="term-sep"> – </span>
                         <lightning-formatted-date-time value={context.currentEndDate} year="numeric"
-                            month="short" day="2-digit"></lightning-formatted-date-time>
+                            month="short" day="2-digit" time-zone="UTC"></lightning-formatted-date-time>
                     </p>
                 </div>
                 <div class="slds-col slds-grow-none term-arrow">
@@ -40,11 +40,11 @@
                     <p class="term-label">{label.newTerm}</p>
                     <p class="term-dates">
                         <lightning-formatted-date-time value={startDate} year="numeric"
-                            month="short" day="2-digit"></lightning-formatted-date-time>
+                            month="short" day="2-digit" time-zone="UTC"></lightning-formatted-date-time>
                         <span class="term-sep"> – </span>
                         <template lwc:if={newEndDate}>
                             <lightning-formatted-date-time value={newEndDate} year="numeric"
-                                month="short" day="2-digit"></lightning-formatted-date-time>
+                                month="short" day="2-digit" time-zone="UTC"></lightning-formatted-date-time>
                         </template>
                     </p>
                 </div>

@@ -41,4 +41,24 @@ public with sharing class InsuranceRenewalController {
             throw new AuraHandledException('Could not renew this policy. Please try again or contact your admin.');
         }
     }
+
+    /**
+     * @description Renews a policy from a JSON payload. This is the path the LWC uses: an object
+     * built on a reactive LWC field can serialize to an empty {} across the Apex boundary, so the
+     * form sends JSON.stringify(request) and the request is deserialized here.
+     * @param requestJson The renewal request serialized as JSON.
+     * @return The renewal result — the new policy id and how many members carried over.
+     */
+    @AuraEnabled
+    public static InsuranceRenewalService.RenewalResult renewJson(String requestJson) {
+        InsuranceRenewalService.RenewalRequest request;
+        try {
+            request = (InsuranceRenewalService.RenewalRequest) JSON.deserialize(
+                requestJson, InsuranceRenewalService.RenewalRequest.class
+            );
+        } catch (Exception ex) {
+            throw new AuraHandledException('The renewal form sent an unreadable request. Please try again.');
+        }
+        return renew(request);
+    }
 }

@@ -1,7 +1,7 @@
 import { createElement } from 'lwc';
 import InsuranceRenewalForm from 'c/insuranceRenewalForm';
 import getRenewalContext from '@salesforce/apex/InsuranceRenewalController.getRenewalContext';
-import renew from '@salesforce/apex/InsuranceRenewalController.renew';
+import renew from '@salesforce/apex/InsuranceRenewalController.renewJson';
 
 jest.mock(
     '@salesforce/apex/InsuranceRenewalController.getRenewalContext',
@@ -12,7 +12,7 @@ jest.mock(
     { virtual: true }
 );
 jest.mock(
-    '@salesforce/apex/InsuranceRenewalController.renew',
+    '@salesforce/apex/InsuranceRenewalController.renewJson',
     () => ({ default: jest.fn() }),
     { virtual: true }
 );
@@ -75,7 +75,7 @@ describe('c-insurance-renewal-form', () => {
         await flush();
 
         expect(renew).toHaveBeenCalledTimes(1);
-        const passed = renew.mock.calls[0][0].request;
+        const passed = JSON.parse(renew.mock.calls[0][0].requestJson);
         expect(passed.originalInsuranceId).toBe('a0m00000000001');
         expect(passed.termMonths).toBe(12);
     });

@@ -55,6 +55,9 @@
                     <name>actionNames</name>
                     <valueList>
                         <valueListItems>
+                            <value>Insurance__c.Renewal</value>
+                        </valueListItems>
+                        <valueListItems>
                             <value>Edit</value>
                         </valueListItems>
                         <valueListItems>

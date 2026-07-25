@@ -4,7 +4,7 @@ import { CloseActionScreenEvent } from 'lightning/actions';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { reduceErrors } from 'c/ldsUtils';
 import getRenewalContext from '@salesforce/apex/InsuranceRenewalController.getRenewalContext';
-import renew from '@salesforce/apex/InsuranceRenewalController.renew';
+import renew from '@salesforce/apex/InsuranceRenewalController.renewJson';
 
 import LBL_TITLE from '@salesforce/label/c.InsuranceRenewal_Title';
 import LBL_CURRENT_TERM from '@salesforce/label/c.InsuranceRenewal_CurrentTerm';
@@ -28,6 +28,15 @@ import LBL_LOAD_ERROR from '@salesforce/label/c.InsuranceRenewal_LoadError';
 
 const GROUP_HEALTH = 'Group_Health';
 const AUTO_HOME = 'Auto_Home_Insurance';
+
+/**
+ * @description Coerces a form input value to a number, treating blank as null.
+ * @param value The raw input value.
+ * @return The numeric value, or null when blank.
+ */
+function toNumber(value) {
+    return value === '' || value === null || value === undefined ? null : Number(value);
+}
 
 /**
  * @description Record-page action that renews an insurance policy of any record type: shows the
@@ -121,9 +130,11 @@ export default class InsuranceRenewalForm extends NavigationMixin(LightningEleme
         if (!this.startDate || !this.termMonths) {
             return null;
         }
-        const start = new Date(`${this.startDate}T00:00:00`);
-        start.setMonth(start.getMonth() + Number(this.termMonths));
-        return start.toISOString().slice(0, 10);
+        // Compute purely from the date parts in UTC so it matches the UTC-rendered display and
+        // never shifts a day across the local timezone boundary.
+        const [year, month, day] = this.startDate.split('-').map(Number);
+        const end = new Date(Date.UTC(year, month - 1 + Number(this.termMonths), day));
+        return end.toISOString().slice(0, 10);
     }
 
     get hasErrors() {
@@ -166,19 +177,22 @@ export default class InsuranceRenewalForm extends NavigationMixin(LightningEleme
         this.isSaving = true;
         this.errors = [];
         try {
+            // Build a fresh plain literal and send it as a JSON string: an object read off a
+            // reactive field can reach Apex as an empty {} (all fields null). JSON.stringify
+            // preserves the values across the boundary.
             const request = {
-                originalInsuranceId: this.recordId,
-                startDate: this.startDate,
-                termMonths: this.termMonths ? Number(this.termMonths) : null,
-                providerId: this.providerId,
-                premium: this.premium,
-                deductible: this.deductible,
-                policyName: this.policyName,
+                originalInsuranceId: this.context ? this.context.recordId : this.recordId,
+                startDate: this.startDate || null,
+                termMonths: toNumber(this.termMonths),
+                providerId: this.providerId || null,
+                premium: toNumber(this.premium),
+                deductible: toNumber(this.deductible),
+                policyName: this.policyName || null,
                 carryMembers: this.carryMembers,
-                buildingCoverageLimit: this.buildingCoverageLimit,
-                businessPersonalProperty: this.businessPersonalProperty
+                buildingCoverageLimit: toNumber(this.buildingCoverageLimit),
+                businessPersonalProperty: toNumber(this.businessPersonalProperty)
             };
-            const result = await renew({ request });
+            const result = await renew({ requestJson: JSON.stringify(request) });
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: LBL_SUCCESS_TITLE,

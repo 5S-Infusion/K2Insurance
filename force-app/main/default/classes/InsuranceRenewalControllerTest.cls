@@ -72,6 +72,39 @@ private class InsuranceRenewalControllerTest {
     }
 
     /**
+     * @description renewJson deserializes the JSON payload and renews (the path the LWC uses).
+     */
+    @isTest
+    static void renewJsonDelegates() {
+        Insurance__c policy = buildActivePolicy('Other', 12);
+
+        Test.startTest();
+        InsuranceRenewalService.RenewalResult result =
+            InsuranceRenewalController.renewJson(JSON.serialize(request(policy.Id)));
+        Test.stopTest();
+
+        Assert.isNotNull(result.newInsuranceId, 'Controller renews from a JSON payload');
+        Assert.areEqual('Inactive',
+            [SELECT Status__c FROM Insurance__c WHERE Id = :policy.Id].Status__c,
+            'The source policy is inactivated');
+    }
+
+    /**
+     * @description renewJson surfaces a controlled error for an unreadable payload.
+     */
+    @isTest
+    static void renewJsonInvalidPayloadThrows() {
+        Test.startTest();
+        try {
+            InsuranceRenewalController.renewJson('not valid json');
+            Assert.fail('Expected an AuraHandledException for an unreadable payload');
+        } catch (AuraHandledException ex) {
+            Assert.isNotNull(ex, 'A controlled error is thrown');
+        }
+        Test.stopTest();
+    }
+
+    /**
      * @description A RenewalException from the service surfaces as a controlled AuraHandledException.
      */
     @isTest
