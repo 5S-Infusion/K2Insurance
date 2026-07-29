@@ -169,7 +169,7 @@ public with sharing class EmployeeRosterService {
             WITH USER_MODE
         ];
         for (ContactInsuranceAssociation__c cia : coverageToEnd) {
-            cia.Insurance_End_Date__c = effectiveEnd;
+            cia.Coverage_End_Date__c = effectiveEnd;
             cia.Active__c = false;
         }
 

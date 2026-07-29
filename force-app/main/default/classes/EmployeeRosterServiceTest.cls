@@ -99,13 +99,13 @@ private class EmployeeRosterServiceTest {
         Assert.areEqual(25, inactiveContacts, 'Every contact should be marked Inactive');
 
         List<ContactInsuranceAssociation__c> coverage = [
-            SELECT Active__c, Insurance_End_Date__c
+            SELECT Active__c, Coverage_End_Date__c
             FROM ContactInsuranceAssociation__c WHERE Contact__c IN :contactIds
         ];
         Assert.areEqual(25, coverage.size(), 'Coverage junctions should still exist');
         for (ContactInsuranceAssociation__c cia : coverage) {
             Assert.isFalse(cia.Active__c, 'Coverage should be inactivated');
-            Assert.areEqual(endDate, cia.Insurance_End_Date__c, 'Coverage end date should be stamped');
+            Assert.areEqual(endDate, cia.Coverage_End_Date__c, 'Coverage end date should be stamped');
         }
     }
 
@@ -123,7 +123,7 @@ private class EmployeeRosterServiceTest {
 
         Integer endedToday = [
             SELECT COUNT() FROM ContactInsuranceAssociation__c
-            WHERE Insurance_End_Date__c = :Date.today() AND Active__c = false
+            WHERE Coverage_End_Date__c = :Date.today() AND Active__c = false
         ];
         Assert.areEqual(20, endedToday, 'A null end date should default to today');
     }

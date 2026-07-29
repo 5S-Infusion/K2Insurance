@@ -333,8 +333,8 @@ public with sharing class InsuranceRenewalService {
             ContactInsuranceAssociation__c copy = cia.clone(false, false, false, false);
             copy.Insurance__c = oldToNew.get(cia.Insurance__c);
             copy.Active__c = true;
-            copy.Insurance_Start_Date__c = newStart;
-            copy.Insurance_End_Date__c = newEnd;
+            copy.Coverage_Start_Date__c = newStart;
+            copy.Coverage_End_Date__c = newEnd;
             newCias.add(copy);
 
             Integer running = carriedByOldId.get(cia.Insurance__c);

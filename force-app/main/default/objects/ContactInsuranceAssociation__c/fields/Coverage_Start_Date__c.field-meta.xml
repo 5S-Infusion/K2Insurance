@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Insurance_Start_Date__c</fullName>
+    <fullName>Coverage_Start_Date__c</fullName>
     <description>Stores the date this policyholder’s coverage begins under the related group health insurance policy. This date applies to the Contact–Insurance association record, not the parent insurance policy as a whole.</description>
     <inlineHelpText>Enter the date this person’s coverage starts under this group health policy. This is the member-level effective date, which may differ from the parent insurance policy start date.</inlineHelpText>
     <label>Coverage Start Date</label>

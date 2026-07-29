@@ -8,14 +8,14 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>varContactInsuranceAssociationRecord.Insurance_Start_Date__c</assignToReference>
+            <assignToReference>varContactInsuranceAssociationRecord.Coverage_Start_Date__c</assignToReference>
             <operator>Assign</operator>
             <value>
                 <elementReference>Get_The_Insurance.Insurance_Start_Date__c</elementReference>
             </value>
         </assignmentItems>
         <assignmentItems>
-            <assignToReference>varContactInsuranceAssociationRecord.Insurance_End_Date__c</assignToReference>
+            <assignToReference>varContactInsuranceAssociationRecord.Coverage_End_Date__c</assignToReference>
             <operator>Assign</operator>
             <value>
                 <elementReference>Get_The_Insurance.Insurance_End_Date__c</elementReference>

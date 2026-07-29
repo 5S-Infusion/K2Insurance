@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Insurance_End_Date__c</fullName>
+    <fullName>Coverage_End_Date__c</fullName>
     <description>Stores the date this policyholder’s coverage ends under the related group health insurance policy. Use this when the member cancels, terminates, or otherwise stops coverage, even if the parent group policy remains active.</description>
     <inlineHelpText>Enter the date this person’s coverage ends under this group health policy. Leave blank if coverage is still active. This is the member-level termination/cancellation date, not the parent insurance policy end date.</inlineHelpText>
     <label>Coverage End Date</label>

@@ -122,7 +122,7 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Insurance_Start_Date__c</fieldItem>
+                <fieldItem>Record.Coverage_Start_Date__c</fieldItem>
                 <identifier>RecordInsurance_Start_Date_cField</identifier>
             </fieldInstance>
         </itemInstances>
@@ -132,7 +132,7 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Insurance_End_Date__c</fieldItem>
+                <fieldItem>Record.Coverage_End_Date__c</fieldItem>
                 <identifier>RecordInsurance_End_Date_cField</identifier>
             </fieldInstance>
         </itemInstances>
