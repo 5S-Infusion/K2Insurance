@@ -29,6 +29,36 @@
         </rules>
     </decisions>
     <decisions>
+        <description>Gate the Inactivation stage here rather than on the stage/step conditions. A stage whose completion condition is never met leaves its orchestration instance parked In Progress forever, so the stage must only be entered when there is actually work to do.</description>
+        <name>Is_Policy_No_Longer_Active</name>
+        <label>Is Policy No Longer Active?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>No — Still In Force</defaultConnectorLabel>
+        <rules>
+            <name>Is_Policy_No_Longer_Active_Yes</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Inactive</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Cancelled</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Inactivation</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
         <description>Is custom label &quot;TRIGGER_ACTIVATION&quot; &quot;ON&quot; or &quot;OFF&quot;, AND the per-object Automation Setting active.</description>
         <name>Is_TRIGGER_ACTIVATED</name>
         <label>Is TRIGGER ACTIVATED?</label>
@@ -68,12 +98,12 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Inactivation</targetReference>
+                <targetReference>Is_Policy_No_Longer_Active</targetReference>
             </connector>
             <label>Group Health</label>
         </rules>
     </decisions>
-    <description>2026-07-18: Added Recalculate_Contacts stage to recompute related Contact active-insurance fields on policy Status change (all record types); existing Group Health inactivation path unchanged.</description>
+    <description>2026-07-28: Inactivation now also fires on Status Cancelled (was Inactive only), and is gated by the new Is_Policy_No_Longer_Active decision instead of stage-exit/step-entry conditions — the old conditions left an orchestration instance parked In Progress on every Group Health save because the stage completion condition was never met.</description>
     <environments>Default</environments>
     <formulas>
         <name>fxStatusChanged</name>
@@ -88,13 +118,6 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <exitConditionLogic>and</exitConditionLogic>
-        <exitConditions>
-            <leftValueReference>$Record.Status__c</leftValueReference>
-            <operator>EqualTo</operator>
-            <rightValue>
-                <stringValue>Inactive</stringValue>
-            </rightValue>
-        </exitConditions>
         <stageSteps>
             <name>Inactivate_All_Related_ContactInsuranceAssociation</name>
             <actionName>Inactivate_All_Related_ContactInsuranceAssociation_Records</actionName>
@@ -102,13 +125,6 @@
             <canAssigneeEdit>false</canAssigneeEdit>
             <debugSimulateStep>false</debugSimulateStep>
             <entryConditionLogic>and</entryConditionLogic>
-            <entryConditions>
-                <leftValueReference>$Record.Status__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Inactive</stringValue>
-                </rightValue>
-            </entryConditions>
             <exitConditionLogic>and</exitConditionLogic>
             <inputParameters>
                 <name>varInsuranceId</name>

@@ -25,6 +25,7 @@
             <targetReference>Iterate_ContactInsuranceAssociation_Records</targetReference>
         </connector>
     </assignments>
+    <description>2026-07-28: Get now filters Active__c = true so only records that actually need flipping are updated (idempotent, no DML when nothing to do); added a fault path on the Get per the fault-handling standard. Inactivates every ContactInsuranceAssociation linked to the given Insurance. Called by Insurance_Record_Triggered_Orchestration when a Group Health policy Status becomes Inactive or Cancelled.</description>
     <environments>Default</environments>
     <interviewLabel>Inactivate All Related ContactInsuranceAssociation Records {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Inactivate All Related ContactInsuranceAssociation Records</label>
@@ -70,12 +71,22 @@
         <connector>
             <targetReference>Iterate_ContactInsuranceAssociation_Records</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Log_the_Get_Error</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Insurance__c</field>
             <operator>EqualTo</operator>
             <value>
                 <elementReference>varInsuranceId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Active__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
@@ -142,6 +153,49 @@
             <name>varSourceStep</name>
             <value>
                 <stringValue>Update_the_Related_ContactInsuranceAssociation_Records</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Log_the_Get_Error</name>
+        <label>Log the Get Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>Log_Error</flowName>
+        <inputAssignments>
+            <name>varContext</name>
+            <value>
+                <stringValue>Failed to query the related ContactInsuranceAssociation records when the Insurance went Inactive or Cancelled.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varErrorMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varRecordId</name>
+            <value>
+                <elementReference>varInsuranceId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSeverity</name>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceFlow</name>
+            <value>
+                <stringValue>Inactivate_All_Related_ContactInsuranceAssociation_Records</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceStep</name>
+            <value>
+                <stringValue>Get_All_Related_ContactInsuranceAssociation_Records</stringValue>
             </value>
         </inputAssignments>
     </subflows>

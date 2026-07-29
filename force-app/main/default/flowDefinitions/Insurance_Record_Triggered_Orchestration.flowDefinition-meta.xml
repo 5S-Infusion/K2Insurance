@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FlowDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
-    <activeVersionNumber>11</activeVersionNumber>
-    <description>2026-07-18: Added Recalculate_Contacts stage to recompute related Contact active-insurance fields on policy Status change (all record types); existing Group Health inactivation path unchanged.</description>
+    <activeVersionNumber>12</activeVersionNumber>
+    <description>2026-07-28: Inactivation now also fires on Status Cancelled (was Inactive only), and is gated by the new Is_Policy_No_Longer_Active decision instead of stage-exit/step-entry conditions — the old conditions left an orchestration instance parked In Progress on every Group Health save because the stage completion condition was never met.</description>
     <masterLabel>Insurance | After Save Record-Triggered Orchestration</masterLabel>
 </FlowDefinition>
