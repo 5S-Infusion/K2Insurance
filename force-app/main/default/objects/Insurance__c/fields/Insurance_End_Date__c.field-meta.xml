@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Insurance_End_Date__c</fullName>
-    <description>Automatically calculates the date when the insurance policy coverage ends based on the start date and contract term.</description>
+    <description>Automatically calculates the last day of insurance policy coverage from the start date and contract term. This is the final covered day, not the day after: a 1/1/2025 start with a 12-month term ends 12/31/2025. Blank when the term is blank or zero (e.g. Life policies with no fixed end).</description>
     <formula>IF(
   AND(
     NOT(ISBLANK( Insurance_Start_Date__c )),
-    NOT(ISBLANK(Insurance_Term_months__c))
+    Insurance_Term_months__c &gt; 0
   ),
-  ADDMONTHS(Insurance_Start_Date__c, Insurance_Term_months__c),
+  ADDMONTHS(Insurance_Start_Date__c, Insurance_Term_months__c) - 1,
   NULL
 )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <inlineHelpText>This date is derived from the Insurance Start Date and Contract Term (Months). It represents the final day the insurance policy remains valid.</inlineHelpText>
+    <inlineHelpText>Derived from the Insurance Start Date and Contract Term (Months). This is the final day the policy remains valid — a policy starting 1/1/2025 with a 12-month term ends 12/31/2025. Blank if no term is entered.</inlineHelpText>
     <label>Insurance End Date</label>
     <required>false</required>
     <trackHistory>false</trackHistory>

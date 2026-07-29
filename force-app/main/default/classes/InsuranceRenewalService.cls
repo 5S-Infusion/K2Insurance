@@ -326,8 +326,9 @@ public with sharing class InsuranceRenewalService {
         for (ContactInsuranceAssociation__c cia : members) {
             RenewalRequest req = requestByOldId.get(cia.Insurance__c);
             Date newStart = req.startDate;
-            Date newEnd = (newStart != null && req.termMonths != null)
-                ? newStart.addMonths(req.termMonths) : null;
+            // Mirrors the Insurance_End_Date__c formula: the last covered day, not the day after.
+            Date newEnd = (newStart != null && req.termMonths != null && req.termMonths > 0)
+                ? newStart.addMonths(req.termMonths).addDays(-1) : null;
 
             ContactInsuranceAssociation__c copy = cia.clone(false, false, false, false);
             copy.Insurance__c = oldToNew.get(cia.Insurance__c);
