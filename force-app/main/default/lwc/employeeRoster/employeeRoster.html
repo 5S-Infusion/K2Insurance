@@ -29,159 +29,85 @@
         <div class="slds-var-p-horizontal_small">
             <template lwc:if={hasEmployees}>
                 <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped roster-table">
-                    <colgroup>
-                        <col data-col="name" />
-                        <col data-col="company" />
-                        <col data-col="empStatus" class="col-status" />
-                        <col data-col="roles" />
-                        <col data-col="plans" class="col-plans" />
-                        <col data-col="family" />
-                        <col data-col="activeIns" class="col-activeins" />
-                        <col data-col="actions" class="col-actions" />
-                    </colgroup>
                     <thead>
                         <tr class="slds-line-height_reset">
-                            <th scope="col" data-field="name" onclick={handleSort} class="roster-sortable">
-                                <div class="slds-truncate">
-                                    {label.colName}
-                                    <template lwc:if={isSortedByName}>
-                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
-                                    </template>
-                                </div>
-                                <span class="roster-resizer" data-field="name"
-                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
-                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
-                            </th>
-                            <th scope="col" data-field="company" onclick={handleSort} class="roster-sortable">
-                                <div class="slds-truncate">
-                                    {label.colCompany}
-                                    <template lwc:if={isSortedByCompany}>
-                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
-                                    </template>
-                                </div>
-                                <span class="roster-resizer" data-field="company"
-                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
-                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
-                            </th>
-                            <th scope="col" data-field="empStatus" onclick={handleSort} class="roster-sortable">
-                                <div class="slds-truncate">
-                                    {label.colEmpStatus}
-                                    <template lwc:if={isSortedByEmpStatus}>
-                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
-                                    </template>
-                                </div>
-                                <span class="roster-resizer" data-field="empStatus"
-                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
-                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
-                            </th>
-                            <th scope="col" data-field="roles" onclick={handleSort} class="roster-sortable">
-                                <div class="slds-truncate">
-                                    {label.colRoles}
-                                    <template lwc:if={isSortedByRoles}>
-                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
-                                    </template>
-                                </div>
-                                <span class="roster-resizer" data-field="roles"
-                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
-                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
-                            </th>
-                            <th scope="col" data-field="plans" onclick={handleSort} class="roster-sortable">
-                                <div class="slds-truncate">
-                                    {label.colPlans}
-                                    <template lwc:if={isSortedByPlans}>
-                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
-                                    </template>
-                                </div>
-                                <span class="roster-resizer" data-field="plans"
-                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
-                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
-                            </th>
-                            <th scope="col" data-field="family" onclick={handleSort} class="roster-sortable">
-                                <div class="slds-truncate">
-                                    {label.colFamily}
-                                    <template lwc:if={isSortedByFamily}>
-                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
-                                    </template>
-                                </div>
-                                <span class="roster-resizer" data-field="family"
-                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
-                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
-                            </th>
-                            <th scope="col" data-field="activeIns" onclick={handleSort} class="roster-sortable">
-                                <div class="slds-truncate">
-                                    {label.colActiveIns}
-                                    <template lwc:if={isSortedByActiveIns}>
-                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
-                                    </template>
-                                </div>
-                                <span class="roster-resizer" data-field="activeIns"
-                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
-                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
-                            </th>
+                            <template for:each={columns} for:item="col">
+                                <th
+                                    key={col.field}
+                                    scope="col"
+                                    draggable="true"
+                                    data-field={col.field}
+                                    class={col.headerClass}
+                                    style={col.style}
+                                    onclick={handleSort}
+                                    ondragstart={handleDragStart}
+                                    ondragover={handleDragOver}
+                                    ondrop={handleDrop}
+                                    ondragend={handleDragEnd}>
+                                    <div class="slds-truncate">
+                                        <span class="roster-grip" aria-hidden="true"></span>
+                                        {col.label}
+                                        <template lwc:if={col.showSortIcon}>
+                                            <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
+                                        </template>
+                                    </div>
+                                    <span class="roster-resizer" data-field={col.field} draggable="false"
+                                        onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
+                                        onpointerup={handleResizeEnd} onclick={stopEvent}></span>
+                                </th>
+                            </template>
                             <th scope="col" class="roster-actions-col"><div class="slds-truncate">&nbsp;</div></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <template for:each={rows} for:item="row">
+                        <template for:each={displayRows} for:item="row">
                             <tr key={row.acrId} class="slds-hint-parent">
-                                <th scope="row" data-label={label.colName}>
-                                    <div class="slds-truncate">
-                                        <a href={row.contactUrl}>{row.name}</a>
-                                    </div>
-                                </th>
-                                <td data-label={label.colCompany}>
-                                    <div class="slds-truncate">
-                                        <a href={row.companyUrl} title={row.company}>{row.company}</a>
-                                    </div>
-                                </td>
-                                <td data-label={label.colEmpStatus}>
-                                    <template lwc:if={row.empStatus}>
-                                        <lightning-icon
-                                            icon-name="utility:check"
-                                            size="x-small"
-                                            variant="success"
-                                            alternative-text={label.active}
-                                            title={label.active}></lightning-icon>
-                                    </template>
-                                    <template lwc:else>
-                                        <span class="slds-badge slds-text-color_weak">{label.inactive}</span>
-                                    </template>
-                                </td>
-                                <td data-label={label.colRoles}>
-                                    <lightning-combobox
-                                        variant="label-hidden"
-                                        label={label.colRoles}
-                                        value={row.roles}
-                                        placeholder={label.rolesPlaceholder}
-                                        options={rolesOptions}
-                                        data-acr={row.acrId}
-                                        onchange={handleRolesChange}></lightning-combobox>
-                                </td>
-                                <td data-label={label.colPlans}>
-                                    <div class="roster-plans">
-                                        <template for:each={row.planBadges} for:item="badge">
-                                            <span key={badge.key} class={badge.cssClass} title={badge.title}>{badge.label}</span>
+                                <template for:each={row.cells} for:item="cell">
+                                    <td key={cell.key} data-label={cell.label}>
+                                        <template lwc:if={cell.isLink}>
+                                            <div class="slds-truncate">
+                                                <a href={cell.url} title={cell.text}>{cell.text}</a>
+                                            </div>
                                         </template>
-                                    </div>
-                                </td>
-                                <td data-label={label.colFamily}>
-                                    <lightning-combobox
-                                        variant="label-hidden"
-                                        label={label.colFamily}
-                                        value={row.family}
-                                        placeholder={label.familyPlaceholder}
-                                        options={familyOptions}
-                                        data-acr={row.acrId}
-                                        onchange={handleFamilyChange}></lightning-combobox>
-                                </td>
-                                <td data-label={label.colActiveIns}>
-                                    <template lwc:if={row.activeIns}>
-                                        <lightning-icon
-                                            icon-name="utility:check"
-                                            size="x-small"
-                                            alternative-text={label.colActiveIns}></lightning-icon>
-                                    </template>
-                                </td>
+                                        <template lwc:elseif={cell.isEmpStatus}>
+                                            <template lwc:if={cell.isActiveEmp}>
+                                                <lightning-icon
+                                                    icon-name="utility:check"
+                                                    size="x-small"
+                                                    variant="success"
+                                                    alternative-text={label.active}
+                                                    title={label.active}></lightning-icon>
+                                            </template>
+                                            <template lwc:else>
+                                                <span class="slds-badge slds-text-color_weak">{label.inactive}</span>
+                                            </template>
+                                        </template>
+                                        <template lwc:elseif={cell.isCombo}>
+                                            <lightning-combobox
+                                                variant="label-hidden"
+                                                label={cell.label}
+                                                value={cell.value}
+                                                placeholder={cell.placeholder}
+                                                options={cell.options}
+                                                data-acr={cell.acrId}
+                                                data-field={cell.field}
+                                                onchange={handleComboChange}></lightning-combobox>
+                                        </template>
+                                        <template lwc:elseif={cell.isPlans}>
+                                            <div class="roster-plans">
+                                                <template for:each={cell.badges} for:item="badge">
+                                                    <span key={badge.key} class={badge.cssClass} title={badge.title}>{badge.label}</span>
+                                                </template>
+                                            </div>
+                                        </template>
+                                        <template lwc:elseif={cell.isChecked}>
+                                            <lightning-icon
+                                                icon-name="utility:check"
+                                                size="x-small"
+                                                alternative-text={cell.label}></lightning-icon>
+                                        </template>
+                                    </td>
+                                </template>
                                 <td class="roster-actions-col">
                                     <div class="slds-grid slds-grid_align-end slds-grid_vertical-align-center">
                                         <lightning-button-icon

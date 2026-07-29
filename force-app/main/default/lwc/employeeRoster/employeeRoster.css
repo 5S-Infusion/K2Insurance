@@ -2,7 +2,7 @@
     cursor: pointer;
 }
 
-/* Fixed layout so column widths follow the colgroup and stay put while resizing. */
+/* Fixed layout so column widths follow the header row and stay put while resizing. */
 .roster-table {
     table-layout: fixed;
     width: 100%;
@@ -19,17 +19,47 @@
 }
 
 /* Initial column widths; a drag on the resize handle overrides these inline. */
-.col-status {
+.roster-table th.col-status {
     width: 6rem;
 }
-.col-plans {
+.roster-table th.col-plans {
     width: 8rem;
 }
-.col-activeins {
+.roster-table th.col-activeins {
     width: 5.5rem;
 }
-.col-actions {
-    width: 12rem;
+
+/* Reorderable headers: grab cursor, a grip that appears on hover, and a blue insertion line
+   showing which edge the dragged column will land on. */
+.roster-draggable {
+    cursor: grab;
+}
+.roster-draggable:active {
+    cursor: grabbing;
+}
+.roster-dragging {
+    opacity: 0.4;
+}
+.roster-grip {
+    display: inline-block;
+    width: 7px;
+    height: 11px;
+    margin-right: 0.25rem;
+    vertical-align: -1px;
+    background-image: radial-gradient(#b0adab 1px, transparent 1px);
+    background-size: 4px 4px;
+    background-position: 0 1px;
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out;
+}
+.roster-draggable:hover .roster-grip {
+    opacity: 1;
+}
+.roster-drop-before {
+    box-shadow: inset 3px 0 0 0 #1b96ff;
+}
+.roster-drop-after {
+    box-shadow: inset -3px 0 0 0 #1b96ff;
 }
 
 /* Drag handle at the right edge of each resizable header, with a visible grip. */

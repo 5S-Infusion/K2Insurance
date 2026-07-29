@@ -43,6 +43,27 @@ const PLAN_META = {
 
 /** @description Minimum column width (px) enforced while dragging a resize handle. */
 const MIN_COLUMN_WIDTH = 60;
+
+/**
+ * @description The reorderable columns, in their default left-to-right order. `labelKey` points at
+ * an entry of the component's `label` map and `colClass` carries the column's default width. The
+ * trailing actions column (open-relationship + Offboard) is not listed here — it is rendered
+ * separately and stays pinned to the right edge.
+ */
+const COLUMN_DEFS = [
+    { field: 'name', labelKey: 'colName', colClass: '' },
+    { field: 'company', labelKey: 'colCompany', colClass: '' },
+    { field: 'empStatus', labelKey: 'colEmpStatus', colClass: 'col-status' },
+    { field: 'roles', labelKey: 'colRoles', colClass: '' },
+    { field: 'plans', labelKey: 'colPlans', colClass: 'col-plans' },
+    { field: 'family', labelKey: 'colFamily', colClass: '' },
+    { field: 'activeIns', labelKey: 'colActiveIns', colClass: 'col-activeins' }
+];
+
+const COLUMN_BY_FIELD = COLUMN_DEFS.reduce((map, def) => Object.assign(map, { [def.field]: def }), {});
+
+/** @description Header classes marking the column a drop would land before/after. */
+const DROP_MARKERS = ['roster-drop-before', 'roster-drop-after'];
 import LBL_NEW_CONTACT from '@salesforce/label/c.EmployeeRoster_NewContact';
 import LBL_ADD_RELATIONSHIP from '@salesforce/label/c.EmployeeRoster_AddRelationship';
 import LBL_SUCCESS_TITLE from '@salesforce/label/c.EmployeeRoster_SuccessTitle';
@@ -94,7 +115,17 @@ export default class EmployeeRoster extends NavigationMixin(LightningElement) {
     sortedBy = 'name';
     sortedDirection = 'asc';
     drafts = {};
+
+    /** @description Current left-to-right column order; reassigned when a header is dropped. */
+    columnOrder = COLUMN_DEFS.map((def) => def.field);
+    /** @description Committed column widths (px) keyed by field, so a resize survives re-renders. */
+    widths = {};
+
     resizeState;
+    dragField;
+    dropTarget;
+    dropAfter;
+    justDragged = false;
 
     showModal = false;
     selectedAcrId;
@@ -175,29 +206,85 @@ export default class EmployeeRoster extends NavigationMixin(LightningElement) {
         return this.sortedDirection === 'asc' ? 'utility:arrowup' : 'utility:arrowdown';
     }
 
-    get isSortedByName() {
-        return this.sortedBy === 'name';
+    /**
+     * @description The header descriptors in the user's current column order.
+     * @return One descriptor per reorderable column.
+     */
+    get columns() {
+        return this.columnOrder.map((field) => {
+            const def = COLUMN_BY_FIELD[field];
+            const width = this.widths[field];
+            return {
+                field,
+                label: this.label[def.labelKey],
+                headerClass: `roster-sortable roster-draggable ${def.colClass}`.trim(),
+                style: width ? `width: ${width}px;` : '',
+                showSortIcon: this.sortedBy === field
+            };
+        });
     }
-    get isSortedByCompany() {
-        return this.sortedBy === 'company';
+
+    /**
+     * @description The roster rows with their cells laid out in the current column order, so a
+     * reorder of `columnOrder` moves the header and its data together.
+     * @return The rows, each carrying a `cells` array parallel to `columns`.
+     */
+    get displayRows() {
+        return this.rows.map((row) => ({ ...row, cells: this.buildCells(row) }));
     }
-    get isSortedByEmpStatus() {
-        return this.sortedBy === 'empStatus';
-    }
-    get isSortedByRoles() {
-        return this.sortedBy === 'roles';
-    }
-    get isSortedByPlans() {
-        return this.sortedBy === 'plans';
-    }
-    get isSortedByFamily() {
-        return this.sortedBy === 'family';
-    }
-    get isSortedByActiveIns() {
-        return this.sortedBy === 'activeIns';
+
+    /**
+     * @description Builds one display descriptor per column for a single roster row.
+     * @param row The roster row to render.
+     * @return The row's cells, ordered to match `columnOrder`.
+     */
+    buildCells(row) {
+        return this.columnOrder.map((field) => {
+            const cell = {
+                key: `${row.acrId}-${field}`,
+                field,
+                acrId: row.acrId,
+                label: this.label[COLUMN_BY_FIELD[field].labelKey]
+            };
+            switch (field) {
+                case 'name':
+                    return { ...cell, isLink: true, url: row.contactUrl, text: row.name };
+                case 'company':
+                    return { ...cell, isLink: true, url: row.companyUrl, text: row.company };
+                case 'empStatus':
+                    return { ...cell, isEmpStatus: true, isActiveEmp: !!row.empStatus };
+                case 'roles':
+                    return {
+                        ...cell,
+                        isCombo: true,
+                        value: row.roles,
+                        options: this.rolesOptions,
+                        placeholder: this.label.rolesPlaceholder
+                    };
+                case 'plans':
+                    return { ...cell, isPlans: true, badges: row.planBadges };
+                case 'family':
+                    return {
+                        ...cell,
+                        isCombo: true,
+                        value: row.family,
+                        options: this.familyOptions,
+                        placeholder: this.label.familyPlaceholder
+                    };
+                case 'activeIns':
+                    return { ...cell, isChecked: !!row.activeIns };
+                default:
+                    return cell;
+            }
+        });
     }
 
     handleSort(event) {
+        // A native drag ends with a click on the header it started from in some browsers; ignore
+        // it so repositioning a column does not also flip its sort direction.
+        if (this.justDragged) {
+            return;
+        }
         const field = event.currentTarget.dataset.field;
         if (this.sortedBy === field) {
             this.sortedDirection = this.sortedDirection === 'asc' ? 'desc' : 'asc';
@@ -239,16 +326,19 @@ export default class EmployeeRoster extends NavigationMixin(LightningElement) {
         event.preventDefault();
         event.stopPropagation();
         const field = event.currentTarget.dataset.field;
-        const col = this.getColumn(field);
-        if (!col) {
+        const header = this.getHeader(field);
+        if (!header) {
             return;
         }
         event.currentTarget.setPointerCapture(event.pointerId);
-        this.resizeState = { field, startX: event.clientX, startWidth: col.getBoundingClientRect().width };
+        const startWidth = this.widths[field] || header.getBoundingClientRect().width;
+        this.resizeState = { field, startX: event.clientX, startWidth, width: startWidth };
     }
 
     /**
-     * @description Widens or narrows the active column as the resize handle is dragged.
+     * @description Widens or narrows the active column as the resize handle is dragged. The width
+     * is written straight to the header element so the drag stays smooth; it is only committed to
+     * reactive state (and so re-rendered) on pointerup.
      * @param event The pointermove event on the resize handle.
      */
     handleResizeMove(event) {
@@ -257,17 +347,129 @@ export default class EmployeeRoster extends NavigationMixin(LightningElement) {
         }
         const delta = event.clientX - this.resizeState.startX;
         const width = Math.max(MIN_COLUMN_WIDTH, this.resizeState.startWidth + delta);
-        const col = this.getColumn(this.resizeState.field);
-        if (col) {
-            col.style.width = `${width}px`;
+        const header = this.getHeader(this.resizeState.field);
+        if (header) {
+            header.style.width = `${width}px`;
+            this.resizeState.width = width;
         }
     }
 
     /**
-     * @description Ends the active column resize.
+     * @description Ends the active column resize and remembers the new width, so it survives the
+     * re-render that a sort, an inline edit or a column reorder triggers.
      */
     handleResizeEnd() {
+        if (this.resizeState) {
+            this.widths = { ...this.widths, [this.resizeState.field]: this.resizeState.width };
+        }
         this.resizeState = undefined;
+    }
+
+    /**
+     * @description Starts dragging a column header to a new position. Suppressed while a resize is
+     * in flight so grabbing the resize handle never turns into a column move.
+     * @param event The dragstart event on the header.
+     */
+    handleDragStart(event) {
+        if (this.resizeState) {
+            event.preventDefault();
+            return;
+        }
+        const header = event.currentTarget;
+        this.dragField = header.dataset.field;
+        event.dataTransfer.effectAllowed = 'move';
+        // Firefox refuses to start a drag unless some data is attached.
+        event.dataTransfer.setData('text/plain', this.dragField);
+        // Deferred so the browser snapshots the drag image before the header dims.
+        // eslint-disable-next-line @lwc/lwc/no-async-operation
+        setTimeout(() => header.classList.add('roster-dragging'), 0);
+    }
+
+    /**
+     * @description Marks the edge the dragged column would land on and allows the drop. Which side
+     * of the hovered header the pointer is on decides whether the column lands before or after it.
+     * @param event The dragover event on a header.
+     */
+    handleDragOver(event) {
+        if (!this.dragField) {
+            return;
+        }
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+        const header = event.currentTarget;
+        const field = header.dataset.field;
+        if (field === this.dragField) {
+            this.clearDropMarkers();
+            this.dropTarget = undefined;
+            return;
+        }
+        const rect = header.getBoundingClientRect();
+        const after = event.clientX > rect.left + rect.width / 2;
+        if (this.dropTarget === field && this.dropAfter === after) {
+            return;
+        }
+        this.dropTarget = field;
+        this.dropAfter = after;
+        this.clearDropMarkers();
+        header.classList.add(after ? 'roster-drop-after' : 'roster-drop-before');
+    }
+
+    /**
+     * @description Drops the dragged column at the marked position.
+     * @param event The drop event on a header.
+     */
+    handleDrop(event) {
+        if (!this.dragField) {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        const field = event.currentTarget.dataset.field;
+        const rect = event.currentTarget.getBoundingClientRect();
+        this.moveColumn(this.dragField, field, event.clientX > rect.left + rect.width / 2);
+    }
+
+    /**
+     * @description Clears the drag decorations once the pointer is released, wherever it landed.
+     */
+    handleDragEnd() {
+        this.clearDropMarkers();
+        const dragging = this.template.querySelector('th.roster-dragging');
+        if (dragging) {
+            dragging.classList.remove('roster-dragging');
+        }
+        this.dragField = undefined;
+        this.dropTarget = undefined;
+        this.justDragged = true;
+        // eslint-disable-next-line @lwc/lwc/no-async-operation
+        setTimeout(() => {
+            this.justDragged = false;
+        }, 0);
+    }
+
+    /**
+     * @description Repositions a column relative to another one.
+     * @param field The column being moved.
+     * @param targetField The column it was dropped on.
+     * @param after Whether it lands to the right of the target.
+     */
+    moveColumn(field, targetField, after) {
+        if (!field || !targetField || field === targetField) {
+            return;
+        }
+        const order = this.columnOrder.filter((item) => item !== field);
+        const index = order.indexOf(targetField);
+        if (index < 0) {
+            return;
+        }
+        order.splice(after ? index + 1 : index, 0, field);
+        this.columnOrder = order;
+    }
+
+    clearDropMarkers() {
+        this.template.querySelectorAll('th.roster-draggable').forEach((header) => {
+            header.classList.remove(...DROP_MARKERS);
+        });
     }
 
     /**
@@ -278,16 +480,12 @@ export default class EmployeeRoster extends NavigationMixin(LightningElement) {
         event.stopPropagation();
     }
 
-    getColumn(field) {
-        return this.template.querySelector(`col[data-col="${field}"]`);
+    getHeader(field) {
+        return this.template.querySelector(`th[data-field="${field}"]`);
     }
 
-    handleRolesChange(event) {
-        this.applyEdit(event.target.dataset.acr, 'roles', event.detail.value);
-    }
-
-    handleFamilyChange(event) {
-        this.applyEdit(event.target.dataset.acr, 'family', event.detail.value);
+    handleComboChange(event) {
+        this.applyEdit(event.target.dataset.acr, event.target.dataset.field, event.detail.value);
     }
 
     applyEdit(acrId, field, value) {
