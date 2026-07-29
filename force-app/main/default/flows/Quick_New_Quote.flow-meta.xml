@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <apiVersion>64.0</apiVersion>
+    <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
         <name>Carry_Defaults</name>
         <label>Carry Original Defaults</label>
-        <locationX>400</locationX>
-        <locationY>650</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <assignmentItems>
             <assignToReference>varPremiumDefault</assignToReference>
             <operator>Assign</operator>
@@ -44,14 +44,14 @@
     <decisions>
         <name>Auto_Sync_Decision</name>
         <label>Auto Sync?</label>
-        <locationX>176</locationX>
-        <locationY>1050</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <defaultConnector>
             <targetReference>Done</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>No</defaultConnectorLabel>
         <rules>
-            <name>Sync</name>
+            <name>Auto_Sync_Decision_Yes</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>AutoSync</leftValueReference>
@@ -63,20 +63,21 @@
             <connector>
                 <targetReference>Sync_Quote</targetReference>
             </connector>
-            <label>Sync</label>
+            <label>Yes</label>
         </rules>
     </decisions>
     <decisions>
         <name>Same_Provider</name>
         <label>Same Provider?</label>
-        <locationX>176</locationX>
-        <locationY>550</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <defaultConnector>
+            <isGoTo>true</isGoTo>
             <targetReference>Quote_Details</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Provider Changed</defaultConnectorLabel>
         <rules>
-            <name>Same</name>
+            <name>Same_Provider_Yes</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>ServiceProvider</leftValueReference>
@@ -91,7 +92,7 @@
             <label>Same</label>
         </rules>
     </decisions>
-    <description>Quick Action on a Renewal Opportunity. Two-screen: (1) pick the Service Provider; (2) edit quote details. Premium and Policy Number default from the Original Insurance only when the provider is unchanged (blank when the provider is switched) — set via a decision + variables so no conditional field is read by a formula.</description>
+    <description>2026-07-24: Quick Action on a Renewal Opportunity. Two-screen: (1) pick Service Provider; (2) edit quote details, then create the Quote and optionally start sync (SyncedQuoteId). Premium/Policy Number default from the Original Insurance only when the provider is unchanged. Every Get/Create/Update has a Fault path to a shared handler that publishes an Exception__e via the Log_Error subflow (durable, survives rollback) and shows a high-visibility error screen with the fault detail — stop-and-notify so a partial quote never looks synced. Auto-Layout, API 67.</description>
     <dynamicChoiceSets>
         <name>Choice_PaymentFrequency</name>
         <dataType>Picklist</dataType>
@@ -163,7 +164,7 @@
     <processMetadataValues>
         <name>CanvasMode</name>
         <value>
-            <stringValue>FREE_FORM_CANVAS</stringValue>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
         </value>
     </processMetadataValues>
     <processMetadataValues>
@@ -176,11 +177,15 @@
     <recordCreates>
         <name>Create_Quote</name>
         <label>Create Quote</label>
-        <locationX>176</locationX>
-        <locationY>950</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <connector>
             <targetReference>Auto_Sync_Decision</targetReference>
         </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Log_Fault</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>ContactId</field>
             <value>
@@ -283,12 +288,15 @@
     <recordLookups>
         <name>Get_Opportunity</name>
         <label>Get Opportunity</label>
-        <locationX>176</locationX>
-        <locationY>100</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Get_Original_Insurance</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Log_Fault</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
@@ -307,12 +315,16 @@
     <recordLookups>
         <name>Get_Original_Insurance</name>
         <label>Get Original Insurance</label>
-        <locationX>176</locationX>
-        <locationY>200</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Get_Standard_Pricebook</targetReference>
         </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Log_Fault</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
@@ -340,12 +352,16 @@
     <recordLookups>
         <name>Get_Provider_RecordType</name>
         <label>Get Provider Record Type</label>
-        <locationX>176</locationX>
-        <locationY>400</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Pick_Provider</targetReference>
         </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Log_Fault</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>SobjectType</field>
@@ -369,12 +385,16 @@
     <recordLookups>
         <name>Get_Selected_Provider</name>
         <label>Get Selected Provider</label>
-        <locationX>176</locationX>
-        <locationY>850</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Create_Quote</targetReference>
         </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Log_Fault</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
@@ -392,12 +412,16 @@
     <recordLookups>
         <name>Get_Standard_Pricebook</name>
         <label>Get Standard Pricebook</label>
-        <locationX>176</locationX>
-        <locationY>300</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Get_Provider_RecordType</targetReference>
         </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Log_Fault</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>IsStandard</field>
@@ -414,11 +438,15 @@
     <recordUpdates>
         <name>Accept_Quote</name>
         <label>Set Quote Accepted</label>
-        <locationX>400</locationX>
-        <locationY>1250</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <connector>
             <targetReference>Done_Synced</targetReference>
         </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Log_Fault</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
@@ -438,11 +466,15 @@
     <recordUpdates>
         <name>Sync_Quote</name>
         <label>Sync Quote</label>
-        <locationX>400</locationX>
-        <locationY>1150</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <connector>
             <targetReference>Accept_Quote</targetReference>
         </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Log_Fault</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
@@ -460,58 +492,10 @@
         <object>Opportunity</object>
     </recordUpdates>
     <screens>
-        <name>Done</name>
-        <label>Done</label>
-        <locationX>50</locationX>
-        <locationY>1150</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <fields>
-            <name>DoneMessage</name>
-            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created:&lt;/b&gt; &lt;a href=&quot;/{!Create_Quote}&quot;&gt;{!fxQuoteName}&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Next: open the Quote (link above), click &lt;b&gt;Start Sync&lt;/b&gt;, then move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
-        <name>Done_Synced</name>
-        <label>Done</label>
-        <locationX>400</locationX>
-        <locationY>1350</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <fields>
-            <name>DoneSyncedMessage</name>
-            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created &amp; syncing:&lt;/b&gt; &lt;a href=&quot;/{!Create_Quote}&quot;&gt;{!fxQuoteName}&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Now just move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
         <name>Pick_Provider</name>
         <label>Choose Provider</label>
-        <locationX>176</locationX>
-        <locationY>500</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -556,8 +540,8 @@
     <screens>
         <name>Quote_Details</name>
         <label>Quote Details</label>
-        <locationX>176</locationX>
-        <locationY>750</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -923,14 +907,132 @@
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
+    <screens>
+        <name>Done</name>
+        <label>Done</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>DoneMessage</name>
+            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created:&lt;/b&gt; &lt;a href=&quot;/{!Create_Quote}&quot;&gt;{!fxQuoteName}&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Next: open the Quote (link above), click &lt;b&gt;Start Sync&lt;/b&gt;, then move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Done_Synced</name>
+        <label>Done Synced</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>DoneSyncedMessage</name>
+            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created &amp; syncing:&lt;/b&gt; &lt;a href=&quot;/{!Create_Quote}&quot;&gt;{!fxQuoteName}&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Now just move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Show_Error</name>
+        <label>Something went wrong</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>ErrorMessage</name>
+            <fieldText>&lt;p&gt;&lt;span style=&quot;color: rgb(194, 57, 52);&quot;&gt;⚠ &lt;b&gt;We couldn&apos;t finish this quote&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Something went wrong while creating or syncing the quote, so nothing was saved. Open this Renewal and check the &lt;b&gt;Quotes&lt;/b&gt; related list: if a quote is there, open it and click &lt;b&gt;Start Sync&lt;/b&gt; manually, then mark the renewal &lt;b&gt;Closed Won&lt;/b&gt;. If it isn&apos;t there, run &lt;b&gt;Quick New Quote&lt;/b&gt; again. If it keeps failing, send your admin the error detail below.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 12px; color: rgb(112, 110, 107);&quot;&gt;&lt;b&gt;Error detail:&lt;/b&gt; {!$Flow.FaultMessage}&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
     <start>
-        <locationX>176</locationX>
+        <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Get_Opportunity</targetReference>
         </connector>
     </start>
     <status>Active</status>
+    <subflows>
+        <name>Log_Fault</name>
+        <label>Log Fault</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Show_Error</targetReference>
+        </connector>
+        <flowName>Log_Error</flowName>
+        <inputAssignments>
+            <name>varContext</name>
+            <value>
+                <stringValue>Quick New Quote failed while creating or syncing the renewal quote.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varErrorMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varRecordId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSeverity</name>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceFlow</name>
+            <value>
+                <stringValue>Quick_New_Quote</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceStep</name>
+            <value>
+                <stringValue>Create/Sync Quote (see error detail)</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
     <variables>
         <name>recordId</name>
         <dataType>String</dataType>
