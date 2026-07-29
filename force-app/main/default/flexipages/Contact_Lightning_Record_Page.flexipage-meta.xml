@@ -217,6 +217,14 @@
                     </valueList>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
+                    <name>adminFilters</name>
+                    <valueList>
+                        <valueListItems>
+                            <value>Active__c|EQUALS|true</value>
+                        </valueListItems>
+                    </valueList>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
                     <name>maxRecordsToDisplay</name>
                     <value>10</value>
                 </componentInstanceProperties>
@@ -245,19 +253,22 @@
                             <value>Insurance__c</value>
                         </valueListItems>
                         <valueListItems>
-                            <value>Insurance_Status__c</value>
-                        </valueListItems>
-                        <valueListItems>
                             <value>Insurance_Record_Type__c</value>
                         </valueListItems>
                         <valueListItems>
                             <value>Insurance_Provider__c</value>
                         </valueListItems>
+                        <valueListItems>
+                            <value>Coverage_Start_Date__c</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>Coverage_End_Date__c</value>
+                        </valueListItems>
                     </valueList>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>relatedListLabel</name>
-                    <value>Group Insurances</value>
+                    <value>Active Group Insurances</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>showActionBar</name>
@@ -470,9 +481,6 @@
                 <componentInstanceProperties>
                     <name>adminFilters</name>
                     <valueList>
-                        <valueListItems>
-                            <value>RECORDTYPE|NOT_EQUAL|[&quot;Group_Health&quot;]</value>
-                        </valueListItems>
                         <valueListItems>
                             <value>Status__c|NOT_EQUAL|[&quot;Active&quot;]</value>
                         </valueListItems>

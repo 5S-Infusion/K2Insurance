@@ -30,6 +30,44 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Important_Note__c</fieldItem>
+                <identifier>RecordImportant_Note_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <name>Facet-230ab2e1-b69b-4593-8e64-b0c008ef05c2</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>Facet-230ab2e1-b69b-4593-8e64-b0c008ef05c2</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>flexipage_column8</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>Facet-c03c820d-f4b6-4599-b6a4-f78ac8c27a2d</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>displayOption</name>
+                    <value>TOAST</value>
+                </componentInstanceProperties>
+                <componentName>runtime_sales_merge:mergeCandidatesPreviewCard</componentName>
+                <identifier>runtime_sales_merge_mergeCandidatesPreviewCard</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
                     <name>actionNames</name>
@@ -67,14 +105,27 @@
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
-                    <name>displayOption</name>
-                    <value>TOAST</value>
+                    <name>columns</name>
+                    <value>Facet-c03c820d-f4b6-4599-b6a4-f78ac8c27a2d</value>
                 </componentInstanceProperties>
-                <componentName>runtime_sales_merge:mergeCandidatesPreviewCard</componentName>
-                <identifier>runtime_sales_merge_mergeCandidatesPreviewCard</identifier>
+                <componentInstanceProperties>
+                    <name>horizontalAlignment</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>label</name>
+                    <value>Important Note</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:fieldSection</componentName>
+                <identifier>flexipage_fieldSection5</identifier>
             </componentInstance>
         </itemInstances>
-        <mode>Replace</mode>
+        <itemInstances>
+            <componentInstance>
+                <componentName>employeeRoster</componentName>
+                <identifier>c_employeeRoster</identifier>
+            </componentInstance>
+        </itemInstances>
         <name>header</name>
         <type>Region</type>
     </flexiPageRegions>
@@ -89,7 +140,6 @@
                 <identifier>runtime_sales_activities_activityPanel</identifier>
             </componentInstance>
         </itemInstances>
-        <mode>Replace</mode>
         <name>activityTabContent</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -100,17 +150,10 @@
                 <identifier>forceChatter_recordFeedContainer</identifier>
             </componentInstance>
         </itemInstances>
-        <mode>Replace</mode>
         <name>feedTabContent</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
-                <componentName>employeeRoster</componentName>
-                <identifier>c_employeeRoster</identifier>
-            </componentInstance>
-        </itemInstances>
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
@@ -164,6 +207,9 @@
                             <value>Type__c</value>
                         </valueListItems>
                         <valueListItems>
+                            <value>Premium__c</value>
+                        </valueListItems>
+                        <valueListItems>
                             <value>Insurance_Start_Date__c</value>
                         </valueListItems>
                         <valueListItems>
@@ -208,7 +254,7 @@
                     <name>adminFilters</name>
                     <valueList>
                         <valueListItems>
-                            <value>Status__c|NOT_EQUAL|[&quot;Inactive&quot;,&quot;Cancelled&quot;]</value>
+                            <value>Status__c|EQUALS|[&quot;Inactive&quot;,&quot;Cancelled&quot;]</value>
                         </valueListItems>
                     </valueList>
                 </componentInstanceProperties>
@@ -242,6 +288,9 @@
                         </valueListItems>
                         <valueListItems>
                             <value>Type__c</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>Premium__c</value>
                         </valueListItems>
                         <valueListItems>
                             <value>Insurance_Start_Date__c</value>
@@ -321,7 +370,6 @@
                 <identifier>flexipage_tab4</identifier>
             </componentInstance>
         </itemInstances>
-        <mode>Replace</mode>
         <name>sidebartabs</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -446,8 +494,7 @@
                 <identifier>flexipage_tabset3</identifier>
             </componentInstance>
         </itemInstances>
-        <mode>Replace</mode>
-        <name>main</name>
+        <name>leftcol</name>
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -639,34 +686,6 @@
             <fieldInstance>
                 <fieldInstanceProperties>
                     <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Important_Note__c</fieldItem>
-                <identifier>RecordImportant_Note_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <name>Facet-3012a314-f278-4105-9b7d-2166828f5b3e</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>body</name>
-                    <value>Facet-3012a314-f278-4105-9b7d-2166828f5b3e</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:column</componentName>
-                <identifier>flexipage_column3</identifier>
-            </componentInstance>
-        </itemInstances>
-        <name>Facet-77841bf2-bcff-4b53-836f-bf3cd822f257</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
                     <value>readonly</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.CreatedById</fieldItem>
@@ -755,24 +774,6 @@
             <componentInstance>
                 <componentInstanceProperties>
                     <name>columns</name>
-                    <value>Facet-77841bf2-bcff-4b53-836f-bf3cd822f257</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>horizontalAlignment</name>
-                    <value>false</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>label</name>
-                    <value>Additional Information</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:fieldSection</componentName>
-                <identifier>flexipage_fieldSection2</identifier>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>columns</name>
                     <value>Facet-82fc46d7-8318-42d9-86ca-001c8b50706b</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
@@ -793,7 +794,6 @@
                 <identifier>force_recordDetailPanelMobile</identifier>
             </componentInstance>
         </itemInstances>
-        <mode>Replace</mode>
         <name>detailTabContent</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -812,7 +812,6 @@
                 <identifier>detailTab</identifier>
             </componentInstance>
         </itemInstances>
-        <mode>Replace</mode>
         <name>maintabs</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -831,15 +830,13 @@
                 <identifier>flexipage_tabset</identifier>
             </componentInstance>
         </itemInstances>
-        <mode>Replace</mode>
-        <name>sidebar</name>
+        <name>rightcol</name>
         <type>Region</type>
     </flexiPageRegions>
     <masterLabel>Client Business Lightning Record Page</masterLabel>
-    <parentFlexiPage>sfa__Account_rec_L</parentFlexiPage>
     <sobjectType>Account</sobjectType>
     <template>
-        <name>flexipage:recordHomeTemplateDesktop</name>
+        <name>flexipage:recordHomeTwoColEqualHeaderTemplateDesktop</name>
         <properties>
             <name>saveOptions</name>
             <value>[{&quot;name&quot;:&quot;UseDefaultAssignmentRule&quot;,&quot;value&quot;:&quot;NONE&quot;}]</value>
