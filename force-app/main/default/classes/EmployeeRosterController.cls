@@ -38,6 +38,44 @@ public with sharing class EmployeeRosterController {
     }
 
     /**
+     * @description Lists the company's active group-health policies a new employee can be enrolled
+     * into, for the Add Employee form.
+     * @param accountId The company account record id.
+     * @return One option per active group-health policy; empty when the company has none.
+     */
+    @AuraEnabled(cacheable=true)
+    public static List<EmployeeRosterService.PolicyOption> getGroupHealthPolicies(Id accountId) {
+        try {
+            return service.getGroupHealthPolicies(accountId);
+        } catch (Exception ex) {
+            ExceptionLogger.log('EmployeeRosterController.getGroupHealthPolicies', accountId, ex);
+            throw new AuraHandledException(Label.EmployeeRoster_LoadError);
+        }
+    }
+
+    /**
+     * @description Adds one person to the company as an employee, optionally enrolling them into a
+     * group-health policy in the same save. The request arrives as a JSON string for the same
+     * reason as saveRelationshipsJson: reactive-proxy objects serialize to empty {} at Apex.
+     * @param requestJson JSON object matching EmployeeRosterService.OnboardRequest.
+     * @return The contact id of the onboarded employee.
+     */
+    @AuraEnabled
+    public static Id onboardEmployeeJson(String requestJson) {
+        try {
+            EmployeeRosterService.OnboardRequest request =
+                (EmployeeRosterService.OnboardRequest) JSON.deserialize(
+                    requestJson, EmployeeRosterService.OnboardRequest.class);
+            return service.onboard(new List<EmployeeRosterService.OnboardRequest>{ request })[0];
+        } catch (EmployeeRosterService.EmployeeOnboardException ex) {
+            throw new AuraHandledException(ex.getMessage());
+        } catch (Exception ex) {
+            ExceptionLogger.log('EmployeeRosterController.onboardEmployeeJson', null, ex);
+            throw new AuraHandledException('Could not add this employee. Please try again or contact your admin.');
+        }
+    }
+
+    /**
      * @description Offboards a single employee relationship from the roster UI.
      * @param acrId The AccountContactRelation id of the employee to offboard.
      * @param endDate The coverage end date; defaults to today when null.

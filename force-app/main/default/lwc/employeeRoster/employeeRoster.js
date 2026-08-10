@@ -1,6 +1,7 @@
 import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import { encodeDefaultFieldValues } from 'lightning/pageReferenceUtils';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import ACCOUNT_NAME from '@salesforce/schema/Account.Name';
 import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { reduceErrors } from 'c/ldsUtils';
@@ -8,6 +9,8 @@ import getEmployees from '@salesforce/apex/EmployeeRosterController.getEmployees
 import getFieldOptions from '@salesforce/apex/EmployeeRosterController.getFieldOptions';
 import offboardEmployee from '@salesforce/apex/EmployeeRosterController.offboardEmployee';
 import saveRelationships from '@salesforce/apex/EmployeeRosterController.saveRelationshipsJson';
+import getGroupHealthPolicies from '@salesforce/apex/EmployeeRosterController.getGroupHealthPolicies';
+import onboardEmployee from '@salesforce/apex/EmployeeRosterController.onboardEmployeeJson';
 
 import LBL_TITLE from '@salesforce/label/c.EmployeeRoster_Title';
 import LBL_COL_NAME from '@salesforce/label/c.EmployeeRoster_ColName';
@@ -64,11 +67,48 @@ const COLUMN_BY_FIELD = COLUMN_DEFS.reduce((map, def) => Object.assign(map, { [d
 
 /** @description Header classes marking the column a drop would land before/after. */
 const DROP_MARKERS = ['roster-drop-before', 'roster-drop-after'];
-import LBL_NEW_CONTACT from '@salesforce/label/c.EmployeeRoster_NewContact';
-import LBL_ADD_RELATIONSHIP from '@salesforce/label/c.EmployeeRoster_AddRelationship';
 import LBL_SUCCESS_TITLE from '@salesforce/label/c.EmployeeRoster_SuccessTitle';
 import LBL_SUCCESS_MSG from '@salesforce/label/c.EmployeeRoster_SuccessMessage';
 import LBL_ERROR_TITLE from '@salesforce/label/c.EmployeeRoster_ErrorTitle';
+import LBL_ADD_EMPLOYEE from '@salesforce/label/c.EmployeeRoster_AddEmployee';
+import LBL_SECTION_EMPLOYEE from '@salesforce/label/c.EmployeeRoster_SectionEmployee';
+import LBL_SECTION_COVERAGE from '@salesforce/label/c.EmployeeRoster_SectionCoverage';
+import LBL_PERSON_MODE from '@salesforce/label/c.EmployeeRoster_PersonMode';
+import LBL_NEW_PERSON from '@salesforce/label/c.EmployeeRoster_NewPerson';
+import LBL_EXISTING_PERSON from '@salesforce/label/c.EmployeeRoster_ExistingPerson';
+import LBL_FIRST_NAME from '@salesforce/label/c.EmployeeRoster_FirstName';
+import LBL_LAST_NAME from '@salesforce/label/c.EmployeeRoster_LastName';
+import LBL_KOREAN_NAME from '@salesforce/label/c.EmployeeRoster_KoreanName';
+import LBL_EMAIL from '@salesforce/label/c.EmployeeRoster_Email';
+import LBL_MOBILE_PHONE from '@salesforce/label/c.EmployeeRoster_MobilePhone';
+import LBL_JOB_TITLE from '@salesforce/label/c.EmployeeRoster_JobTitle';
+import LBL_SELECT_CONTACT from '@salesforce/label/c.EmployeeRoster_SelectContact';
+import LBL_EMP_STATUS_INPUT from '@salesforce/label/c.EmployeeRoster_EmpStatusInput';
+import LBL_ENROLL_COVERAGE from '@salesforce/label/c.EmployeeRoster_EnrollCoverage';
+import LBL_POLICY from '@salesforce/label/c.EmployeeRoster_Policy';
+import LBL_POLICY_PLACEHOLDER from '@salesforce/label/c.EmployeeRoster_PolicyPlaceholder';
+import LBL_COVERAGE_START_DATE from '@salesforce/label/c.EmployeeRoster_CoverageStartDate';
+import LBL_COVERAGE_START_HELP from '@salesforce/label/c.EmployeeRoster_CoverageStartHelp';
+import LBL_PLAN_MEDICAL_LABEL from '@salesforce/label/c.EmployeeRoster_PlanMedicalLabel';
+import LBL_PLAN_DENTAL_LABEL from '@salesforce/label/c.EmployeeRoster_PlanDentalLabel';
+import LBL_PLAN_VISION_LABEL from '@salesforce/label/c.EmployeeRoster_PlanVisionLabel';
+import LBL_NO_POLICIES from '@salesforce/label/c.EmployeeRoster_NoPolicies';
+import LBL_ADD_SUCCESS_TITLE from '@salesforce/label/c.EmployeeRoster_AddSuccessTitle';
+import LBL_ADD_SUCCESS_MSG from '@salesforce/label/c.EmployeeRoster_AddSuccessMessage';
+import LBL_ADD_SUCCESS_COVERAGE from '@salesforce/label/c.EmployeeRoster_AddSuccessCoverage';
+import LBL_LAST_NAME_REQUIRED from '@salesforce/label/c.EmployeeRoster_LastNameRequired';
+import LBL_CONTACT_REQUIRED from '@salesforce/label/c.EmployeeRoster_ContactRequired';
+import LBL_POLICY_REQUIRED from '@salesforce/label/c.EmployeeRoster_PolicyRequired';
+
+import LBL_SECTION_EMPLOYMENT from '@salesforce/label/c.EmployeeRoster_SectionEmployment';
+import LBL_COVERAGE_TYPES from '@salesforce/label/c.EmployeeRoster_CoverageTypes';
+import LBL_ENROLL_HINT from '@salesforce/label/c.EmployeeRoster_EnrollHint';
+
+/** @description The two ways a person can be added to the company on the Add Employee form. */
+const PERSON_MODE = { NEW: 'new', EXISTING: 'existing' };
+
+/** @description Form fields the Add Employee modal renders as a checkbox or toggle, not text. */
+const CHECKBOX_FIELDS = ['empStatus', 'enroll', 'medical', 'dental', 'vision'];
 
 /**
  * @description Lists a company's employees (active and inactive) with inline editing of Roles and
@@ -101,8 +141,31 @@ export default class EmployeeRoster extends NavigationMixin(LightningElement) {
         openRelationship: LBL_OPEN_RELATIONSHIP,
         active: LBL_ACTIVE,
         inactive: LBL_INACTIVE,
-        newContact: LBL_NEW_CONTACT,
-        addRelationship: LBL_ADD_RELATIONSHIP
+        errorTitle: LBL_ERROR_TITLE,
+        addEmployee: LBL_ADD_EMPLOYEE,
+        sectionEmployee: LBL_SECTION_EMPLOYEE,
+        sectionCoverage: LBL_SECTION_COVERAGE,
+        personMode: LBL_PERSON_MODE,
+        firstName: LBL_FIRST_NAME,
+        lastName: LBL_LAST_NAME,
+        koreanName: LBL_KOREAN_NAME,
+        email: LBL_EMAIL,
+        mobilePhone: LBL_MOBILE_PHONE,
+        jobTitle: LBL_JOB_TITLE,
+        selectContact: LBL_SELECT_CONTACT,
+        empStatusInput: LBL_EMP_STATUS_INPUT,
+        enrollCoverage: LBL_ENROLL_COVERAGE,
+        policy: LBL_POLICY,
+        policyPlaceholder: LBL_POLICY_PLACEHOLDER,
+        coverageStartDate: LBL_COVERAGE_START_DATE,
+        coverageStartHelp: LBL_COVERAGE_START_HELP,
+        planMedical: LBL_PLAN_MEDICAL_LABEL,
+        planDental: LBL_PLAN_DENTAL_LABEL,
+        planVision: LBL_PLAN_VISION_LABEL,
+        noPolicies: LBL_NO_POLICIES,
+        sectionEmployment: LBL_SECTION_EMPLOYMENT,
+        coverageTypes: LBL_COVERAGE_TYPES,
+        enrollHint: LBL_ENROLL_HINT
     };
 
     rows = [];
@@ -133,11 +196,41 @@ export default class EmployeeRoster extends NavigationMixin(LightningElement) {
     endDate;
     isSaving = false;
 
+    showOnboardModal = false;
+    onboardError;
+    personMode = PERSON_MODE.NEW;
+    form = {};
+    policies = [];
+    hasPolicyError = false;
+
     @wire(getFieldOptions)
     handleFieldOptions({ data }) {
         if (data) {
             this.rolesOptions = data.roles;
             this.familyOptions = data.family;
+        }
+    }
+
+    @wire(getRecord, { recordId: '$recordId', fields: [ACCOUNT_NAME] })
+    company;
+
+    /** @description The company name, once the record wire has delivered it. */
+    get companyName() {
+        return this.company && this.company.data
+            ? getFieldValue(this.company.data, ACCOUNT_NAME)
+            : undefined;
+    }
+
+    @wire(getGroupHealthPolicies, { accountId: '$recordId' })
+    handlePolicies({ data, error }) {
+        if (data) {
+            this.policies = data;
+            this.hasPolicyError = false;
+        } else if (error) {
+            // Surfaced inside the Add Employee modal rather than as a toast, so a policy-read
+            // failure never interrupts someone who only came to read the roster.
+            this.policies = [];
+            this.hasPolicyError = true;
         }
     }
 
@@ -204,6 +297,60 @@ export default class EmployeeRoster extends NavigationMixin(LightningElement) {
 
     get sortIconName() {
         return this.sortedDirection === 'asc' ? 'utility:arrowup' : 'utility:arrowdown';
+    }
+
+    get isNewPerson() {
+        return this.personMode === PERSON_MODE.NEW;
+    }
+
+    get personModeOptions() {
+        return [
+            { label: LBL_NEW_PERSON, value: PERSON_MODE.NEW },
+            { label: LBL_EXISTING_PERSON, value: PERSON_MODE.EXISTING }
+        ];
+    }
+
+    get hasPolicies() {
+        return !this.hasPolicyError && this.policies.length > 0;
+    }
+
+    get policyOptions() {
+        return this.policies.map((policy) => ({ label: policy.label, value: policy.policyId }));
+    }
+
+    /**
+     * @description The Roles multi-select rendered as selectable pills.
+     * @return One descriptor per role, carrying its selected state and styling.
+     */
+    get roleChoices() {
+        return this.rolesOptions.map((role) => {
+            const selected = this.form.role === role.value;
+            return {
+                label: role.label,
+                value: role.value,
+                selected,
+                cssClass: selected ? 'onboard-chip onboard-chip_selected' : 'onboard-chip'
+            };
+        });
+    }
+
+    /**
+     * @description The Medical/Dental/Vision coverage ticks rendered as selectable pills.
+     * @return One descriptor per coverage type, carrying its selected state and styling.
+     */
+    get coverageChoices() {
+        return [
+            { field: 'medical', label: this.label.planMedical },
+            { field: 'dental', label: this.label.planDental },
+            { field: 'vision', label: this.label.planVision }
+        ].map((plan) => {
+            const selected = !!this.form[plan.field];
+            return {
+                ...plan,
+                selected,
+                cssClass: selected ? 'onboard-chip onboard-chip_selected' : 'onboard-chip'
+            };
+        });
     }
 
     /**
@@ -537,22 +684,6 @@ export default class EmployeeRoster extends NavigationMixin(LightningElement) {
         this.showModal = true;
     }
 
-    handleNewContact() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__objectPage',
-            attributes: { objectApiName: 'Contact', actionName: 'new' },
-            state: { defaultFieldValues: encodeDefaultFieldValues({ AccountId: this.recordId }) }
-        });
-    }
-
-    handleAddRelationship() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__objectPage',
-            attributes: { objectApiName: 'AccountContactRelation', actionName: 'new' },
-            state: { defaultFieldValues: encodeDefaultFieldValues({ AccountId: this.recordId }) }
-        });
-    }
-
     navigateToRecord(recordId, objectApiName) {
         this[NavigationMixin.Navigate]({
             type: 'standard__recordPage',
@@ -585,6 +716,157 @@ export default class EmployeeRoster extends NavigationMixin(LightningElement) {
             await refreshApex(this.wiredEmployees);
         } catch (error) {
             this.notifyError(error);
+        } finally {
+            this.isSaving = false;
+        }
+    }
+
+    /**
+     * @description Opens the Add Employee modal on a blank form, defaulting the member coverage
+     * start date to today and pre-selecting the company's only policy when there is just one.
+     */
+    openOnboardModal() {
+        const onlyPolicy = this.policies.length === 1 ? this.policies[0] : undefined;
+        this.personMode = PERSON_MODE.NEW;
+        this.onboardError = undefined;
+        this.form = {
+            firstName: '',
+            lastName: '',
+            koreanName: '',
+            email: '',
+            mobilePhone: '',
+            title: '',
+            contactId: '',
+            role: '',
+            family: '',
+            empStatus: true,
+            enroll: this.hasPolicies,
+            insuranceId: onlyPolicy ? onlyPolicy.policyId : '',
+            coverageStartDate: this.today(),
+            // Medical is the near-universal default; Dental and Vision are opted into per person
+            // even when the group policy carries them.
+            medical: true,
+            dental: false,
+            vision: false
+        };
+        this.showOnboardModal = true;
+    }
+
+    closeOnboardModal() {
+        this.showOnboardModal = false;
+        this.onboardError = undefined;
+    }
+
+    /**
+     * @description Today's date as `YYYY-MM-DD` in the user's own time zone, so a late-evening save
+     * west of UTC does not default the coverage start to tomorrow.
+     * @return The local date, ISO formatted.
+     */
+    today() {
+        const now = new Date();
+        return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    }
+
+    handlePersonModeChange(event) {
+        this.personMode = event.detail.value;
+        this.onboardError = undefined;
+    }
+
+    handleFormChange(event) {
+        const field = event.currentTarget.dataset.field;
+        const value = CHECKBOX_FIELDS.includes(field)
+            ? event.currentTarget.checked
+            : event.currentTarget.value;
+        this.form = { ...this.form, [field]: value };
+    }
+
+    handleContactPick(event) {
+        this.form = { ...this.form, contactId: event.detail.recordId || '' };
+    }
+
+    /**
+     * @description Selects a role, or clears it when the already-selected pill is clicked again.
+     * Only one role is assignable from this form.
+     * @param event The click event on a role pill.
+     */
+    handleRoleToggle(event) {
+        const role = event.currentTarget.dataset.role;
+        this.form = { ...this.form, role: this.form.role === role ? '' : role };
+    }
+
+    handleCoverageToggle(event) {
+        const field = event.currentTarget.dataset.field;
+        this.form = { ...this.form, [field]: !this.form[field] };
+    }
+
+    handlePolicyChange(event) {
+        this.form = { ...this.form, insuranceId: event.detail.value };
+    }
+
+    /**
+     * @description Checks the Add Employee form and reports the first problem inline.
+     * @return True when the form can be submitted.
+     */
+    validateOnboard() {
+        if (this.isNewPerson && !this.form.lastName) {
+            this.onboardError = LBL_LAST_NAME_REQUIRED;
+            return false;
+        }
+        if (!this.isNewPerson && !this.form.contactId) {
+            this.onboardError = LBL_CONTACT_REQUIRED;
+            return false;
+        }
+        if (this.form.enroll && !this.form.insuranceId) {
+            this.onboardError = LBL_POLICY_REQUIRED;
+            return false;
+        }
+        this.onboardError = undefined;
+        return true;
+    }
+
+    /**
+     * @description Creates the employee, the employment relationship and — when requested — the
+     * group-health coverage, then refreshes the roster so the new row appears immediately.
+     */
+    async saveOnboard() {
+        if (!this.validateOnboard()) {
+            return;
+        }
+        this.isSaving = true;
+        try {
+            const enrolling = !!this.form.enroll;
+            // Built as a plain literal for the same reason as handleSave(): values read off the
+            // reactive `form` field are proxies, and passing those to Apex serializes them away.
+            const request = {
+                accountId: this.recordId,
+                contactId: this.isNewPerson ? null : this.form.contactId,
+                firstName: this.isNewPerson ? this.form.firstName : null,
+                lastName: this.isNewPerson ? this.form.lastName : null,
+                koreanName: this.isNewPerson ? this.form.koreanName : null,
+                email: this.isNewPerson ? this.form.email : null,
+                mobilePhone: this.isNewPerson ? this.form.mobilePhone : null,
+                title: this.isNewPerson ? this.form.title : null,
+                roles: this.form.role,
+                family: this.form.family,
+                empStatus: !!this.form.empStatus,
+                insuranceId: enrolling ? this.form.insuranceId : null,
+                coverageStartDate: enrolling ? this.form.coverageStartDate : null,
+                medical: enrolling && !!this.form.medical,
+                dental: enrolling && !!this.form.dental,
+                vision: enrolling && !!this.form.vision
+            };
+            await onboardEmployee({ requestJson: JSON.stringify(request) });
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: LBL_ADD_SUCCESS_TITLE,
+                    message: enrolling ? LBL_ADD_SUCCESS_COVERAGE : LBL_ADD_SUCCESS_MSG,
+                    variant: 'success'
+                })
+            );
+            this.showOnboardModal = false;
+            await refreshApex(this.wiredEmployees);
+        } catch (error) {
+            this.onboardError = reduceErrors(error).join(', ') || this.label.loadError;
         } finally {
             this.isSaving = false;
         }

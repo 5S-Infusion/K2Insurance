@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>62.0</apiVersion>
+    <apiVersion>65.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>Employee Roster</masterLabel>
-    <description>Lists a company's active employees with a per-row Offboard action (ends group-health coverage, employment, and marks the Contact inactive).</description>
+    <description>Lists a company's employees with an Add Employee action (creates the person, the employment relationship, and optional group-health coverage) and a per-row Offboard action (ends group-health coverage, employment, and marks the Contact inactive).</description>
     <targets>
         <target>lightning__RecordPage</target>
     </targets>

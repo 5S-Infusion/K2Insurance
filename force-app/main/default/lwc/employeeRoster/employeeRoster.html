@@ -2,13 +2,11 @@
     <lightning-card title={label.title} icon-name="standard:groups">
         <div slot="actions">
             <lightning-button
-                label={label.newContact}
-                onclick={handleNewContact}
-                class="slds-var-m-left_x-small"></lightning-button>
-            <lightning-button
-                label={label.addRelationship}
-                onclick={handleAddRelationship}
-                class="slds-var-m-left_x-small"></lightning-button>
+                variant="brand"
+                data-id="add-employee"
+                label={label.addEmployee}
+                icon-name="utility:adduser"
+                onclick={openOnboardModal}></lightning-button>
         </div>
 
         <template lwc:if={hasChanges}>
@@ -20,6 +18,7 @@
                     class="slds-var-m-right_x-small"></lightning-button>
                 <lightning-button
                     variant="brand"
+                    data-id="save-edits"
                     label={label.save}
                     onclick={handleSave}
                     disabled={isSaving}></lightning-button>
@@ -193,6 +192,261 @@
                         onclick={confirmOffboard}
                         disabled={isSaving}>
                         {label.offboard}
+                    </button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+
+    <template lwc:if={showOnboardModal}>
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="onboard-heading"
+            class="slds-modal slds-modal_medium slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header onboard-header">
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title={label.cancel}
+                        onclick={closeOnboardModal}
+                        disabled={isSaving}>
+                        <lightning-icon
+                            icon-name="utility:close"
+                            alternative-text={label.cancel}
+                            size="small"></lightning-icon>
+                    </button>
+                    <h1 id="onboard-heading" class="slds-modal__title slds-hyphenate">
+                        {label.addEmployee}
+                    </h1>
+                    <template lwc:if={companyName}>
+                        <p class="onboard-subtitle">{companyName}</p>
+                    </template>
+                </header>
+
+                <div class="slds-modal__content onboard-body">
+                    <template lwc:if={onboardError}>
+                        <div
+                            role="alert"
+                            class="slds-scoped-notification slds-media slds-media_center slds-theme_error slds-var-m-bottom_medium">
+                            <div class="slds-media__figure">
+                                <lightning-icon
+                                    icon-name="utility:error"
+                                    variant="inverse"
+                                    size="small"
+                                    alternative-text={label.errorTitle}></lightning-icon>
+                            </div>
+                            <div class="slds-media__body">
+                                <p>{onboardError}</p>
+                            </div>
+                        </div>
+                    </template>
+
+                    <section class="onboard-card">
+                        <div class="onboard-card__header">
+                            <lightning-icon icon-name="standard:contact" size="x-small"></lightning-icon>
+                            <span class="onboard-card__title">{label.sectionEmployee}</span>
+                            <div class="onboard-card__spacer"></div>
+                            <lightning-radio-group
+                                variant="label-hidden"
+                                name="personMode"
+                                type="button"
+                                label={label.personMode}
+                                options={personModeOptions}
+                                value={personMode}
+                                onchange={handlePersonModeChange}
+                                disabled={isSaving}></lightning-radio-group>
+                        </div>
+
+                        <template lwc:if={isNewPerson}>
+                            <div class="onboard-grid">
+                                <lightning-input
+                                    required
+                                    label={label.lastName}
+                                    value={form.lastName}
+                                    data-field="lastName"
+                                    onchange={handleFormChange}
+                                    disabled={isSaving}></lightning-input>
+                                <lightning-input
+                                    label={label.firstName}
+                                    value={form.firstName}
+                                    data-field="firstName"
+                                    onchange={handleFormChange}
+                                    disabled={isSaving}></lightning-input>
+                                <lightning-input
+                                    label={label.koreanName}
+                                    value={form.koreanName}
+                                    data-field="koreanName"
+                                    onchange={handleFormChange}
+                                    disabled={isSaving}></lightning-input>
+                                <lightning-input
+                                    label={label.jobTitle}
+                                    value={form.title}
+                                    data-field="title"
+                                    onchange={handleFormChange}
+                                    disabled={isSaving}></lightning-input>
+                                <lightning-input
+                                    type="email"
+                                    label={label.email}
+                                    value={form.email}
+                                    data-field="email"
+                                    onchange={handleFormChange}
+                                    disabled={isSaving}></lightning-input>
+                                <lightning-input
+                                    type="tel"
+                                    label={label.mobilePhone}
+                                    value={form.mobilePhone}
+                                    data-field="mobilePhone"
+                                    onchange={handleFormChange}
+                                    disabled={isSaving}></lightning-input>
+                            </div>
+                        </template>
+                        <template lwc:else>
+                            <lightning-record-picker
+                                label={label.selectContact}
+                                object-api-name="Contact"
+                                placeholder={label.selectContact}
+                                value={form.contactId}
+                                onchange={handleContactPick}
+                                disabled={isSaving}></lightning-record-picker>
+                        </template>
+                    </section>
+
+                    <section class="onboard-card">
+                        <div class="onboard-card__header">
+                            <lightning-icon icon-name="standard:relationship" size="x-small"></lightning-icon>
+                            <span class="onboard-card__title">{label.sectionEmployment}</span>
+                        </div>
+
+                        <div class="slds-form-element slds-var-m-bottom_small">
+                            <span class="slds-form-element__label">{label.colRoles}</span>
+                            <div class="onboard-chips">
+                                <template for:each={roleChoices} for:item="role">
+                                    <button
+                                        key={role.value}
+                                        type="button"
+                                        class={role.cssClass}
+                                        aria-pressed={role.selected}
+                                        data-role={role.value}
+                                        onclick={handleRoleToggle}
+                                        disabled={isSaving}>
+                                        {role.label}
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+
+                        <div class="onboard-grid">
+                            <lightning-combobox
+                                label={label.colFamily}
+                                placeholder={label.familyPlaceholder}
+                                options={familyOptions}
+                                value={form.family}
+                                data-field="family"
+                                onchange={handleFormChange}
+                                disabled={isSaving}></lightning-combobox>
+                            <div class="onboard-toggle-cell">
+                                <lightning-input
+                                    type="toggle"
+                                    message-toggle-active=""
+                                    message-toggle-inactive=""
+                                    label={label.empStatusInput}
+                                    checked={form.empStatus}
+                                    data-field="empStatus"
+                                    onchange={handleFormChange}
+                                    disabled={isSaving}></lightning-input>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="onboard-card">
+                        <div class="onboard-card__header">
+                            <lightning-icon icon-name="standard:health_and_safety" size="x-small"></lightning-icon>
+                            <span class="onboard-card__title">{label.sectionCoverage}</span>
+                            <div class="onboard-card__spacer"></div>
+                            <template lwc:if={hasPolicies}>
+                                <lightning-input
+                                    type="toggle"
+                                    variant="label-hidden"
+                                    data-id="enroll-toggle"
+                                    message-toggle-active=""
+                                    message-toggle-inactive=""
+                                    label={label.enrollCoverage}
+                                    checked={form.enroll}
+                                    data-field="enroll"
+                                    onchange={handleFormChange}
+                                    disabled={isSaving}></lightning-input>
+                            </template>
+                        </div>
+
+                        <template lwc:if={hasPolicies}>
+                            <template lwc:if={form.enroll}>
+                                <lightning-combobox
+                                    class="slds-var-m-bottom_small"
+                                    data-id="policy"
+                                    label={label.policy}
+                                    placeholder={label.policyPlaceholder}
+                                    options={policyOptions}
+                                    value={form.insuranceId}
+                                    onchange={handlePolicyChange}
+                                    disabled={isSaving}></lightning-combobox>
+
+                                <div class="onboard-grid">
+                                    <lightning-input
+                                        type="date"
+                                        label={label.coverageStartDate}
+                                        field-level-help={label.coverageStartHelp}
+                                        value={form.coverageStartDate}
+                                        data-field="coverageStartDate"
+                                        onchange={handleFormChange}
+                                        disabled={isSaving}></lightning-input>
+                                    <div class="slds-form-element">
+                                        <span class="slds-form-element__label">{label.coverageTypes}</span>
+                                        <div class="onboard-chips">
+                                            <template for:each={coverageChoices} for:item="plan">
+                                                <button
+                                                    key={plan.field}
+                                                    type="button"
+                                                    class={plan.cssClass}
+                                                    aria-pressed={plan.selected}
+                                                    data-field={plan.field}
+                                                    onclick={handleCoverageToggle}
+                                                    disabled={isSaving}>
+                                                    {plan.label}
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <p class="slds-text-color_weak">{label.enrollHint}</p>
+                            </template>
+                        </template>
+                        <template lwc:elseif={hasPolicyError}>
+                            <p class="slds-text-color_error" role="alert">{label.loadError}</p>
+                        </template>
+                        <template lwc:else>
+                            <p class="slds-text-color_weak">{label.noPolicies}</p>
+                        </template>
+                    </section>
+                </div>
+
+                <footer class="slds-modal__footer">
+                    <button
+                        class="slds-button slds-button_neutral"
+                        onclick={closeOnboardModal}
+                        disabled={isSaving}>
+                        {label.cancel}
+                    </button>
+                    <button
+                        class="slds-button slds-button_brand"
+                        onclick={saveOnboard}
+                        disabled={isSaving}>
+                        {label.save}
                     </button>
                 </footer>
             </div>

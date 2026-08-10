@@ -21,6 +21,79 @@ private class EmployeeRosterControllerTest {
     }
 
     /**
+     * @description getGroupHealthPolicies returns the company's enrollable policies.
+     */
+    @isTest
+    static void getGroupHealthPoliciesReturnsOptions() {
+        List<AccountContactRelation> relations = EmployeeRosterTestData.buildRoster(1);
+        Id companyId = [SELECT AccountId FROM AccountContactRelation WHERE Id = :relations[0].Id].AccountId;
+
+        Test.startTest();
+        List<EmployeeRosterService.PolicyOption> options =
+            EmployeeRosterController.getGroupHealthPolicies(companyId);
+        Test.stopTest();
+
+        Assert.areEqual(1, options.size(), 'The company has one active group-health policy');
+        Assert.isNotNull(options[0].label, 'Each option should carry a display label');
+    }
+
+    /**
+     * @description onboardEmployeeJson deserializes the form payload and creates the employee, the
+     * employment relationship, and the coverage junction.
+     */
+    @isTest
+    static void onboardEmployeeJsonCreatesEmployee() {
+        List<AccountContactRelation> relations = EmployeeRosterTestData.buildRoster(1);
+        Id companyId = [SELECT AccountId FROM AccountContactRelation WHERE Id = :relations[0].Id].AccountId;
+        Id policyId = [SELECT Id FROM Insurance__c WHERE Company__c = :companyId LIMIT 1].Id;
+        Date joinDate = Date.today().addDays(5);
+        String payload = JSON.serialize(new Map<String, Object>{
+            'accountId' => companyId,
+            'firstName' => 'Alison',
+            'lastName' => 'Controller',
+            'roles' => 'Employee',
+            'family' => 'EO',
+            'empStatus' => true,
+            'insuranceId' => policyId,
+            'coverageStartDate' => String.valueOf(joinDate),
+            'medical' => true,
+            'dental' => false,
+            'vision' => false
+        });
+
+        Test.startTest();
+        Id contactId = EmployeeRosterController.onboardEmployeeJson(payload);
+        Test.stopTest();
+
+        Assert.isNotNull(contactId, 'The new contact id should be returned');
+        Assert.areEqual(companyId, [SELECT AccountId FROM Contact WHERE Id = :contactId].AccountId,
+            'The employee should belong to the company');
+        Assert.areEqual(joinDate, [
+            SELECT Coverage_Start_Date__c FROM ContactInsuranceAssociation__c WHERE Contact__c = :contactId
+        ].Coverage_Start_Date__c, 'The entered member start date should be stored');
+    }
+
+    /**
+     * @description onboardEmployeeJson surfaces the service's own message for a request it can
+     * refuse (no name and no contact), rather than a generic failure.
+     */
+    @isTest
+    static void onboardEmployeeJsonInvalidThrowsAuraHandled() {
+        List<AccountContactRelation> relations = EmployeeRosterTestData.buildRoster(1);
+        Id companyId = [SELECT AccountId FROM AccountContactRelation WHERE Id = :relations[0].Id].AccountId;
+        String payload = JSON.serialize(new Map<String, Object>{ 'accountId' => companyId });
+
+        Test.startTest();
+        try {
+            EmployeeRosterController.onboardEmployeeJson(payload);
+            Assert.fail('Expected an AuraHandledException for an unnamed employee');
+        } catch (AuraHandledException ex) {
+            Assert.isNotNull(ex, 'A controlled UI exception should be thrown');
+        }
+        Test.stopTest();
+    }
+
+    /**
      * @description offboardEmployee delegates to the service and turns off employment for each row.
      */
     @isTest

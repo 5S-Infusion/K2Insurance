@@ -125,3 +125,122 @@
 .plan-other {
     background-color: #8a8a8a;
 }
+
+/* ---------- Add Employee modal ---------- */
+
+.onboard-header {
+    padding-bottom: 0.75rem;
+}
+
+.onboard-subtitle {
+    margin-top: 0.125rem;
+    font-size: 0.8125rem;
+    color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+/* Tinted canvas so the white section cards read as separate, layered panels. */
+.onboard-body {
+    padding: 1rem;
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+}
+
+.onboard-card {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+    border-radius: 0.5rem;
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+}
+
+.onboard-card:last-child {
+    margin-bottom: 0;
+}
+
+.onboard-card__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2rem;
+    margin-bottom: 0.875rem;
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+}
+
+.onboard-card__title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.0625rem;
+    text-transform: uppercase;
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+/* Pushes the trailing control (mode switch, enrol toggle) to the right edge. */
+.onboard-card__spacer {
+    flex: 1 1 auto;
+}
+
+/* Two even columns that collapse to one on a narrow viewport. */
+.onboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 1rem;
+}
+
+@media (max-width: 30rem) {
+    .onboard-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* Vertically centres a toggle against the input sitting beside it. */
+.onboard-toggle-cell {
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 0.35rem;
+}
+
+/* Selectable pills — a compact, modern stand-in for a multi-select list. */
+.onboard-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    padding-top: 0.125rem;
+}
+
+.onboard-chip {
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--slds-g-color-border-base-2, #c9c9c9);
+    border-radius: 1rem;
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+    color: var(--slds-g-color-neutral-base-30, #444444);
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.1s ease-in-out, border-color 0.1s ease-in-out;
+}
+
+.onboard-chip:hover:not(:disabled) {
+    border-color: var(--slds-g-color-brand-base-50, #0176d3);
+    background-color: var(--slds-g-color-brand-base-95, #eef4ff);
+}
+
+.onboard-chip:focus-visible {
+    outline: 2px solid var(--slds-g-color-brand-base-50, #0176d3);
+    outline-offset: 1px;
+}
+
+.onboard-chip_selected {
+    border-color: var(--slds-g-color-brand-base-50, #0176d3);
+    background-color: var(--slds-g-color-brand-base-50, #0176d3);
+    color: var(--slds-g-color-neutral-base-100, #ffffff);
+}
+
+.onboard-chip_selected:hover:not(:disabled) {
+    background-color: var(--slds-g-color-brand-base-40, #014486);
+    border-color: var(--slds-g-color-brand-base-40, #014486);
+}
+
+.onboard-chip:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
