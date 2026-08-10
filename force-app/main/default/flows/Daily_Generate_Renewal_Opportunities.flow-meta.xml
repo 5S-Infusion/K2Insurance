@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>66.0</apiVersion>
+    <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <decisions>
         <name>End_Date_in_60_Days</name>
@@ -32,6 +32,79 @@
         </rules>
     </decisions>
     <decisions>
+        <description>Auto/Home renewals are handled by the weekly Auto/Home renewal email, not by a Renewal Opportunity.</description>
+        <name>Is_It_Auto_Home_Insurance</name>
+        <label>Is It Auto/Home Insurance?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>End_Date_in_60_Days</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No — Continue</defaultConnectorLabel>
+        <rules>
+            <name>Is_It_Auto_Home_Insurance_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.RecordType.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Auto_Home_Insurance</stringValue>
+                </rightValue>
+            </conditions>
+            <label>Yes — Skip</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_Policy_Holder_Found</name>
+        <label>Is Policy Holder Found?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Log_Missing_Policy_Holder</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No — Log and Stop</defaultConnectorLabel>
+        <rules>
+            <name>Is_Policy_Holder_Found_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Policy_Holder_Contact</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Renewal_Opportunity</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_Renewal_RecordType_Found</name>
+        <label>Is Renewal RecordType Found?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Log_Missing_Renewal_RecordType</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No — Log and Stop</defaultConnectorLabel>
+        <rules>
+            <name>Is_Renewal_RecordType_Found_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Renewal_RecordType</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Policy_Holder_Contact</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
         <description>Is custom label &quot;TRIGGER_ACTIVATION&quot; &quot;ON&quot; or &quot;OFF&quot;.</description>
         <name>Is_TRIGGER_ACTIVATED</name>
         <label>Is TRIGGER ACTIVATED?</label>
@@ -49,11 +122,12 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>End_Date_in_60_Days</targetReference>
+                <targetReference>Is_It_Auto_Home_Insurance</targetReference>
             </connector>
             <label>ON</label>
         </rules>
     </decisions>
+    <description>2026-08-09: Skip Auto/Home; add fault paths and Get null guards so every failure logs to Error_Log__c instead of an unhandled-fault email.</description>
     <environments>Default</environments>
     <formulas>
         <name>Renewal_Opportunity_Name</name>
@@ -93,10 +167,11 @@
     <processType>AutoLaunchedFlow</processType>
     <recordCreates>
         <name>Create_Outreach_Task</name>
-        <label>Create_Outreach_Task</label>
+        <label>Create Outreach Task</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <faultConnector>
+            <isGoTo>true</isGoTo>
             <targetReference>Log_the_Error</targetReference>
         </faultConnector>
         <inputAssignments>
@@ -159,6 +234,7 @@
             <targetReference>Link_Renewal_to_Insurance</targetReference>
         </connector>
         <faultConnector>
+            <isGoTo>true</isGoTo>
             <targetReference>Log_the_Error</targetReference>
         </faultConnector>
         <inputAssignments>
@@ -213,8 +289,12 @@
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Create_Renewal_Opportunity</targetReference>
+            <targetReference>Is_Policy_Holder_Found</targetReference>
         </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Log_the_Error</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
@@ -229,13 +309,16 @@
     </recordLookups>
     <recordLookups>
         <name>Get_Renewal_RecordType</name>
-        <label>Ret Renewal RecordType</label>
+        <label>Get Renewal RecordType</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Get_Policy_Holder_Contact</targetReference>
+            <targetReference>Is_Renewal_RecordType_Found</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Log_the_Error</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>SobjectType</field>
@@ -264,6 +347,7 @@
             <targetReference>Create_Outreach_Task</targetReference>
         </connector>
         <faultConnector>
+            <isGoTo>true</isGoTo>
             <targetReference>Log_the_Error</targetReference>
         </faultConnector>
         <filterLogic>and</filterLogic>
@@ -305,13 +389,101 @@
         </filters>
         <object>Insurance__c</object>
         <schedule>
+            <dayOfMonthToRun>0</dayOfMonthToRun>
             <frequency>Daily</frequency>
+            <frequencyNumber>0</frequencyNumber>
             <startDate>2026-05-16</startDate>
             <startTime>05:00:00.000Z</startTime>
         </schedule>
         <triggerType>Scheduled</triggerType>
     </start>
     <status>Active</status>
+    <subflows>
+        <name>Log_Missing_Policy_Holder</name>
+        <label>Log Missing Policy Holder</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>Log_Error</flowName>
+        <inputAssignments>
+            <name>varContext</name>
+            <value>
+                <stringValue>Renewal Opportunity skipped: the Insurance has no Policy Holder Contact, so the Opportunity name and outreach task cannot be built.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varErrorMessage</name>
+            <value>
+                <stringValue>Get Policy Holder Contact returned no record for Policy_Holder__c on this Insurance.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSeverity</name>
+            <value>
+                <stringValue>Medium</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceFlow</name>
+            <value>
+                <stringValue>Daily_Generate_Renewal_Opportunities</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceStep</name>
+            <value>
+                <stringValue>Is_Policy_Holder_Found</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Log_Missing_Renewal_RecordType</name>
+        <label>Log Missing Renewal RecordType</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>Log_Error</flowName>
+        <inputAssignments>
+            <name>varContext</name>
+            <value>
+                <stringValue>Renewal Opportunity skipped: no Opportunity RecordType matches this Insurance RecordType DeveloperName.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varErrorMessage</name>
+            <value>
+                <stringValue>Get Renewal RecordType returned no record for the Insurance RecordType DeveloperName.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSeverity</name>
+            <value>
+                <stringValue>Medium</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceFlow</name>
+            <value>
+                <stringValue>Daily_Generate_Renewal_Opportunities</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceStep</name>
+            <value>
+                <stringValue>Is_Renewal_RecordType_Found</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
     <subflows>
         <name>Log_the_Error</name>
         <label>Log the Error</label>
@@ -351,7 +523,7 @@
         <inputAssignments>
             <name>varSourceStep</name>
             <value>
-                <stringValue>Create_Renewal_Opportunity / Link_Renewal_to_Insurance / Create_Outreach_Task</stringValue>
+                <stringValue>Get_RecordType / Get_Contact / Create_Opp / Link_Insurance / Create_Task</stringValue>
             </value>
         </inputAssignments>
     </subflows>
