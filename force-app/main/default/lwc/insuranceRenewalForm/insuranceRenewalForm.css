@@ -45,3 +45,18 @@
     background-color: var(--slds-g-color-brand-base-95, #eef4ff);
     border-color: var(--slds-g-color-brand-base-80, #aacbff);
 }
+
+.status-pill {
+    display: inline-block;
+    margin-left: var(--slds-g-spacing-1, 0.25rem);
+    padding: 0 var(--slds-g-spacing-2, 0.5rem);
+    border-radius: var(--slds-g-radius-border-circle, 15rem);
+    background-color: var(--slds-g-color-brand-base-50, #1b96ff);
+    color: var(--slds-g-color-neutral-base-100, #ffffff);
+    letter-spacing: normal;
+}
+
+.future-callout {
+    background-color: var(--slds-g-color-warning-container-1, #fef1de);
+    border-color: var(--slds-g-color-warning-base-60, #fcc003);
+}

@@ -25,9 +25,15 @@ import LBL_SUCCESS_TITLE from '@salesforce/label/c.InsuranceRenewal_SuccessTitle
 import LBL_SUCCESS_MSG from '@salesforce/label/c.InsuranceRenewal_SuccessMessage';
 import LBL_ERROR_TITLE from '@salesforce/label/c.InsuranceRenewal_ErrorTitle';
 import LBL_LOAD_ERROR from '@salesforce/label/c.InsuranceRenewal_LoadError';
+import LBL_STATUS_ACTIVE from '@salesforce/label/c.InsuranceRenewal_StatusActive';
+import LBL_STATUS_DRAFT from '@salesforce/label/c.InsuranceRenewal_StatusDraft';
+import LBL_FUTURE_NOTICE from '@salesforce/label/c.InsuranceRenewal_FutureNotice';
+import LBL_MEMBERS_MOVE from '@salesforce/label/c.InsuranceRenewal_MembersMove';
+import LBL_SUCCESS_DRAFT_MSG from '@salesforce/label/c.InsuranceRenewal_SuccessDraftMessage';
 
 const GROUP_HEALTH = 'Group_Health';
 const AUTO_HOME = 'Auto_Home_Insurance';
+const DRAFT = 'Draft';
 
 /**
  * @description Coerces a form input value to a number, treating blank as null.
@@ -39,10 +45,22 @@ function toNumber(value) {
 }
 
 /**
+ * @description Today's date as a yyyy-MM-dd string in the browser's own timezone, so it compares
+ * directly against the date input's value without a UTC round-trip shifting it a day.
+ * @return Today as an ISO date string.
+ */
+function todayIsoDate() {
+    const now = new Date();
+    return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+}
+
+/**
  * @description Record-page action that renews an insurance policy of any record type: shows the
  * current term against the proposed new term, lets the user adjust the new-term values (dates,
- * provider, premium, coverage), and renews via InsuranceRenewalController — cloning the policy,
- * carrying active members (Group Health), and inactivating the old policy.
+ * provider, premium, coverage), and renews via InsuranceRenewalController. A term that has already
+ * started takes effect immediately — the new policy is Active, its members carry over and the old
+ * policy is inactivated. A term dated in the future is created as Draft, leaves the current policy
+ * alone, and picks up its members when someone sets it to Active.
  * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 export default class InsuranceRenewalForm extends NavigationMixin(LightningElement) {
@@ -66,7 +84,8 @@ export default class InsuranceRenewalForm extends NavigationMixin(LightningEleme
         renew: LBL_RENEW,
         cancel: LBL_CANCEL,
         errorTitle: LBL_ERROR_TITLE,
-        loadError: LBL_LOAD_ERROR
+        loadError: LBL_LOAD_ERROR,
+        futureNotice: LBL_FUTURE_NOTICE
     };
 
     context;
@@ -122,8 +141,27 @@ export default class InsuranceRenewalForm extends NavigationMixin(LightningEleme
         return this.isGroupHealth && this.context.activeMemberCount > 0;
     }
 
+    /**
+     * @description Whether the new term has not started yet, which is what makes the renewal a Draft
+     * plan rather than an immediate switch. The server decides this authoritatively on save; this is
+     * the preview the user sees while filling the form.
+     */
+    get startsInFuture() {
+        return !!this.startDate && this.startDate > todayIsoDate();
+    }
+
+    get newStatusLabel() {
+        return this.startsInFuture ? LBL_STATUS_DRAFT : LBL_STATUS_ACTIVE;
+    }
+
+    get showCarryToggle() {
+        // A future-dated term carries nobody on save — its members move at activation instead.
+        return this.isGroupHealth && !this.startsInFuture;
+    }
+
     get memberMessage() {
-        return `${this.context.activeMemberCount} ${this.label.membersCarry}`;
+        const suffix = this.startsInFuture ? LBL_MEMBERS_MOVE : this.label.membersCarry;
+        return `${this.context.activeMemberCount} ${suffix}`;
     }
 
     get newEndDate() {
@@ -196,7 +234,8 @@ export default class InsuranceRenewalForm extends NavigationMixin(LightningEleme
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: LBL_SUCCESS_TITLE,
-                    message: LBL_SUCCESS_MSG,
+                    // The status comes back from the server, which owns the today comparison.
+                    message: result.newStatus === DRAFT ? LBL_SUCCESS_DRAFT_MSG : LBL_SUCCESS_MSG,
                     variant: 'success'
                 })
             );

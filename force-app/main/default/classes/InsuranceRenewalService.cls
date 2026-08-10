@@ -1,16 +1,25 @@
 /**
  * @description Core renewal engine for Insurance policies of any record type. Clones the expiring
- * policy into a new active term (inheriting every field, including record-type-specific coverage
- * fields), applies the caller's overrides (dates, term, provider, premium, ...), carries the
- * expiring policy's active coverage junctions (ContactInsuranceAssociation) onto the new term, and
- * marks the old policy and its coverage inactive. Caller-agnostic and bulk-safe (accepts a List)
- * so the renewal LWC controller today, and a scheduled job later, can share one implementation.
+ * policy into a new term (inheriting every field, including record-type-specific coverage fields)
+ * and applies the caller's overrides (dates, term, provider, premium, ...). What happens next is
+ * decided by the new term's start date, measured against today at the moment the renewal is
+ * submitted:
+ * - Starting today or earlier — the renewal takes effect now: the new policy is Active, the
+ *   expiring policy's active coverage junctions (ContactInsuranceAssociation) are carried onto the
+ *   new term, and the old policy and its coverage are marked inactive.
+ * - Starting in the future — the renewal is only a plan: the new policy is Draft and the current
+ *   policy is left exactly as it is (whatever its status), with its coverage untouched. The members
+ *   move across later, when the Draft term is set to Active — see the
+ *   Transfer_ContactInsuranceAssociation_Records_to_Renewal_Insurance subflow.
+ * Caller-agnostic and bulk-safe (accepts a List) so the renewal LWC controller today, and a
+ * scheduled job later, can share one implementation.
  * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 public with sharing class InsuranceRenewalService {
 
     private static final String STATUS_ACTIVE = 'Active';
     private static final String STATUS_INACTIVE = 'Inactive';
+    private static final String STATUS_DRAFT = 'Draft';
 
     /**
      * @description Raised when a renewal request is missing its source policy or that policy no
@@ -39,11 +48,14 @@ public with sharing class InsuranceRenewalService {
     }
 
     /**
-     * @description Result of a renewal: the new policy and how many members were carried over.
+     * @description Result of a renewal: the new policy, the status it was created with (Active for
+     * a term that has already started, Draft for one dated in the future), and how many members
+     * were carried over — always zero for a Draft term, whose members move at activation.
      */
     public class RenewalResult {
         @AuraEnabled public Id newInsuranceId;
         @AuraEnabled public Integer membersCarried;
+        @AuraEnabled public String newStatus;
     }
 
     /**
@@ -118,8 +130,9 @@ public with sharing class InsuranceRenewalService {
     }
 
     /**
-     * @description Renews each requested policy. Bulk-safe: all reads and writes are batched across
-     * the whole request list (no SOQL/DML inside per-record loops).
+     * @description Renews each requested policy, immediately or as a future-dated Draft depending on
+     * the new term's start date. Bulk-safe: all reads and writes are batched across the whole
+     * request list (no SOQL/DML inside per-record loops).
      * @param requests The renewal requests to process.
      * @return One RenewalResult per request, in request order.
      */
@@ -141,21 +154,29 @@ public with sharing class InsuranceRenewalService {
             throw new RenewalException('The policy to renew no longer exists.');
         }
 
-        // Clone each old policy into a new active term (parallel list preserves request order).
+        // Clone each old policy into its new term (parallel list preserves request order), and note
+        // which renewals take effect now — only those retire the policy they came from.
         List<Insurance__c> oldOrdered = new List<Insurance__c>();
         List<Insurance__c> newPolicies = new List<Insurance__c>();
+        Map<Id, RenewalRequest> immediateByOldId = new Map<Id, RenewalRequest>();
+        List<Insurance__c> oldToRetire = new List<Insurance__c>();
         for (RenewalRequest req : requests) {
             Insurance__c old = oldById.get(req.originalInsuranceId);
             if (old == null) {
                 throw new RenewalException('The policy to renew no longer exists: ' + req.originalInsuranceId);
             }
-            // Idempotency guard: only an active policy renews. A renewed policy is set inactive, so a
-            // repeat request cannot create a duplicate renewal term.
+            // Idempotency guard: only an active policy renews. A renewal that takes effect now sets
+            // its source policy inactive, so a repeat request cannot create a duplicate renewal term.
             if (old.Status__c != STATUS_ACTIVE) {
                 throw new RenewalException('Only an active policy can be renewed: ' + req.originalInsuranceId);
             }
+            Boolean takesEffectNow = !startsInTheFuture(req);
+            if (takesEffectNow) {
+                immediateByOldId.put(old.Id, req);
+                oldToRetire.add(old);
+            }
             oldOrdered.add(old);
-            newPolicies.add(buildRenewalPolicy(old, req));
+            newPolicies.add(buildRenewalPolicy(old, req, takesEffectNow));
         }
         // Writes run in system mode: renewal is a Flow-invoked administrative cascade over
         // system-managed policy and coverage-junction records, so it must complete regardless of
@@ -168,23 +189,37 @@ public with sharing class InsuranceRenewalService {
             oldToNew.put(oldOrdered[i].Id, newPolicies[i].Id);
         }
 
+        // Only the renewals that take effect now move coverage; a future-dated Draft leaves the
+        // current policy and its members untouched until the new term is activated.
         // Capture the members to carry BEFORE the old policies (and their coverage) are inactivated.
-        List<ContactInsuranceAssociation__c> membersToCarry = captureActiveMembers(requestByOldId);
+        List<ContactInsuranceAssociation__c> membersToCarry = captureActiveMembers(immediateByOldId);
         inactivateOldMembers(membersToCarry);
-        inactivateOld(oldById.values());
+        inactivateOld(oldToRetire);
         // Create the new-term coverage LAST — after every old-policy inactivation cascade has run —
         // so no downstream automation can flip the new coverage inactive.
-        Map<Id, Integer> carriedByOldId = createNewMembers(membersToCarry, oldToNew, requestByOldId);
+        Map<Id, Integer> carriedByOldId = createNewMembers(membersToCarry, oldToNew, immediateByOldId);
 
         List<RenewalResult> results = new List<RenewalResult>();
-        for (RenewalRequest req : requests) {
+        for (Integer i = 0; i < requests.size(); i++) {
             RenewalResult res = new RenewalResult();
-            res.newInsuranceId = oldToNew.get(req.originalInsuranceId);
-            Integer carried = carriedByOldId.get(req.originalInsuranceId);
+            res.newInsuranceId = newPolicies[i].Id;
+            res.newStatus = newPolicies[i].Status__c;
+            Integer carried = carriedByOldId.get(requests[i].originalInsuranceId);
             res.membersCarried = carried == null ? 0 : carried;
             results.add(res);
         }
         return results;
+    }
+
+    /**
+     * @description Whether a renewal's term has not started yet, measured against today at the
+     * moment the renewal is submitted. A term starting today, or already under way, is not future;
+     * a blank start date is treated the same way, so an incomplete form still renews immediately.
+     * @param req The renewal request.
+     * @return True when the new term starts after today.
+     */
+    private Boolean startsInTheFuture(RenewalRequest req) {
+        return req.startDate != null && req.startDate > Date.today();
     }
 
     /**
@@ -216,16 +251,18 @@ public with sharing class InsuranceRenewalService {
     }
 
     /**
-     * @description Clones one source policy into a new active-term policy: copies all fields, resets
-     * lifecycle fields, links back to the source via Parent_Insurance__c, and applies the request's
-     * overrides (start date and term always; the rest only when provided).
+     * @description Clones one source policy into its new term: copies all fields, resets lifecycle
+     * fields, links back to the source via Parent_Insurance__c, and applies the request's overrides
+     * (start date and term always; the rest only when provided).
      * @param old The source policy (with all createable fields loaded).
      * @param req The renewal request carrying the new-term values.
+     * @param takesEffectNow Whether the new term has already started — Active if so, Draft if the
+     * term is still in the future.
      * @return The unsaved new policy.
      */
-    private Insurance__c buildRenewalPolicy(Insurance__c old, RenewalRequest req) {
+    private Insurance__c buildRenewalPolicy(Insurance__c old, RenewalRequest req, Boolean takesEffectNow) {
         Insurance__c neu = old.clone(false, false, false, false);
-        neu.Status__c = STATUS_ACTIVE;
+        neu.Status__c = takesEffectNow ? STATUS_ACTIVE : STATUS_DRAFT;
         neu.Parent_Insurance__c = old.Id;
         neu.Cancellation_Date__c = null;
         neu.Cancellation_Reason__c = null;
@@ -268,13 +305,14 @@ public with sharing class InsuranceRenewalService {
      * @description Reads the active coverage members of the source policies (unless the request
      * opted out), before those policies are inactivated. Members offboarded mid-term are already
      * inactive and so are naturally excluded.
-     * @param requestByOldId Source policy id → request (for the carry-members flag).
+     * @param immediateByOldId Source policy id → request, for the renewals taking effect now only
+     * (for the carry-members flag).
      * @return The active coverage junctions to carry.
      */
-    private List<ContactInsuranceAssociation__c> captureActiveMembers(Map<Id, RenewalRequest> requestByOldId) {
+    private List<ContactInsuranceAssociation__c> captureActiveMembers(Map<Id, RenewalRequest> immediateByOldId) {
         Set<Id> carryOldIds = new Set<Id>();
-        for (Id oldId : requestByOldId.keySet()) {
-            RenewalRequest req = requestByOldId.get(oldId);
+        for (Id oldId : immediateByOldId.keySet()) {
+            RenewalRequest req = immediateByOldId.get(oldId);
             if (req.carryMembers == null || req.carryMembers == true) {
                 carryOldIds.add(oldId);
             }
@@ -311,12 +349,13 @@ public with sharing class InsuranceRenewalService {
      * copied, active, new dates). Called last so no downstream cascade flips the new rows inactive.
      * @param members The coverage junctions captured from the source policies.
      * @param oldToNew Source policy id → new policy id.
-     * @param requestByOldId Source policy id → request (for the new-term dates).
+     * @param immediateByOldId Source policy id → request, for the renewals taking effect now only
+     * (for the new-term dates).
      * @return Count of members carried, by source policy id.
      */
     private Map<Id, Integer> createNewMembers(
         List<ContactInsuranceAssociation__c> members, Map<Id, Id> oldToNew,
-        Map<Id, RenewalRequest> requestByOldId
+        Map<Id, RenewalRequest> immediateByOldId
     ) {
         Map<Id, Integer> carriedByOldId = new Map<Id, Integer>();
         if (members.isEmpty()) {
@@ -324,7 +363,7 @@ public with sharing class InsuranceRenewalService {
         }
         List<ContactInsuranceAssociation__c> newCias = new List<ContactInsuranceAssociation__c>();
         for (ContactInsuranceAssociation__c cia : members) {
-            RenewalRequest req = requestByOldId.get(cia.Insurance__c);
+            RenewalRequest req = immediateByOldId.get(cia.Insurance__c);
             Date newStart = req.startDate;
             // Mirrors the Insurance_End_Date__c formula: the last covered day, not the day after.
             Date newEnd = (newStart != null && req.termMonths != null && req.termMonths > 0)
@@ -345,11 +384,15 @@ public with sharing class InsuranceRenewalService {
     }
 
     /**
-     * @description Marks the source policies inactive (their remaining active coverage, for Group
-     * Health, is also inactivated by the existing Insurance status-change orchestration).
+     * @description Marks the retiring source policies inactive (their remaining active coverage, for
+     * Group Health, is also inactivated by the existing Insurance status-change orchestration).
+     * Policies renewed into a future Draft term are not in this list and are left untouched.
      * @param oldPolicies The source policies to inactivate.
      */
     private void inactivateOld(List<Insurance__c> oldPolicies) {
+        if (oldPolicies.isEmpty()) {
+            return;
+        }
         List<Insurance__c> updates = new List<Insurance__c>();
         for (Insurance__c old : oldPolicies) {
             updates.add(new Insurance__c(Id = old.Id, Status__c = STATUS_INACTIVE));

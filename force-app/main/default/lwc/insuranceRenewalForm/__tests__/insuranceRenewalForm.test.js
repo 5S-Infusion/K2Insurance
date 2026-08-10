@@ -17,6 +17,16 @@ jest.mock(
     { virtual: true }
 );
 
+/**
+ * @description A date offset from today as yyyy-MM-dd, so the future/immediate branches under test
+ * stay on the right side of "today" no matter when the suite runs.
+ */
+function isoDaysFromToday(days) {
+    const date = new Date();
+    date.setDate(date.getDate() + days);
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+}
+
 const CONTEXT = {
     recordId: 'a0m00000000001',
     name: 'ROSTER-GH-TEST (Active)',
@@ -25,7 +35,7 @@ const CONTEXT = {
     currentStartDate: '2026-05-01',
     currentEndDate: '2027-04-30',
     currentTermMonths: 12,
-    suggestedStartDate: '2027-05-01',
+    suggestedStartDate: isoDaysFromToday(60),
     providerId: '001000000000001',
     providerName: 'Blue Cross',
     premium: 4200,
@@ -37,6 +47,12 @@ const CONTEXT = {
 
 function flush() {
     return Promise.resolve();
+}
+
+function toggleInput(element) {
+    return [...element.shadowRoot.querySelectorAll('lightning-input')].find(
+        (input) => input.type === 'toggle'
+    );
 }
 
 describe('c-insurance-renewal-form', () => {
@@ -59,8 +75,39 @@ describe('c-insurance-renewal-form', () => {
         expect(element.shadowRoot.querySelector('.member-callout')).not.toBeNull();
     });
 
+    it('flags a future-dated term as Draft and defers the member move', async () => {
+        const element = createElement('c-insurance-renewal-form', { is: InsuranceRenewalForm });
+        element.recordId = 'a0m00000000001';
+        document.body.appendChild(element);
+
+        getRenewalContext.emit(CONTEXT);
+        await flush();
+
+        expect(element.shadowRoot.querySelector('.future-callout')).not.toBeNull();
+        expect(element.shadowRoot.querySelector('.status-pill').textContent).toBe('Draft');
+        // Nothing carries on save, so the carry-members toggle has nothing to control.
+        expect(toggleInput(element)).toBeUndefined();
+    });
+
+    it('keeps a term that has already started on the immediate Active path', async () => {
+        const element = createElement('c-insurance-renewal-form', { is: InsuranceRenewalForm });
+        element.recordId = 'a0m00000000001';
+        document.body.appendChild(element);
+
+        getRenewalContext.emit({ ...CONTEXT, suggestedStartDate: isoDaysFromToday(0) });
+        await flush();
+
+        expect(element.shadowRoot.querySelector('.future-callout')).toBeNull();
+        expect(element.shadowRoot.querySelector('.status-pill').textContent).toBe('Active');
+        expect(toggleInput(element)).toBeDefined();
+    });
+
     it('calls the renew controller when Renew is clicked', async () => {
-        renew.mockResolvedValue({ newInsuranceId: 'a0m00000000002', membersCarried: 12 });
+        renew.mockResolvedValue({
+            newInsuranceId: 'a0m00000000002',
+            membersCarried: 0,
+            newStatus: 'Draft'
+        });
         const element = createElement('c-insurance-renewal-form', { is: InsuranceRenewalForm });
         element.recordId = 'a0m00000000001';
         document.body.appendChild(element);

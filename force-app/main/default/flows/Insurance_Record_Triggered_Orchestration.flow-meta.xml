@@ -34,6 +34,9 @@
         <label>Is Policy No Longer Active?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Is_Renewal_Now_Active</targetReference>
+        </defaultConnector>
         <defaultConnectorLabel>No — Still In Force</defaultConnectorLabel>
         <rules>
             <name>Is_Policy_No_Longer_Active_Yes</name>
@@ -54,6 +57,43 @@
             </conditions>
             <connector>
                 <targetReference>Inactivation</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>A renewal dated in the future is created Draft with no coverage of its own, and the policy it came from keeps its members. When that renewal is finally set to Active, the members move across. Gate the stage here, not on the stage/step conditions, so no orchestration instance is left parked In Progress. ISCHANGED is false on insert, so a renewal created Active on the spot (a term that had already started) never reaches this branch — its coverage was already handled by the renewal engine.</description>
+        <name>Is_Renewal_Now_Active</name>
+        <label>Is Renewal Now Active?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Is_Renewal_Now_Active_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>fxStatusChanged</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Active</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Parent_Insurance__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Renewal_Activation</targetReference>
             </connector>
             <label>Yes</label>
         </rules>
@@ -103,7 +143,7 @@
             <label>Group Health</label>
         </rules>
     </decisions>
-    <description>2026-07-28: Inactivation now also fires on Status Cancelled (was Inactive only), and is gated by the new Is_Policy_No_Longer_Active decision instead of stage-exit/step-entry conditions — the old conditions left an orchestration instance parked In Progress on every Group Health save because the stage completion condition was never met.</description>
+    <description>2026-08-08: Adds the Renewal Activation stage — when a Group Health renewal (Parent Insurance set) that is still in force has its Status changed to Active, the source policy&apos;s active members are moved onto it. This is how a future-dated renewal, created Draft with no coverage, picks up its members.</description>
     <environments>Default</environments>
     <formulas>
         <name>fxStatusChanged</name>
@@ -170,6 +210,51 @@
                 </value>
             </inputParameters>
             <label>Recalculate Related Contacts</label>
+            <requiresAsyncProcessing>false</requiresAsyncProcessing>
+            <runAsUser>false</runAsUser>
+            <shouldLock>false</shouldLock>
+            <stepSubtype>BackgroundStep</stepSubtype>
+        </stageSteps>
+    </orchestratedStages>
+    <orchestratedStages>
+        <name>Renewal_Activation</name>
+        <label>Renewal Activation</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <exitConditionLogic>and</exitConditionLogic>
+        <stageSteps>
+            <name>Transfer_ContactInsuranceAssociation_to_the_Renewal</name>
+            <actionName>Transfer_ContactInsuranceAssociation_Records_to_Renewal_Insurance</actionName>
+            <actionType>stepBackground</actionType>
+            <canAssigneeEdit>false</canAssigneeEdit>
+            <debugSimulateStep>false</debugSimulateStep>
+            <entryConditionLogic>and</entryConditionLogic>
+            <exitConditionLogic>and</exitConditionLogic>
+            <inputParameters>
+                <name>varCoverageEndDate</name>
+                <value>
+                    <elementReference>$Record.Insurance_End_Date__c</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>varCoverageStartDate</name>
+                <value>
+                    <elementReference>$Record.Insurance_Start_Date__c</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>varRenewalInsuranceId</name>
+                <value>
+                    <elementReference>$Record.Id</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>varSourceInsuranceId</name>
+                <value>
+                    <elementReference>$Record.Parent_Insurance__c</elementReference>
+                </value>
+            </inputParameters>
+            <label>Transfer ContactInsuranceAssociation to the Renewal</label>
             <requiresAsyncProcessing>false</requiresAsyncProcessing>
             <runAsUser>false</runAsUser>
             <shouldLock>false</shouldLock>

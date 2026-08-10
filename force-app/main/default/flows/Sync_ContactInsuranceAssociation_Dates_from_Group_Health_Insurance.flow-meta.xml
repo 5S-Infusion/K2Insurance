@@ -1,7 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>66.0</apiVersion>
+    <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign_End_Date</name>
+        <label>Assign End Date</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>varContactInsuranceAssociationRecord.Coverage_End_Date__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_The_Insurance.Insurance_End_Date__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_the_ContactInsuranceAssociation_Record</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Start_Date</name>
+        <label>Assign Start Date</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>varContactInsuranceAssociationRecord.Coverage_Start_Date__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_The_Insurance.Insurance_Start_Date__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_the_ContactInsuranceAssociation_Record</targetReference>
+        </connector>
+    </assignments>
     <assignments>
         <name>Assign_Start_and_End_Date</name>
         <label>Assign Start and End Date</label>
@@ -25,6 +57,86 @@
             <targetReference>Update_the_ContactInsuranceAssociation_Record</targetReference>
         </connector>
     </assignments>
+    <decisions>
+        <name>Are_Coverage_Dates_Blank</name>
+        <label>Are Coverage Dates Blank?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>NEITHER — KEEP THE ENTERED DATES</defaultConnectorLabel>
+        <rules>
+            <name>Are_Coverage_Dates_Blank_Both</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_The_Insurance.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>varContactInsuranceAssociationRecord.Coverage_Start_Date__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>varContactInsuranceAssociationRecord.Coverage_End_Date__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_Start_and_End_Date</targetReference>
+            </connector>
+            <label>BOTH BLANK</label>
+        </rules>
+        <rules>
+            <name>Are_Coverage_Dates_Blank_Start_Only</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_The_Insurance.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>varContactInsuranceAssociationRecord.Coverage_Start_Date__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_Start_Date</targetReference>
+            </connector>
+            <label>START BLANK ONLY</label>
+        </rules>
+        <rules>
+            <name>Are_Coverage_Dates_Blank_End_Only</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_The_Insurance.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>varContactInsuranceAssociationRecord.Coverage_End_Date__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_End_Date</targetReference>
+            </connector>
+            <label>END BLANK ONLY</label>
+        </rules>
+    </decisions>
     <decisions>
         <name>Is_ContactInsuranceAssociation_Valid</name>
         <label>Is ContactInsuranceAssociation Valid?</label>
@@ -90,6 +202,7 @@
             <label>NO</label>
         </rules>
     </decisions>
+    <description>2026-08-08: Fill-only date sync. Coverage Start/End are now stamped from the Group Health Insurance ONLY when the junction leaves them blank, so a member-level date entered by the user (e.g. a mid-term joiner starting 8/1 on a policy that began 5/1) survives. Previously both dates were overwritten unconditionally on every insert, which silently discarded the entered start date. Also adds the missing Fault path on the Get.</description>
     <environments>Default</environments>
     <interviewLabel>Sync ContactInsuranceAssociation Dates from Group Health Insurance {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Sync ContactInsuranceAssociation Dates from Group Health Insurance</label>
@@ -119,8 +232,11 @@
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Assign_Start_and_End_Date</targetReference>
+            <targetReference>Are_Coverage_Dates_Blank</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Log_the_Error</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>

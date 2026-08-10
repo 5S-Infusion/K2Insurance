@@ -90,6 +90,27 @@ private class InsuranceRenewalControllerTest {
     }
 
     /**
+     * @description A future-dated payload comes back reporting the Draft status, which is what the
+     * form keys its confirmation message off.
+     */
+    @isTest
+    static void renewJsonReportsDraftForAFutureTerm() {
+        Insurance__c policy = buildActivePolicy('Other', 12);
+        InsuranceRenewalService.RenewalRequest req = request(policy.Id);
+        req.startDate = Date.today().addDays(45);
+
+        Test.startTest();
+        InsuranceRenewalService.RenewalResult result =
+            InsuranceRenewalController.renewJson(JSON.serialize(req));
+        Test.stopTest();
+
+        Assert.areEqual('Draft', result.newStatus, 'The result reports the Draft status to the form');
+        Assert.areEqual('Active',
+            [SELECT Status__c FROM Insurance__c WHERE Id = :policy.Id].Status__c,
+            'The source policy is left in force');
+    }
+
+    /**
      * @description renewJson surfaces a controlled error for an unreadable payload.
      */
     @isTest

@@ -1,6 +1,7 @@
 /**
  * @description Tests for InsuranceRenewalService — policy clone, coverage carryover, old-policy
- * inactivation, overrides, whole-life (no term), fault paths, and bulk behavior.
+ * inactivation, future-dated Draft terms, overrides, whole-life (no term), fault paths, and bulk
+ * behavior.
  * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 @isTest
@@ -82,6 +83,7 @@ private class InsuranceRenewalServiceTest {
             FROM Insurance__c WHERE Id = :newId
         ];
         Assert.areEqual('Active', neu.Status__c, 'New policy is active');
+        Assert.areEqual('Active', results[0].newStatus, 'The result reports the status it created');
         Assert.areEqual(gh.Id, neu.Parent_Insurance__c, 'New policy links to the old policy');
         Assert.areEqual(Date.today(), neu.Insurance_Start_Date__c, 'New start date applied');
         Assert.areEqual(12, neu.Insurance_Term_months__c, 'New term applied');
@@ -95,6 +97,121 @@ private class InsuranceRenewalServiceTest {
         Assert.areEqual(0,
             [SELECT COUNT() FROM ContactInsuranceAssociation__c WHERE Insurance__c = :gh.Id AND Active__c = true],
             'Old coverage inactivated');
+    }
+
+    /**
+     * @description A renewal whose term starts in the future is only a plan: the new policy is
+     * created Draft with no coverage of its own, and the policy it came from is left exactly as it
+     * was — still active, still holding its members.
+     */
+    @isTest
+    static void renewFutureStartCreatesDraftAndLeavesTheCurrentPolicyAlone() {
+        EmployeeRosterTestData.buildRoster(5);
+        Insurance__c gh = [
+            SELECT Id FROM Insurance__c WHERE Name LIKE 'ROSTER-GH-TEST%' LIMIT 1
+        ];
+        Integer activeBefore = [
+            SELECT COUNT() FROM ContactInsuranceAssociation__c
+            WHERE Insurance__c = :gh.Id AND Active__c = true
+        ];
+
+        Test.startTest();
+        List<InsuranceRenewalService.RenewalResult> results = new InsuranceRenewalService().renew(
+            new List<InsuranceRenewalService.RenewalRequest>{
+                request(gh.Id, Date.today().addDays(30), 12)
+            }
+        );
+        Test.stopTest();
+
+        Id newId = results[0].newInsuranceId;
+        Insurance__c neu = [
+            SELECT Status__c, Parent_Insurance__c, Insurance_Start_Date__c
+            FROM Insurance__c WHERE Id = :newId
+        ];
+        Assert.areEqual('Draft', neu.Status__c, 'A term that has not started yet is created as Draft');
+        Assert.areEqual('Draft', results[0].newStatus, 'The result reports the status it created');
+        Assert.areEqual(gh.Id, neu.Parent_Insurance__c, 'The Draft term still links to its source policy');
+
+        Assert.areEqual('Active',
+            [SELECT Status__c FROM Insurance__c WHERE Id = :gh.Id].Status__c,
+            'The current policy is untouched');
+        Assert.areEqual(activeBefore,
+            [SELECT COUNT() FROM ContactInsuranceAssociation__c WHERE Insurance__c = :gh.Id AND Active__c = true],
+            'The current policy keeps every one of its members');
+        Assert.areEqual(0,
+            [SELECT COUNT() FROM ContactInsuranceAssociation__c WHERE Insurance__c = :newId],
+            'The Draft term carries no coverage — members move when it is activated');
+        Assert.areEqual(0, results[0].membersCarried, 'Nothing is carried at renewal time');
+    }
+
+    /**
+     * @description A term starting today is already under way, so it takes effect immediately rather
+     * than becoming a Draft plan (the boundary of the future test).
+     */
+    @isTest
+    static void renewStartingTodayTakesEffectImmediately() {
+        Insurance__c policy = buildPolicy('Other', 12, providerAccountId());
+
+        Test.startTest();
+        List<InsuranceRenewalService.RenewalResult> results = new InsuranceRenewalService().renew(
+            new List<InsuranceRenewalService.RenewalRequest>{ request(policy.Id, Date.today(), 12) }
+        );
+        Test.stopTest();
+
+        Assert.areEqual('Active', results[0].newStatus, 'A term starting today is active');
+        Assert.areEqual('Inactive',
+            [SELECT Status__c FROM Insurance__c WHERE Id = :policy.Id].Status__c,
+            'The source policy is retired');
+    }
+
+    /**
+     * @description A back-dated term is already under way and takes effect immediately.
+     */
+    @isTest
+    static void renewPastStartTakesEffectImmediately() {
+        Insurance__c policy = buildPolicy('Other', 12, providerAccountId());
+
+        Test.startTest();
+        List<InsuranceRenewalService.RenewalResult> results = new InsuranceRenewalService().renew(
+            new List<InsuranceRenewalService.RenewalRequest>{
+                request(policy.Id, Date.today().addDays(-10), 12)
+            }
+        );
+        Test.stopTest();
+
+        Assert.areEqual('Active', results[0].newStatus, 'A back-dated term is active');
+        Assert.areEqual('Inactive',
+            [SELECT Status__c FROM Insurance__c WHERE Id = :policy.Id].Status__c,
+            'The source policy is retired');
+    }
+
+    /**
+     * @description One bulk call mixing immediate and future-dated renewals settles each policy on
+     * its own start date — no cross-contamination between the two branches.
+     */
+    @isTest
+    static void renewBulkMixesImmediateAndFutureTerms() {
+        Id provider = providerAccountId();
+        Insurance__c immediate = buildPolicy('Other', 12, provider);
+        Insurance__c future = buildPolicy('Commercial', 12, provider);
+
+        Test.startTest();
+        List<InsuranceRenewalService.RenewalResult> results = new InsuranceRenewalService().renew(
+            new List<InsuranceRenewalService.RenewalRequest>{
+                request(immediate.Id, Date.today(), 12),
+                request(future.Id, Date.today().addMonths(2), 12)
+            }
+        );
+        Test.stopTest();
+
+        Assert.areEqual('Active', results[0].newStatus, 'The immediate renewal is active');
+        Assert.areEqual('Draft', results[1].newStatus, 'The future-dated renewal is a draft');
+        Assert.areEqual('Inactive',
+            [SELECT Status__c FROM Insurance__c WHERE Id = :immediate.Id].Status__c,
+            'Only the immediately renewed policy is retired');
+        Assert.areEqual('Active',
+            [SELECT Status__c FROM Insurance__c WHERE Id = :future.Id].Status__c,
+            'The future-dated policy is left in force');
     }
 
     /**
