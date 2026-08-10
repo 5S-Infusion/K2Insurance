@@ -617,6 +617,46 @@
         <value>Could not load the renewal form.</value>
     </labels>
     <labels>
+        <fullName>InsuranceRenewal_StatusActive</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - new term status badge, takes effect now</shortDescription>
+        <value>Active</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_StatusDraft</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - new term status badge, future dated</shortDescription>
+        <value>Draft</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_FutureNotice</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - future-dated term explanation</shortDescription>
+        <value>This term has not started yet, so the new policy is created as Draft and the current policy is left unchanged. Set the new policy to Active on its start date.</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_MembersMove</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - deferred member move suffix</shortDescription>
+        <value>members will move over when you set the new policy to Active</value>
+    </labels>
+    <labels>
+        <fullName>InsuranceRenewal_SuccessDraftMessage</fullName>
+        <categories>InsuranceRenewal</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Insurance Renewal - success toast message for a future-dated draft</shortDescription>
+        <value>The new term was created as Draft. Set it to Active on its start date to bring the members across.</value>
+    </labels>
+    <labels>
         <fullName>EmployeeRoster_Inactive</fullName>
         <categories>EmployeeRoster</categories>
         <language>en_US</language>
@@ -721,22 +761,6 @@
         <value>Something went wrong</value>
     </labels>
     <labels>
-        <fullName>EmployeeRoster_NewContact</fullName>
-        <categories>EmployeeRoster</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Employee Roster new contact button</shortDescription>
-        <value>New Contact</value>
-    </labels>
-    <labels>
-        <fullName>EmployeeRoster_AddRelationship</fullName>
-        <categories>EmployeeRoster</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Employee Roster add relationship button</shortDescription>
-        <value>Add Relationship</value>
-    </labels>
-    <labels>
         <fullName>EmployeeRoster_OpenRelationship</fullName>
         <categories>EmployeeRoster</categories>
         <language>en_US</language>
@@ -775,5 +799,261 @@
         <protected>false</protected>
         <shortDescription>Employee Roster family combobox placeholder</shortDescription>
         <value>Select tier</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_AddEmployee</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee button and modal title</shortDescription>
+        <value>Add Employee</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_SectionEmployee</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - employee section heading</shortDescription>
+        <value>Employee</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_SectionEmployment</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - employment section heading</shortDescription>
+        <value>Employment</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_CoverageTypes</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - coverage type pill group label</shortDescription>
+        <value>Coverage</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_SectionCoverage</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - coverage section heading</shortDescription>
+        <value>Group Health Enrollment</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_PersonMode</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - new vs existing person selector</shortDescription>
+        <value>Who are you adding?</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_NewPerson</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - new person option</shortDescription>
+        <value>New person</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_ExistingPerson</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - existing contact option</shortDescription>
+        <value>Existing contact</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_FirstName</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - first name input</shortDescription>
+        <value>First Name</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_LastName</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - last name input</shortDescription>
+        <value>Last Name</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_KoreanName</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - Korean name input</shortDescription>
+        <value>Korean Name</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_Email</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - email input</shortDescription>
+        <value>Email</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_MobilePhone</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - mobile phone input</shortDescription>
+        <value>Mobile</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_JobTitle</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - job title input</shortDescription>
+        <value>Title</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_SelectContact</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - existing contact picker</shortDescription>
+        <value>Contact</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_EmpStatusInput</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - employment status checkbox</shortDescription>
+        <value>Currently employed</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_EnrollCoverage</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - enroll in group health checkbox</shortDescription>
+        <value>Enroll this employee in group health</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_EnrollHint</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - enrollment toggle off hint</shortDescription>
+        <value>Turn on to enroll this employee in the company&apos;s group health policy.</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_Policy</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - policy combobox label</shortDescription>
+        <value>Policy</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_PolicyPlaceholder</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - policy combobox placeholder</shortDescription>
+        <value>Select a policy</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_CoverageStartDate</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - member coverage start date input</shortDescription>
+        <value>Coverage Start Date</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_CoverageStartHelp</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - coverage start date helper text</shortDescription>
+        <value>The date this person&apos;s coverage starts, which may differ from the policy start date.</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_PlanMedicalLabel</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - medical coverage checkbox</shortDescription>
+        <value>Medical</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_PlanDentalLabel</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - dental coverage checkbox</shortDescription>
+        <value>Dental</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_PlanVisionLabel</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - vision coverage checkbox</shortDescription>
+        <value>Vision</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_NoPolicies</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - no active group health policy notice</shortDescription>
+        <value>This company has no active group health policy, so there is nothing to enroll into yet.</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_AddSuccessTitle</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - success toast title</shortDescription>
+        <value>Employee added</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_AddSuccessMessage</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - success toast message</shortDescription>
+        <value>The employment relationship was created.</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_AddSuccessCoverage</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - success toast when coverage created</shortDescription>
+        <value>Employment and group health coverage were created.</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_LastNameRequired</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - missing last name validation</shortDescription>
+        <value>Enter a last name.</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_ContactRequired</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - missing existing contact validation</shortDescription>
+        <value>Select a contact.</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_PolicyRequired</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add employee - missing policy validation</shortDescription>
+        <value>Select a policy, or turn off the group health enrollment.</value>
     </labels>
 </CustomLabels>
