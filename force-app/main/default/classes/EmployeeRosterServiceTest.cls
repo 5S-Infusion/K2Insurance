@@ -69,6 +69,40 @@ private class EmployeeRosterServiceTest {
     }
 
     /**
+     * @description An offboarded employee stops showing active insurance even though the company's
+     * shared group policy is still Active for everyone else on it.
+     */
+    @isTest
+    static void getRosterDropsCoverageOnceTheJunctionIsInactive() {
+        List<AccountContactRelation> relations = EmployeeRosterTestData.buildRoster(3);
+        Id companyId = companyOf(relations[0].Id);
+        Id leaverId = [SELECT ContactId FROM AccountContactRelation WHERE Id = :relations[0].Id].ContactId;
+
+        Test.startTest();
+        new EmployeeRosterService().offboard(new Set<Id>{ relations[0].Id }, Date.today());
+        List<EmployeeRosterService.EmployeeRow> rows = new EmployeeRosterService().getRoster(companyId);
+        Test.stopTest();
+
+        Assert.areEqual(
+            'Active',
+            [SELECT Status__c FROM Insurance__c WHERE Id = :policyOf(companyId)].Status__c,
+            'The shared group policy must stay Active for the employees still on it'
+        );
+        Integer stillCovered = 0;
+        for (EmployeeRosterService.EmployeeRow row : rows) {
+            if (row.contactId == leaverId) {
+                Assert.isFalse(row.activeIns, 'An offboarded employee should not show active insurance');
+                Assert.isNull(row.plans, 'An offboarded employee should not show plan initials');
+            } else {
+                stillCovered++;
+                Assert.isTrue(row.activeIns, 'An employee still enrolled should keep active insurance');
+                Assert.areEqual('M', row.plans, 'An employee still enrolled should keep their plan initials');
+            }
+        }
+        Assert.areEqual(2, stillCovered, 'Only the offboarded employee should lose coverage');
+    }
+
+    /**
      * @description getRoster on a parent company rolls up employees from its sub-companies and
      * labels each row with its own company; getRoster on the sub-company returns only its own.
      */

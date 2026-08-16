@@ -161,12 +161,15 @@ public with sharing class EmployeeRosterService {
     }
 
     /**
-     * @description Summarizes each contact's coverage as the initials of the plan types they hold
-     * across policies that are still Active — "M / D / V", "M", and so on. Computed here rather
-     * than read from the Contact roll-up fields because those are maintained by an asynchronous
-     * orchestration, so a person onboarded moments ago would show a blank Plans column until the
-     * roll-up caught up. Mirrors the roll-up's own definition of active coverage: the linked
-     * policy's Status is Active.
+     * @description Summarizes each contact's coverage as the initials of the plan types they are
+     * currently enrolled in — "M / D / V", "M", and so on. Computed here rather than read from the
+     * Contact roll-up fields because those are maintained by an asynchronous orchestration, so a
+     * person onboarded moments ago would show a blank Plans column until the roll-up caught up.
+     * Coverage counts only when BOTH the junction is still Active and the linked policy is Active.
+     * The junction check is what makes leavers drop off: offboarding inactivates the junction but
+     * leaves the company's shared group policy Active for everyone still on it, so filtering on the
+     * policy alone would keep an offboarded employee showing active coverage for as long as the
+     * company keeps the plan.
      * @param contactIds The contacts to summarize.
      * @return The coverage summary per contact; a contact with no active coverage is absent.
      */
@@ -175,7 +178,9 @@ public with sharing class EmployeeRosterService {
         for (ContactInsuranceAssociation__c cia : [
             SELECT Contact__c, Medical__c, Dental__c, Vision__c
             FROM ContactInsuranceAssociation__c
-            WHERE Contact__c IN :contactIds AND Insurance__r.Status__c = :INSURANCE_ACTIVE
+            WHERE Contact__c IN :contactIds
+              AND Active__c = true
+              AND Insurance__r.Status__c = :INSURANCE_ACTIVE
             WITH USER_MODE
         ]) {
             Set<String> types = typesByContact.get(cia.Contact__c);
