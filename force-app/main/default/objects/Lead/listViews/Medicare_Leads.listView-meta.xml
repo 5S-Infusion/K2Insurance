@@ -2,14 +2,14 @@
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Medicare_Leads</fullName>
     <columns>Eligibility_Start_Date__c</columns>
-    <columns>Is_Converted__c</columns>
     <columns>LEAD.STATUS</columns>
-    <columns>Agent__c</columns>
     <columns>FULL_NAME</columns>
     <columns>Korean_Name__c</columns>
     <columns>Birthdate__c</columns>
     <columns>LEAD.PHONE</columns>
     <columns>LEAD.STATE</columns>
+    <columns>Agent__c</columns>
+    <columns>Is_Converted__c</columns>
     <filterScope>Everything</filterScope>
     <filters>
         <field>LEAD.RECORDTYPE</field>
@@ -19,7 +19,12 @@
     <filters>
         <field>LEAD.STATUS</field>
         <operation>notEqual</operation>
-        <value>Unqualified,Qualified</value>
+        <value>Unqualified</value>
+    </filters>
+    <filters>
+        <field>LEAD.STATUS</field>
+        <operation>notEqual</operation>
+        <value>Qualified</value>
     </filters>
     <label>Medicare Leads</label>
 </ListView>

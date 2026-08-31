@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>New_Leads</fullName>
-    <columns>LEAD.CREATED_DATE</columns>
+    <fullName>All_Leads</fullName>
     <columns>Interested_Insurance__c</columns>
-    <columns>LEAD.RECORDTYPE</columns>
     <columns>Eligibility_Start_Date__c</columns>
     <columns>FULL_NAME</columns>
     <columns>Korean_Name__c</columns>
@@ -12,10 +10,5 @@
     <columns>Agent__c</columns>
     <columns>Is_Converted__c</columns>
     <filterScope>Everything</filterScope>
-    <filters>
-        <field>LEAD.STATUS</field>
-        <operation>equals</operation>
-        <value>New</value>
-    </filters>
-    <label>New Leads</label>
+    <label>All Leads</label>
 </ListView>

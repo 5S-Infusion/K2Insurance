@@ -2,7 +2,6 @@
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Copy_of_Open_Leads_All</fullName>
     <columns>Eligibility_Start_Date__c</columns>
-    <columns>Is_Converted__c</columns>
     <columns>Interested_Insurance__c</columns>
     <columns>LEAD.STATUS</columns>
     <columns>Agent__c</columns>
@@ -10,6 +9,7 @@
     <columns>Korean_Name__c</columns>
     <columns>LEAD.PHONE</columns>
     <columns>LEAD.STATE</columns>
+    <columns>Is_Converted__c</columns>
     <filterScope>Everything</filterScope>
     <filters>
         <field>LEAD.STATUS</field>
