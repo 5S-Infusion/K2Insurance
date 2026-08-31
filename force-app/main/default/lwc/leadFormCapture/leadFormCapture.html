@@ -62,10 +62,17 @@
                 <div class="header-section slds-m-bottom_medium">
                     <img src={logoUrl} alt="K2 Insurance" class="company-logo" if:true={logoUrl}>
                     <h1 class="slds-text-heading_large form-title">{labels.title}</h1>
+                    <p class="form-subtitle">{labels.formIntro}</p>
                 </div>
 
                 <!-- Form Content -->
             <div class="form-content">
+                <section class="form-section">
+                    <div class="section-head">
+                        <span class="section-num">1</span>
+                        <h2 class="section-title">{labels.sectionBasics}</h2>
+                    </div>
+
                 <!-- Name Fields -->
                 <div class="name-fields-container slds-m-bottom_medium">
                     <div class="slds-grid slds-gutters">
@@ -137,6 +144,14 @@
                     </lightning-combobox>
                 </div>
 
+                </section>
+
+                <section class="form-section">
+                    <div class="section-head">
+                        <span class="section-num">2</span>
+                        <h2 class="section-title">{labels.sectionAddress}</h2>
+                    </div>
+
                 <!-- Address Field with Google Lookup -->
                 <div class="slds-form-element slds-m-bottom_medium">
                     <lightning-input-address
@@ -157,6 +172,14 @@
                         class="form-input">
                     </lightning-input-address>
                 </div>
+
+                </section>
+
+                <section class="form-section">
+                    <div class="section-head">
+                        <span class="section-num">3</span>
+                        <h2 class="section-title">{labels.sectionContact}</h2>
+                    </div>
 
                 <!-- Email -->
                 <div class="slds-form-element slds-m-bottom_medium">
@@ -203,23 +226,155 @@
                     </div>
                 </div>
 
-                <!-- Interested Insurance (Multi-select) -->
+                </section>
+
+                <section class="form-section">
+                    <div class="section-head">
+                        <span class="section-num">4</span>
+                        <h2 class="section-title">{labels.sectionInsurance}</h2>
+                    </div>
+
+                <!-- Interested Insurance (single choice) -->
                 <div class="slds-form-element slds-m-bottom_large">
-                    <lightning-dual-listbox
+                    <lightning-combobox
                         label={labels.insuranceQuestion}
                         name="interestedInsurance"
-                        source-label={labels.available}
-                        selected-label={labels.selected}
+                        placeholder={labels.selectInsurance}
                         options={insuranceOptions}
                         value={selectedInsurance}
                         required
                         message-when-value-missing={labels.insuranceRequired}
                         onchange={handleInsuranceChange}
-                        size="4"
                         class="form-input">
-                    </lightning-dual-listbox>
-                    <p class="insurance-help-text slds-m-top_x-small">{labels.insuranceHelpText}</p>
+                    </lightning-combobox>
                 </div>
+
+                <!-- Household members (Health / Medicare only) -->
+                <template if:true={showFamilySection}>
+                    <div class="family-section slds-m-bottom_large">
+                        <fieldset class="slds-form-element">
+                            <legend class="family-legend">{labels.familyQuestion}</legend>
+                            <p class="family-help">{labels.familyHelp}</p>
+                            <lightning-radio-group
+                                name="hasFamily"
+                                label={labels.familyQuestion}
+                                variant="label-hidden"
+                                options={familyChoiceOptions}
+                                value={hasFamily}
+                                type="radio"
+                                onchange={handleHasFamilyChange}>
+                            </lightning-radio-group>
+                        </fieldset>
+
+                        <template if:true={showFamilyRows}>
+                            <template for:each={familyMembers} for:item="member" for:index="idx">
+                                <div key={member.key} class="family-row">
+                                    <div class="family-row-head">
+                                        <span class="family-row-title">{labels.familyMember} {member.displayIndex}</span>
+                                        <template if:true={canRemoveMember}>
+                                            <lightning-button-icon
+                                                icon-name="utility:close"
+                                                variant="bare"
+                                                alternative-text={labels.familyRemove}
+                                                title={labels.familyRemove}
+                                                data-key={member.key}
+                                                onclick={handleRemoveMember}>
+                                            </lightning-button-icon>
+                                        </template>
+                                    </div>
+
+                                    <div class="slds-grid slds-wrap slds-gutters_x-small">
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_x-small">
+                                            <lightning-combobox
+                                                label={labels.familyRelationship}
+                                                options={relationshipOptions}
+                                                value={member.relationship}
+                                                placeholder={labels.familySelectRelationship}
+                                                data-key={member.key}
+                                                data-field="relationship"
+                                                required
+                                                message-when-value-missing={labels.familyRelationshipRequired}
+                                                onchange={handleMemberChange}
+                                                class="form-input">
+                                            </lightning-combobox>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_x-small">
+                                            <lightning-input
+                                                type="date"
+                                                label={labels.dob}
+                                                value={member.birthdate}
+                                                max={maxDate}
+                                                data-key={member.key}
+                                                data-field="birthdate"
+                                                required
+                                                message-when-value-missing={labels.familyDobRequired}
+                                                onchange={handleMemberChange}
+                                                class="form-input">
+                                            </lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_x-small">
+                                            <lightning-input
+                                                label={labels.firstName}
+                                                value={member.firstName}
+                                                data-key={member.key}
+                                                data-field="firstName"
+                                                required
+                                                message-when-value-missing={labels.familyFirstNameRequired}
+                                                onchange={handleMemberChange}
+                                                class="form-input">
+                                            </lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_x-small">
+                                            <lightning-input
+                                                label={labels.lastName}
+                                                value={member.lastName}
+                                                data-key={member.key}
+                                                data-field="lastName"
+                                                required
+                                                message-when-value-missing={labels.familyLastNameRequired}
+                                                onchange={handleMemberChange}
+                                                class="form-input">
+                                            </lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_x-small">
+                                            <lightning-input
+                                                type="email"
+                                                label={labels.familyEmailOptional}
+                                                value={member.email}
+                                                data-key={member.key}
+                                                data-field="email"
+                                                onchange={handleMemberChange}
+                                                class="form-input">
+                                            </lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_x-small">
+                                            <lightning-input
+                                                type="tel"
+                                                label={labels.familyPhoneOptional}
+                                                value={member.phone}
+                                                data-key={member.key}
+                                                data-field="phone"
+                                                onchange={handleMemberChange}
+                                                class="form-input">
+                                            </lightning-input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <lightning-button
+                                variant="neutral"
+                                icon-name="utility:add"
+                                label={labels.familyAdd}
+                                onclick={handleAddMember}
+                                class="family-add-button">
+                            </lightning-button>
+                            <p class="family-note">{labels.familyNote}</p>
+                        </template>
+                    </div>
+                </template>
+
+                </section>
 
                     <!-- Submit Button -->
                     <div class="slds-text-align_center slds-m-top_large">

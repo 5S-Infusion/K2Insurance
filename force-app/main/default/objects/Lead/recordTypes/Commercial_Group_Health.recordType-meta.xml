@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Medicare</fullName>
+    <fullName>Commercial_Group_Health</fullName>
     <active>true</active>
-    <businessProcess>Medicare Lead Process</businessProcess>
-    <description>Lead record type for Medicare prospects requiring regulated handling and compliance controls.</description>
-    <label>Medicare</label>
+    <businessProcess>Others Lead Process</businessProcess>
+    <description>Lead record type for prospects whose company information arrives with them - commercial lines and group health. Converts to an Account (company) alongside the Contact.</description>
+    <label>Commercial / Group Health</label>
     <picklistValues>
         <picklist>County__c</picklist>
         <values>

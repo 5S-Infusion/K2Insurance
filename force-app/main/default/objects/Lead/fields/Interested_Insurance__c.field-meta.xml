@@ -39,13 +39,11 @@
             <value>
                 <fullName>Auto/Home</fullName>
                 <default>false</default>
-                <isActive>false</isActive>
                 <label>Auto/Home</label>
             </value>
             <value>
                 <fullName>Commercial</fullName>
                 <default>false</default>
-                <isActive>false</isActive>
                 <label>Commercial</label>
             </value>
         </valueSetDefinition>

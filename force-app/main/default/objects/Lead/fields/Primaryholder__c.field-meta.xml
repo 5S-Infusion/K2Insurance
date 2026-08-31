@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Primaryholder__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The lead who is the primary policyholder of this household. Carried over to Contact.Primaryholder__c on conversion.</description>
+    <inlineHelpText>Select the household&apos;s primary policyholder. Leave blank if this lead is the primary holder.</inlineHelpText>
+    <label>Primaryholder</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>The primary policyholder is not permitted to select its Primary Holder.</errorMessage>
+        <filterItems>
+            <field>$Source.Is_Primaryholder__c</field>
+            <operation>equals</operation>
+            <value>False</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Lead</referenceTo>
+    <relationshipLabel>Household Members</relationshipLabel>
+    <relationshipName>Household_Members</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Lookup</type>
+</CustomField>

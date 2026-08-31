@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Familial_Relationship__c</fullName>
+    <description>This lead&apos;s relationship to the household&apos;s primary policyholder. Carried over to Contact.Familial_Relationship__c on conversion.</description>
+    <label>Familial Relationship</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Brother</fullName>
+                <default>false</default>
+                <label>Brother</label>
+            </value>
+            <value>
+                <fullName>Daughter</fullName>
+                <default>false</default>
+                <label>Daughter</label>
+            </value>
+            <value>
+                <fullName>Father</fullName>
+                <default>false</default>
+                <label>Father</label>
+            </value>
+            <value>
+                <fullName>Father in Law</fullName>
+                <default>false</default>
+                <label>Father in Law</label>
+            </value>
+            <value>
+                <fullName>Grandfather</fullName>
+                <default>false</default>
+                <label>Grandfather</label>
+            </value>
+            <value>
+                <fullName>Grandmother</fullName>
+                <default>false</default>
+                <label>Grandmother</label>
+            </value>
+            <value>
+                <fullName>Mother</fullName>
+                <default>false</default>
+                <label>Mother</label>
+            </value>
+            <value>
+                <fullName>Mother in Law</fullName>
+                <default>false</default>
+                <label>Mother in Law</label>
+            </value>
+            <value>
+                <fullName>Sister</fullName>
+                <default>false</default>
+                <label>Sister</label>
+            </value>
+            <value>
+                <fullName>Son</fullName>
+                <default>false</default>
+                <label>Son</label>
+            </value>
+            <value>
+                <fullName>Spouse</fullName>
+                <default>false</default>
+                <label>Spouse</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Household_Choice_Label__c</fullName>
+    <description>Display label used by the Lead conversion screen when listing household members. Marks the primary holder and anyone already converted, so the agent can see the whole household at a glance.</description>
+    <externalId>false</externalId>
+    <formula>TRIM(BLANKVALUE(FirstName, &quot;&quot;) &amp; &quot; &quot; &amp; LastName)
+&amp;  IF(NOT(ISBLANK(TEXT(Familial_Relationship__c))), &quot; (&quot; &amp; TEXT(Familial_Relationship__c) &amp; &quot;)&quot;, &quot;&quot;)
+&amp;  IF(Is_Primaryholder__c, &quot; (Primary)&quot;, &quot;&quot;)
+&amp;  IF(NOT(ISBLANK(Contact__c)), &quot; - 이미 전환됨&quot;, &quot;&quot;)</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <label>Household Choice Label</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

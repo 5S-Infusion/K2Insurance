@@ -58,6 +58,10 @@
                     <value>false</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
+                    <name>hideSlackAction</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
                     <name>numVisibleActions</name>
                     <value>3</value>
                 </componentInstanceProperties>
@@ -136,99 +140,6 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>showLegacyActivityComposer</name>
-                    <value>false</value>
-                </componentInstanceProperties>
-                <componentName>runtime_sales_activities:activityPanel</componentName>
-                <identifier>runtime_sales_activities_activityPanel</identifier>
-            </componentInstance>
-        </itemInstances>
-        <mode>Replace</mode>
-        <name>activityTabContent</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>active</name>
-                    <value>true</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>body</name>
-                    <value>activityTabContent</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>title</name>
-                    <value>Standard.Tab.activity</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:tab</componentName>
-                <identifier>activityTab</identifier>
-            </componentInstance>
-        </itemInstances>
-        <mode>Replace</mode>
-        <name>tabs</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>label</name>
-                    <value>Tabs</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>tabs</name>
-                    <value>tabs</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:tabset</componentName>
-                <identifier>flexipage_tabset</identifier>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentName>emailComposer</componentName>
-                <identifier>c_emailComposer</identifier>
-            </componentInstance>
-        </itemInstances>
-        <mode>Replace</mode>
-        <name>main</name>
-        <type>Region</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Agent__c</fieldItem>
-                <identifier>RecordAgent_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Eligibility_Start_Date__c</fieldItem>
-                <identifier>RecordEligibility_Start_Date_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Depricated_Eligibility_Start_Date__c</fieldItem>
-                <identifier>RecordEligibility_Start_Month_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
                     <name>uiBehavior</name>
@@ -304,16 +215,6 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.MobilePhone</fieldItem>
-                <identifier>RecordMobilePhoneField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
                 <fieldItem>Record.Email</fieldItem>
                 <identifier>RecordEmailField</identifier>
             </fieldInstance>
@@ -338,6 +239,36 @@
                 <identifier>RecordCounty_cField</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Is_Primaryholder__c</fieldItem>
+                <identifier>RecordIs_Primaryholder_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Primaryholder__c</fieldItem>
+                <identifier>RecordPrimaryholder_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Familial_Relationship__c</fieldItem>
+                <identifier>RecordFamilial_Relationship_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-06794087-752d-4f6a-b585-a084573ff29a</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -346,10 +277,40 @@
             <fieldInstance>
                 <fieldInstanceProperties>
                     <name>uiBehavior</name>
-                    <value>required</value>
+                    <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Status</fieldItem>
-                <identifier>RecordStatusField</identifier>
+                <fieldItem>Record.Agent__c</fieldItem>
+                <identifier>RecordAgent_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Interested_Insurance__c</fieldItem>
+                <identifier>RecordInterested_Insurance_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Eligibility_Start_Date__c</fieldItem>
+                <identifier>RecordEligibility_Start_Date_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Depricated_Eligibility_Start_Date__c</fieldItem>
+                <identifier>RecordEligibility_Start_Month_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -366,10 +327,10 @@
             <fieldInstance>
                 <fieldInstanceProperties>
                     <name>uiBehavior</name>
-                    <value>none</value>
+                    <value>required</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Contact__c</fieldItem>
-                <identifier>RecordContact_cField</identifier>
+                <fieldItem>Record.Status</fieldItem>
+                <identifier>RecordStatusField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -398,8 +359,68 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Interested_Insurance__c</fieldItem>
-                <identifier>RecordInterested_Insurance_cField</identifier>
+                <fieldItem>Record.Contact__c</fieldItem>
+                <identifier>RecordContact_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Primary_Doctor__c</fieldItem>
+                <identifier>RecordPrimary_Doctor_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.MBI_Number__c</fieldItem>
+                <identifier>RecordMBI_Number_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Part_A_Effective_Date__c</fieldItem>
+                <identifier>RecordPart_A_Effective_Date_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Part_B_Effective_Date__c</fieldItem>
+                <identifier>RecordPart_B_Effective_Date_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Medicaid_Eligibility__c</fieldItem>
+                <identifier>RecordMedicaid_Eligibility_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.LIS_Eligibility__c</fieldItem>
+                <identifier>RecordLIS_Eligibility_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-1d89afb1-2236-4406-8992-588208e2b20d</name>
@@ -504,8 +525,83 @@
                 <identifier>flexipage_fieldSection5</identifier>
             </componentInstance>
         </itemInstances>
-        <name>Facet-11465439-f5fe-4d22-abe0-c3c19a32032c</name>
+        <name>Facet-32d49d9d-ea54-4d8d-87cd-e1540edb0867</name>
         <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>showLegacyActivityComposer</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentName>runtime_sales_activities:activityPanel</componentName>
+                <identifier>runtime_sales_activities_activityPanel</identifier>
+            </componentInstance>
+        </itemInstances>
+        <mode>Replace</mode>
+        <name>activityTabContent</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>active</name>
+                    <value>true</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>Facet-32d49d9d-ea54-4d8d-87cd-e1540edb0867</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>title</name>
+                    <value>Standard.Tab.detail</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:tab</componentName>
+                <identifier>flexipage_tab2</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>active</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>activityTabContent</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>title</name>
+                    <value>Standard.Tab.activity</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:tab</componentName>
+                <identifier>activityTab</identifier>
+            </componentInstance>
+        </itemInstances>
+        <mode>Replace</mode>
+        <name>tabs</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>label</name>
+                    <value>Tabs</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>tabs</name>
+                    <value>tabs</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:tabset</componentName>
+                <identifier>flexipage_tabset</identifier>
+            </componentInstance>
+        </itemInstances>
+        <mode>Replace</mode>
+        <name>main</name>
+        <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <itemInstances>
@@ -565,24 +661,6 @@
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>active</name>
-                    <value>true</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>body</name>
-                    <value>Facet-11465439-f5fe-4d22-abe0-c3c19a32032c</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>title</name>
-                    <value>Standard.Tab.detail</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:tab</componentName>
-                <identifier>flexipage_tab</identifier>
-            </componentInstance>
-        </itemInstances>
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>

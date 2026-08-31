@@ -80,12 +80,40 @@ const GENDER_IDENTITY_OPTIONS_KO = [
 
 // Fallback Insurance options (for guest users without field access)
 const INSURANCE_OPTIONS = [
-    { label: 'Group Health', value: 'Group Health' },
     { label: 'Health', value: 'Health' },
-    { label: 'Life', value: 'Life' },
     { label: 'Medicare', value: 'Medicare' },
+    { label: 'Group Health', value: 'Group Health' },
+    { label: 'Commercial', value: 'Commercial' },
+    { label: 'Auto/Home', value: 'Auto/Home' },
+    { label: 'Life', value: 'Life' },
     { label: 'Other', value: 'Other' }
 ];
+
+// Household relationship options. Values must match the Familial_Relationship__c picklist.
+const RELATIONSHIP_OPTIONS_EN = [
+    { label: 'Spouse', value: 'Spouse' },
+    { label: 'Son', value: 'Son' },
+    { label: 'Daughter', value: 'Daughter' },
+    { label: 'Father', value: 'Father' },
+    { label: 'Mother', value: 'Mother' },
+    { label: 'Brother', value: 'Brother' },
+    { label: 'Sister', value: 'Sister' },
+    { label: 'Other', value: 'Other' }
+];
+
+const RELATIONSHIP_OPTIONS_KO = [
+    { label: '배우자', value: 'Spouse' },
+    { label: '아들', value: 'Son' },
+    { label: '딸', value: 'Daughter' },
+    { label: '아버지', value: 'Father' },
+    { label: '어머니', value: 'Mother' },
+    { label: '형제', value: 'Brother' },
+    { label: '자매', value: 'Sister' },
+    { label: '기타', value: 'Other' }
+];
+
+// Family capture only applies to these insurance lines.
+const FAMILY_ENABLED_INSURANCE = ['Health', 'Medicare'];
 
 // Language options
 const LANGUAGE_OPTIONS_BASE = [
@@ -95,7 +123,12 @@ const LANGUAGE_OPTIONS_BASE = [
 
 // Korean translations (for runtime language switching)
 const KOREAN_LABELS = {
-    title: '리드',
+    title: '보험 상담 신청',
+    formIntro: '몇 가지만 알려주시면 담당자가 곧 연락드립니다.',
+    sectionBasics: '기본 정보',
+    sectionAddress: '주소',
+    sectionContact: '연락처',
+    sectionInsurance: '필요하신 보험',
     firstName: '이름',
     middleName: '중간 이름',
     lastName: '성',
@@ -121,10 +154,25 @@ const KOREAN_LABELS = {
     phoneRequired: '전화번호는 필수입니다',
     phoneInvalid: '올바른 전화번호를 입력하세요',
     insuranceQuestion: '어떤 보험이 필요하신가요?',
-    insuranceRequired: '하나 이상의 보험 상품을 선택해 주세요',
-    insuranceHelpText: '왼쪽 목록(선택 가능)에서 원하는 보험 상품을 선택한 후, 화살표 버튼을 눌러 \'선택됨\' 박스로 이동시키고 제출을 클릭하여 선택을 저장하세요.',
-    available: '선택 가능',
-    selected: '선택됨',
+    insuranceRequired: '보험 상품을 선택해 주세요',
+    selectInsurance: '보험 상품을 선택하세요',
+    familyQuestion: '함께 가입할 가족이 있으신가요?',
+    familyHelp: '배우자나 자녀 등 같이 상담받을 가족을 여기에 적어 주세요. 주소와 연락처는 다시 쓰지 않으셔도 됩니다.',
+    familyYes: '있습니다',
+    familyNo: '없습니다',
+    familyMember: '가족',
+    familyRelationship: '관계',
+    familySelectRelationship: '관계를 선택하세요',
+    familyEmailOptional: '이메일 (선택)',
+    familyPhoneOptional: '전화번호 (선택)',
+    familyAdd: '가족 추가',
+    familyRemove: '삭제',
+    familyNote: '이메일과 전화번호를 비워 두시면 위에 입력하신 정보가 사용됩니다.',
+    familyRelationshipRequired: '관계를 선택해 주세요',
+    familyDobRequired: '생년월일을 입력해 주세요',
+    familyFirstNameRequired: '이름을 입력해 주세요',
+    familyLastNameRequired: '성을 입력해 주세요',
+    familyIncomplete: '가족 정보를 모두 입력해 주세요 (관계·생년월일·이름·성)',
     submit: '제출',
     submitTitle: '리드 양식 제출',
     submitting: '제출 중...',
@@ -141,7 +189,30 @@ const KOREAN_LABELS = {
 
 // English labels from Custom Labels
 const ENGLISH_LABELS = {
-    title: LABEL_TITLE,
+    formIntro: 'Tell us a little about yourself and we will be in touch shortly.',
+    sectionBasics: 'About you',
+    sectionAddress: 'Address',
+    sectionContact: 'How we reach you',
+    sectionInsurance: 'What you need',
+    selectInsurance: 'Select an insurance product',
+    familyQuestion: 'Is anyone in your family applying with you?',
+    familyHelp: 'Add a spouse, children, or anyone else you want covered. You will not need to retype your address or contact details.',
+    familyYes: 'Yes',
+    familyNo: 'No',
+    familyMember: 'Family member',
+    familyRelationship: 'Relationship',
+    familySelectRelationship: 'Select a relationship',
+    familyEmailOptional: 'Email (optional)',
+    familyPhoneOptional: 'Phone (optional)',
+    familyAdd: 'Add family member',
+    familyRemove: 'Remove',
+    familyNote: 'Leave email or phone blank and we will use the details you entered above.',
+    familyRelationshipRequired: 'Please select a relationship',
+    familyDobRequired: 'Please enter a date of birth',
+    familyFirstNameRequired: 'Please enter a first name',
+    familyLastNameRequired: 'Please enter a last name',
+    familyIncomplete: 'Please complete every family member (relationship, date of birth, first and last name)',
+    title: 'Request an Insurance Quote',
     firstName: LABEL_FIRST_NAME,
     middleName: LABEL_MIDDLE_NAME,
     lastName: LABEL_LAST_NAME,
@@ -226,6 +297,30 @@ export default class LeadFormCapture extends NavigationMixin(LightningElement) {
         return !this.showThankYou;
     }
 
+    // Household members are only collected for Health and Medicare.
+    get showFamilySection() {
+        return FAMILY_ENABLED_INSURANCE.includes(this.selectedInsurance);
+    }
+
+    get showFamilyRows() {
+        return this.hasFamily === 'yes';
+    }
+
+    get canRemoveMember() {
+        return this.familyMembers.length > 1;
+    }
+
+    get familyChoiceOptions() {
+        return [
+            { label: this.labels.familyNo, value: 'no' },
+            { label: this.labels.familyYes, value: 'yes' }
+        ];
+    }
+
+    get relationshipOptions() {
+        return this.selectedLanguage === 'ko' ? RELATIONSHIP_OPTIONS_KO : RELATIONSHIP_OPTIONS_EN;
+    }
+
     // Form field values
     @track firstName = '';
     @track middleName = '';
@@ -240,7 +335,12 @@ export default class LeadFormCapture extends NavigationMixin(LightningElement) {
     @track email = '';
     @track phone = '';
     @track countryCode = '+1';
-    @track selectedInsurance = [];
+    @track selectedInsurance = '';
+
+    // Household capture state
+    @track hasFamily = 'no';
+    @track familyMembers = [];
+    _memberKeySeed = 0;
 
     // UI state
     @track isSubmitting = false;
@@ -397,11 +497,111 @@ export default class LeadFormCapture extends NavigationMixin(LightningElement) {
     }
 
     /**
-     * Insurance selection change handler
-     * @param {Event} event - Change event from dual listbox
+     * Insurance selection change handler (single choice)
+     * @param {Event} event - Change event from the combobox
      */
     handleInsuranceChange(event) {
         this.selectedInsurance = event.detail.value;
+
+        // Household capture does not apply to every line of business. Drop anything already
+        // entered when the customer switches to a line that does not collect it, so we never
+        // submit household members that the form has stopped showing.
+        if (!this.showFamilySection) {
+            this.hasFamily = 'no';
+            this.familyMembers = [];
+        }
+    }
+
+    /**
+     * Toggles the household member rows
+     * @param {Event} event - Change event from the radio group
+     */
+    handleHasFamilyChange(event) {
+        this.hasFamily = event.detail.value;
+
+        if (this.hasFamily === 'yes' && this.familyMembers.length === 0) {
+            this.addMemberRow();
+        } else if (this.hasFamily === 'no') {
+            this.familyMembers = [];
+        }
+    }
+
+    /**
+     * Adds one blank household member row
+     */
+    handleAddMember() {
+        this.addMemberRow();
+    }
+
+    /**
+     * Removes a household member row
+     * @param {Event} event - Click event carrying the row key
+     */
+    handleRemoveMember(event) {
+        const key = event.currentTarget.dataset.key;
+        this.familyMembers = this.reindexMembers(
+            this.familyMembers.filter(member => member.key !== key)
+        );
+    }
+
+    /**
+     * Field-level change handler for a household member row
+     * @param {Event} event - Change event carrying the row key and field name
+     */
+    handleMemberChange(event) {
+        const { key, field } = event.currentTarget.dataset;
+        const value = event.detail.value;
+
+        this.familyMembers = this.familyMembers.map(member =>
+            member.key === key ? { ...member, [field]: value } : member
+        );
+    }
+
+    /**
+     * Appends a blank row to the household member list
+     */
+    addMemberRow() {
+        this._memberKeySeed += 1;
+        this.familyMembers = this.reindexMembers([
+            ...this.familyMembers,
+            {
+                key: `member-${this._memberKeySeed}`,
+                relationship: '',
+                firstName: '',
+                lastName: '',
+                birthdate: '',
+                email: '',
+                phone: ''
+            }
+        ]);
+    }
+
+    /**
+     * Recomputes the 1-based label shown on each row
+     * @param {Array} members - Household member rows
+     * @returns {Array} Rows with displayIndex refreshed
+     */
+    reindexMembers(members) {
+        return members.map((member, index) => ({ ...member, displayIndex: index + 1 }));
+    }
+
+    /**
+     * Builds the household member payload, dropping blank rows
+     * @returns {Array} Household members worth sending to Apex
+     */
+    buildFamilyPayload() {
+        if (!this.showFamilySection || this.hasFamily !== 'yes') {
+            return [];
+        }
+
+        return this.familyMembers.map(member => ({
+                relationship: member.relationship || null,
+                firstName: member.firstName.trim(),
+                lastName: member.lastName.trim(),
+                birthdate: member.birthdate || null,
+                email: member.email?.trim() || null,
+                phone: member.phone?.trim() || null
+        }));
     }
 
     /**
@@ -431,7 +631,8 @@ export default class LeadFormCapture extends NavigationMixin(LightningElement) {
                 country: this.country,
                 email: this.email,
                 phone: this.formatPhoneNumber(),
-                interestedInsurance: this.selectedInsurance
+                interestedInsurance: this.selectedInsurance,
+                familyMembers: this.buildFamilyPayload()
             };
 
             console.log('Submitting form data:', JSON.stringify(formData));
@@ -488,6 +689,21 @@ export default class LeadFormCapture extends NavigationMixin(LightningElement) {
             isValid = false;
         }
 
+        // Every household row must be complete. Relationship, date of birth and the full name
+        // all end up on the member's own Lead, so a half-filled row would create a record the
+        // agent cannot act on.
+        if (this.showFamilySection && this.hasFamily === 'yes') {
+            const incomplete = this.familyMembers.some(member =>
+                !member.relationship || !member.birthdate ||
+                !member.firstName?.trim() || !member.lastName?.trim()
+            );
+
+            if (incomplete) {
+                this.showToast(this.labels.validationError, this.labels.familyIncomplete, 'error');
+                isValid = false;
+            }
+        }
+
         if (!this.genderIdentity) {
             this.showToast(this.labels.validationError, this.labels.genderIdentityRequired, 'error');
             isValid = false;
@@ -533,7 +749,9 @@ export default class LeadFormCapture extends NavigationMixin(LightningElement) {
         this.email = '';
         this.phone = '';
         this.countryCode = '+1';
-        this.selectedInsurance = [];
+        this.selectedInsurance = '';
+        this.hasFamily = 'no';
+        this.familyMembers = [];
 
         // Clear validation errors
         const inputFields = this.template.querySelectorAll(

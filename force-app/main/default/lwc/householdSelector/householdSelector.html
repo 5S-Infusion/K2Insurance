@@ -1,0 +1,22 @@
+<template>
+    <div class="household-table">
+        <lightning-datatable
+            key-field="Id"
+            data={rows}
+            columns={columns}
+            selected-rows={preselectedIds}
+            onrowselection={handleRowSelection}
+            hide-checkbox-column={isEmpty}
+            column-widths-mode="auto"
+            resize-column-disabled>
+        </lightning-datatable>
+
+        <template if:true={isEmpty}>
+            <p class="empty-note">연결된 가족이 없습니다.</p>
+        </template>
+
+        <template if:false={isEmpty}>
+            <p class="summary-note">{summaryText}</p>
+        </template>
+    </div>
+</template>

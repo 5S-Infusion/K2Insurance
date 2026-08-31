@@ -26,7 +26,7 @@ private class LeadFormControllerTest {
             'country' => 'USA',
             'email' => 'john.doe@example.com',
             'phone' => '+12025551234',
-            'interestedInsurance' => new List<String>{'Health', 'Life'}
+            'interestedInsurance' => 'Health'
         };
         String formDataJson = JSON.serialize(formData);
 
@@ -52,8 +52,7 @@ private class LeadFormControllerTest {
         System.assertEquals('123 Main Street', createdLead.Street, 'Street should match');
         System.assertEquals('john.doe@example.com', createdLead.Email, 'Email should match');
         System.assertEquals('+12025551234', createdLead.Phone, 'Phone should match');
-        System.assert(createdLead.Interested_Insurance__c.contains('Health'), 'Should contain Health insurance');
-        System.assert(createdLead.Interested_Insurance__c.contains('Life'), 'Should contain Life insurance');
+        System.assertEquals('Health', createdLead.Interested_Insurance__c, 'Interested Insurance should hold the single choice');
         System.assertEquals('[Not Provided]', createdLead.Company, 'Company should be default value');
         System.assertEquals('New', createdLead.Status, 'Status should be New');
         System.assertEquals('Web', createdLead.LeadSource, 'LeadSource should be Web');
@@ -377,5 +376,163 @@ private class LeadFormControllerTest {
         System.assertEquals('Doe', createdLead.LastName, 'LastName should be trimmed');
         System.assertEquals('123 Main St', createdLead.Street, 'Street should be trimmed');
         System.assertEquals('john@example.com', createdLead.Email, 'Email should be trimmed');
+    }
+
+    /**
+     * @description Each insurance choice must land on the right Lead record type.
+     *              Group Health and Commercial deliberately share one record type.
+     */
+    @isTest
+    static void testRecordTypeMappingPerInsuranceChoice() {
+        Map<String, String> expectedByChoice = new Map<String, String>{
+            'Medicare' => 'Medicare',
+            'Health' => 'Health',
+            'Group Health' => 'Commercial_Group_Health',
+            'Commercial' => 'Commercial_Group_Health',
+            'Auto/Home' => 'Others',
+            'Life' => 'Others',
+            'Other' => 'Others'
+        };
+
+        Map<Id, String> devNameByRecordTypeId = new Map<Id, String>();
+        for (RecordType rt : [SELECT Id, DeveloperName FROM RecordType WHERE SobjectType = 'Lead']) {
+            devNameByRecordTypeId.put(rt.Id, rt.DeveloperName);
+        }
+
+        Test.startTest();
+        for (String choice : expectedByChoice.keySet()) {
+            Id leadId = LeadFormController.createLead(JSON.serialize(baseFormData(choice)));
+            Lead created = [SELECT RecordTypeId, Interested_Insurance__c FROM Lead WHERE Id = :leadId];
+
+            System.assertEquals(choice, created.Interested_Insurance__c,
+                'Stored interest should match the submitted choice for ' + choice);
+            System.assertEquals(expectedByChoice.get(choice), devNameByRecordTypeId.get(created.RecordTypeId),
+                'Unexpected record type for ' + choice);
+        }
+        Test.stopTest();
+    }
+
+    /**
+     * @description A Health submission with household members creates one Lead per person,
+     *              all linked back to the submitter, with shared details copied down.
+     */
+    @isTest
+    static void testCreateLeadWithFamilyMembers() {
+        Map<String, Object> formData = baseFormData('Health');
+        formData.put('familyMembers', new List<Map<String, Object>>{
+            new Map<String, Object>{
+                'relationship' => 'Spouse', 'firstName' => 'Jane', 'lastName' => 'Doe',
+                'birthdate' => Date.today().addYears(-28), 'email' => 'jane@example.com', 'phone' => null
+            },
+            new Map<String, Object>{
+                'relationship' => 'Son', 'firstName' => 'Sam', 'lastName' => 'Doe',
+                'birthdate' => Date.today().addYears(-8), 'email' => null, 'phone' => null
+            }
+        });
+
+        Test.startTest();
+        Id primaryId = LeadFormController.createLead(JSON.serialize(formData));
+        Test.stopTest();
+
+        Lead primary = [SELECT Is_Primaryholder__c, Primaryholder__c, Street, Email FROM Lead WHERE Id = :primaryId];
+        System.assertEquals(true, primary.Is_Primaryholder__c, 'Submitter should be the primary holder');
+        System.assertEquals(null, primary.Primaryholder__c, 'Primary holder must not point at anyone');
+
+        List<Lead> members = [
+            SELECT FirstName, LastName, Familial_Relationship__c, Primaryholder__c,
+                   Is_Primaryholder__c, Street, Email, Phone, Interested_Insurance__c
+            FROM Lead WHERE Primaryholder__c = :primaryId ORDER BY FirstName
+        ];
+        System.assertEquals(2, members.size(), 'One Lead per household member');
+
+        for (Lead member : members) {
+            System.assertEquals(false, member.Is_Primaryholder__c, 'Members are not primary holders');
+            System.assertEquals(primary.Street, member.Street, 'Address is inherited, not retyped');
+            System.assertEquals('Health', member.Interested_Insurance__c, 'Insurance interest is inherited');
+        }
+
+        System.assertEquals('Spouse', members[0].Familial_Relationship__c, 'Jane is the spouse');
+        System.assertEquals('jane@example.com', members[0].Email, 'Member keeps their own email');
+        System.assertEquals(primary.Email, members[1].Email, 'Blank member email falls back to the submitter');
+    }
+
+    /**
+     * @description Household capture is limited to Health and Medicare; members submitted
+     *              alongside any other line of business are ignored.
+     */
+    @isTest
+    static void testFamilyMembersIgnoredForNonHealthLines() {
+        Map<String, Object> formData = baseFormData('Auto/Home');
+        formData.put('familyMembers', new List<Map<String, Object>>{
+            new Map<String, Object>{ 'relationship' => 'Spouse', 'firstName' => 'Jane',
+                                     'lastName' => 'Doe', 'birthdate' => Date.today().addYears(-30) }
+        });
+
+        Test.startTest();
+        Id primaryId = LeadFormController.createLead(JSON.serialize(formData));
+        Test.stopTest();
+
+        System.assertEquals(0, [SELECT COUNT() FROM Lead WHERE Primaryholder__c = :primaryId],
+            'Household members should not be created for Auto/Home');
+        System.assertEquals(false, [SELECT Is_Primaryholder__c FROM Lead WHERE Id = :primaryId].Is_Primaryholder__c,
+            'Without household members the submitter is not flagged as primary holder');
+    }
+
+    /**
+     * @description A fully blank row is ignored, but a half-filled one is rejected rather than
+     *              creating a Lead the agent cannot follow up on.
+     */
+    @isTest
+    static void testIncompleteFamilyMemberIsRejected() {
+        Map<String, Object> blankRowData = baseFormData('Medicare');
+        blankRowData.put('familyMembers', new List<Map<String, Object>>{
+            new Map<String, Object>{ 'relationship' => null, 'firstName' => '', 'lastName' => '' },
+            new Map<String, Object>{ 'relationship' => 'Daughter', 'firstName' => 'Amy',
+                                     'lastName' => 'Doe', 'birthdate' => Date.today().addYears(-10) }
+        });
+
+        Map<String, Object> partialRowData = baseFormData('Medicare');
+        partialRowData.put('email', 'partial@example.com');
+        partialRowData.put('familyMembers', new List<Map<String, Object>>{
+            new Map<String, Object>{ 'relationship' => 'Son', 'firstName' => 'Max', 'lastName' => 'Doe' }
+        });
+
+        Test.startTest();
+        Id primaryId = LeadFormController.createLead(JSON.serialize(blankRowData));
+
+        Boolean rejected = false;
+        try {
+            LeadFormController.createLead(JSON.serialize(partialRowData));
+        } catch (AuraHandledException e) {
+            rejected = true;
+        }
+        Test.stopTest();
+
+        List<Lead> members = [SELECT FirstName FROM Lead WHERE Primaryholder__c = :primaryId];
+        System.assertEquals(1, members.size(), 'The blank row is ignored, the complete one is created');
+        System.assertEquals('Amy', members[0].FirstName, 'The completed member is the one created');
+        System.assertEquals(true, rejected, 'A member missing a date of birth must be rejected');
+    }
+
+    /**
+     * @description Builds a valid submission for the given insurance choice.
+     * @param insuranceChoice Value for Interested Insurance.
+     * @return Form data map ready to serialize.
+     */
+    private static Map<String, Object> baseFormData(String insuranceChoice) {
+        return new Map<String, Object>{
+            'firstName' => 'John',
+            'lastName' => 'Doe',
+            'birthdate' => Date.today().addYears(-40),
+            'genderIdentity' => 'Male',
+            'street' => '123 Main Street',
+            'city' => 'Los Angeles',
+            'state' => 'CA',
+            'postalCode' => '90001',
+            'country' => 'USA',
+            'email' => 'john.doe@example.com',
+            'phone' => '+12025551234',
+            'interestedInsurance' => insuranceChoice
+        };
     }
 }

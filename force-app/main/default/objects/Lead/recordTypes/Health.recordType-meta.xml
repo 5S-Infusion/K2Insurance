@@ -1123,6 +1123,14 @@
             <fullName>Other</fullName>
             <default>false</default>
         </values>
+        <values>
+            <fullName>Auto%2FHome</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commercial</fullName>
+            <default>false</default>
+        </values>
     </picklistValues>
     <picklistValues>
         <picklist>LeadSource</picklist>

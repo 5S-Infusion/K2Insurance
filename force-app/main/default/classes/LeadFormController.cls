@@ -25,7 +25,21 @@ public without sharing class LeadFormController {
         @AuraEnabled public String country { get; set; }
         @AuraEnabled public String email { get; set; }
         @AuraEnabled public String phone { get; set; }
-        @AuraEnabled public List<String> interestedInsurance { get; set; }
+        @AuraEnabled public String interestedInsurance { get; set; }
+        @AuraEnabled public List<FamilyMemberData> familyMembers { get; set; }
+    }
+
+    /**
+     * @description One additional household member captured on the same form submission.
+     *              Each becomes its own Lead, linked back to the submitter as Primaryholder.
+     */
+    public class FamilyMemberData {
+        @AuraEnabled public String relationship { get; set; }
+        @AuraEnabled public String firstName { get; set; }
+        @AuraEnabled public String lastName { get; set; }
+        @AuraEnabled public Date birthdate { get; set; }
+        @AuraEnabled public String email { get; set; }
+        @AuraEnabled public String phone { get; set; }
     }
 
     /**
@@ -47,18 +61,36 @@ public without sharing class LeadFormController {
             LeadFormData formData = parseFormData(formDataJson);
             validateFormData(formData);
 
-            // Build Lead record.
-            Lead newLead = buildLeadRecord(formData);
+            List<FamilyMemberData> members = getEligibleFamilyMembers(formData);
+            Boolean hasFamily = !members.isEmpty();
 
-            // Insert Lead.
-            Database.SaveResult result = Database.insert(newLead, false);
+            // Build the submitter's Lead. When family members came in on the same form the
+            // submitter becomes the household's primary holder.
+            Lead primaryLead = buildLeadRecord(formData);
+            primaryLead.Is_Primaryholder__c = hasFamily;
 
-            if (!result.isSuccess()) {
-                String errorMessage = getErrorMessage(result.getErrors());
-                throw new LeadFormException(errorMessage);
+            Database.SaveResult primaryResult = Database.insert(primaryLead, false);
+            if (!primaryResult.isSuccess()) {
+                throw new LeadFormException(getErrorMessage(primaryResult.getErrors()));
             }
 
-            return result.getId();
+            Id primaryLeadId = primaryResult.getId();
+
+            if (hasFamily) {
+                List<Lead> memberLeads = new List<Lead>();
+                for (FamilyMemberData member : members) {
+                    memberLeads.add(buildFamilyMemberLead(member, formData, primaryLeadId));
+                }
+
+                List<Database.SaveResult> memberResults = Database.insert(memberLeads, false);
+                for (Database.SaveResult memberResult : memberResults) {
+                    if (!memberResult.isSuccess()) {
+                        throw new LeadFormException(getErrorMessage(memberResult.getErrors()));
+                    }
+                }
+            }
+
+            return primaryLeadId;
 
         } catch (LeadFormException e) {
             Database.rollback(sp);
@@ -71,6 +103,95 @@ public without sharing class LeadFormController {
             ExceptionLogger.log('LeadFormController.createLead', null, e);
             throw new AuraHandledException(System.Label.LeadFormCapture_UnexpectedError);
         }
+    }
+
+    /**
+     * @description Returns the household members to create Leads for. Family capture only applies
+     *              to Health and Medicare - other lines either do not need household data or are
+     *              collected directly from the employer. Every submitted member must be complete,
+     *              because each one becomes a Lead an agent has to be able to act on.
+     * @param formData The submitted form data.
+     * @return Household members, or an empty list when the line of business does not collect them.
+     */
+    private static List<FamilyMemberData> getEligibleFamilyMembers(LeadFormData formData) {
+        List<FamilyMemberData> members = new List<FamilyMemberData>();
+
+        if (formData.familyMembers == null || !supportsFamilyCapture(formData.interestedInsurance)) {
+            return members;
+        }
+
+        for (FamilyMemberData member : formData.familyMembers) {
+            if (member == null) {
+                continue;
+            }
+
+            Boolean isBlankRow = String.isBlank(member.relationship)
+                && String.isBlank(member.firstName)
+                && String.isBlank(member.lastName)
+                && member.birthdate == null
+                && String.isBlank(member.email)
+                && String.isBlank(member.phone);
+
+            if (isBlankRow) {
+                continue;
+            }
+
+            if (String.isBlank(member.relationship) || String.isBlank(member.firstName)
+                || String.isBlank(member.lastName) || member.birthdate == null) {
+                throw new LeadFormException(
+                    'Each family member needs a relationship, date of birth, first name and last name.');
+            }
+
+            members.add(member);
+        }
+
+        return members;
+    }
+
+    /**
+     * @description Whether the chosen insurance line collects household members.
+     * @param interestedInsurance The value chosen on the form.
+     * @return True for Health and Medicare.
+     */
+    @TestVisible
+    private static Boolean supportsFamilyCapture(String interestedInsurance) {
+        if (String.isBlank(interestedInsurance)) {
+            return false;
+        }
+        String choice = interestedInsurance.trim();
+        return choice.equalsIgnoreCase('Health') || choice.equalsIgnoreCase('Medicare');
+    }
+
+    /**
+     * @description Builds a household member Lead. Shared details (address, insurance interest,
+     *              record type) are inherited from the submitter so the customer only types them
+     *              once; contact details fall back to the submitter's when left blank.
+     * @param member The household member captured on the form.
+     * @param formData The submitter's form data.
+     * @param primaryLeadId Id of the submitter's Lead.
+     * @return Lead sObject ready for insert.
+     */
+    private static Lead buildFamilyMemberLead(FamilyMemberData member, LeadFormData formData, Id primaryLeadId) {
+        Lead memberLead = buildLeadRecord(formData);
+
+        memberLead.FirstName = member.firstName?.trim();
+        memberLead.MiddleName = null;
+        memberLead.LastName = member.lastName?.trim();
+        memberLead.Birthdate__c = member.birthdate;
+
+        // Gender is not collected per household member on the form.
+        memberLead.Gender_Identity__c = null;
+
+        memberLead.Email = String.isNotBlank(member.email) ? member.email.trim() : formData.email?.trim();
+        memberLead.Phone = String.isNotBlank(member.phone) ? member.phone.trim() : formData.phone?.trim();
+
+        // Household linkage. Is_Primaryholder__c stays false so the Primaryholder lookup filter
+        // on Lead accepts the reference.
+        memberLead.Is_Primaryholder__c = false;
+        memberLead.Primaryholder__c = primaryLeadId;
+        memberLead.Familial_Relationship__c = member.relationship;
+
+        return memberLead;
     }
 
     /**
@@ -88,28 +209,16 @@ public without sharing class LeadFormController {
     }
 
     /**
-     * @description Retrieves Interested Insurance picklist values, excluding Auto/Home and Commercial.
+     * @description Retrieves all active Interested Insurance picklist values for the form.
      * @return List of picklist options with label and value.
      */
     @AuraEnabled
     public static List<PicklistOption> getInterestedInsuranceOptions() {
         try {
-            List<PicklistOption> allOptions = getPicklistOptions('Lead', 'Interested_Insurance__c');
-            List<PicklistOption> filteredOptions = new List<PicklistOption>();
-
-            // Values to exclude from the form.
-            Set<String> excludedValues = new Set<String>{ 'Auto/Home', 'Commercial' };
-
-            for (PicklistOption option : allOptions) {
-                if (!excludedValues.contains(option.value)) {
-                    filteredOptions.add(option);
-                }
-            }
-
-            return filteredOptions;
+            return getPicklistOptions('Lead', 'Interested_Insurance__c');
         } catch (Exception e) {
             ExceptionLogger.log('LeadFormController.getInterestedInsuranceOptions', null, e);
-            throw new AuraHandledException(System.Label.LeadFormCapture_InsuranceOptionsError);
+            return new List<PicklistOption>();
         }
     }
 
@@ -254,14 +363,15 @@ public without sharing class LeadFormController {
         newLead.Email = formData.email?.trim();
         newLead.Phone = formData.phone?.trim();
 
-        // Multi-select picklist (semicolon-separated).
-        if (formData.interestedInsurance != null && !formData.interestedInsurance.isEmpty()) {
-            newLead.Interested_Insurance__c = String.join(formData.interestedInsurance, ';');
+        // Interested Insurance is captured as a single choice on the form. The field itself is
+        // still a multi-select picklist, so a lone value is stored without a separator.
+        if (String.isNotBlank(formData.interestedInsurance)) {
+            newLead.Interested_Insurance__c = formData.interestedInsurance.trim();
+        }
 
-            Id resolvedRecordTypeId = resolveLeadRecordTypeId(formData.interestedInsurance);
-            if (resolvedRecordTypeId != null) {
-                newLead.RecordTypeId = resolvedRecordTypeId;
-            }
+        Id resolvedRecordTypeId = resolveLeadRecordTypeId(formData.interestedInsurance);
+        if (resolvedRecordTypeId != null) {
+            newLead.RecordTypeId = resolvedRecordTypeId;
         }
 
         // Default values.
@@ -285,38 +395,31 @@ public without sharing class LeadFormController {
         return String.join(errorMessages, ' ');
     }
 
-    /**
-     * @description Case-insensitive membership check.
-     * @param values The values to search.
-     * @param targetValue The value to find.
-     * @return True when targetValue is present ignoring case.
-     */
-    private static Boolean containsValueIgnoreCase(List<String> values, String targetValue) {
-        if (values == null || String.isBlank(targetValue)) {
-            return false;
-        }
-        for (String value : values) {
-            if (value != null && value.trim().equalsIgnoreCase(targetValue)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
-     * @description Resolves the Lead record type from the selected interests.
-     * Priority: Medicare (regulated) > Health (also covers Group Health) > Others.
-     * @param interestedInsurance Selected interest values.
-     * @return Record type Id, or null when none resolves.
+     * @description Maps the single Interested Insurance choice onto a Lead record type.
+     *              Group Health and Commercial share one record type because both arrive with
+     *              company information attached; everything else falls back to Others.
+     * @param interestedInsurance The value chosen on the form.
+     * @return Record type Id, or null when it cannot be resolved.
      */
-    private static Id resolveLeadRecordTypeId(List<String> interestedInsurance) {
-        if (containsValueIgnoreCase(interestedInsurance, 'Medicare')) {
+    private static Id resolveLeadRecordTypeId(String interestedInsurance) {
+        if (String.isBlank(interestedInsurance)) {
+            return getLeadRecordTypeId('Others');
+        }
+
+        String choice = interestedInsurance.trim();
+
+        if (choice.equalsIgnoreCase('Medicare')) {
             return getLeadRecordTypeId('Medicare');
         }
-        if (containsValueIgnoreCase(interestedInsurance, 'Health')
-            || containsValueIgnoreCase(interestedInsurance, 'Group Health')) {
+        if (choice.equalsIgnoreCase('Health')) {
             return getLeadRecordTypeId('Health');
         }
+        if (choice.equalsIgnoreCase('Group Health') || choice.equalsIgnoreCase('Commercial')) {
+            return getLeadRecordTypeId('Commercial_Group_Health');
+        }
+
         return getLeadRecordTypeId('Others');
     }
 

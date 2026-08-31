@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Household Selector</masterLabel>
+    <description>Lets an agent pick which household members to convert, in one table.</description>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="leads" type="@salesforce/schema/Lead[]" label="Household leads"
+                      description="Every lead in the household, including the primary holder."
+                      role="inputOnly"/>
+            <property name="selectedLeads" type="@salesforce/schema/Lead[]" label="Selected leads"
+                      description="The leads the agent chose to convert." role="outputOnly"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

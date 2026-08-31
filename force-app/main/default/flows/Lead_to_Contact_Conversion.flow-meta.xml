@@ -1,140 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <actionCalls>
-        <name>Create_Note_on_Contact</name>
-        <label>Create Note on Contact</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <actionName>ContentNoteCreator</actionName>
-        <actionType>apex</actionType>
-        <connector>
-            <targetReference>Generating_ContentDocumentLinks</targetReference>
-        </connector>
-        <faultConnector>
-            <isGoTo>true</isGoTo>
-            <targetReference>Generating_ContentDocumentLinks</targetReference>
-        </faultConnector>
-        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
-        <inputParameters>
-            <name>body</name>
-            <value>
-                <elementReference>Get_the_Lead.Important_Note__c</elementReference>
-            </value>
-        </inputParameters>
-        <inputParameters>
-            <name>parentId</name>
-            <value>
-                <elementReference>Create_a_Contact</elementReference>
-            </value>
-        </inputParameters>
-        <inputParameters>
-            <name>title</name>
-            <value>
-                <stringValue>Important Note (from Lead)</stringValue>
-            </value>
-        </inputParameters>
-        <nameSegment>ContentNoteCreator</nameSegment>
-        <offset>0</offset>
-    </actionCalls>
-    <apiVersion>64.0</apiVersion>
+    <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
-    <assignments>
-        <name>Add_the_ContentDocumentLink_to_Collection</name>
-        <label>Add the ContentDocumentLink to Collection</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>varClonedContentDocumentLinks</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <elementReference>varClonedContentDocumentLink</elementReference>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Generating_ContentDocumentLinks</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <name>Assign_Values_to_the_Lead</name>
-        <label>Assign Values to the Lead</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>Get_the_Lead.Status</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <stringValue>Qualified</stringValue>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>Get_the_Lead.ConvertedContactId</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>Create_a_Contact</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>Get_the_Lead.IsConverted</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>Get_the_Lead.ConvertedDate</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>$System.OriginDateTime</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>Get_the_Lead.Contact__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>Create_a_Contact</elementReference>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Update_the_Lead</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <name>Clone_a_ContentDocumentLink</name>
-        <label>Clone a ContentDocumentLink</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>varClonedContentDocumentLink.ContentDocumentId</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>Generating_ContentDocumentLinks.ContentDocumentId</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>varClonedContentDocumentLink.LinkedEntityId</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>Create_a_Contact</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>varClonedContentDocumentLink.ShareType</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>Generating_ContentDocumentLinks.ShareType</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>varClonedContentDocumentLink.Visibility</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>Generating_ContentDocumentLinks.Visibility</elementReference>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Add_the_ContentDocumentLink_to_Collection</targetReference>
-        </connector>
-    </assignments>
     <customProperties>
         <name>ScreenProgressIndicator</name>
         <value>
@@ -142,322 +9,129 @@
         </value>
     </customProperties>
     <decisions>
-        <name>Has_valid_Company_Information</name>
-        <label>Has valid Company Information?</label>
+        <name>Is_Duplicate_Error</name>
+        <label>Conversion Failure Reason</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Get_Related_Attachments</targetReference>
+            <targetReference>Conversion_Failed</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Invalid</defaultConnectorLabel>
+        <defaultConnectorLabel>Other Error</defaultConnectorLabel>
         <rules>
-            <name>Valid</name>
+            <name>Is_Duplicate_Error_Yes</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_the_Lead.Company</leftValueReference>
+                <leftValueReference>$Flow.FaultMessage</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>DUPLICATE</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Duplicate_Contact_Message</targetReference>
+            </connector>
+            <label>Duplicate</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_Lead_Already_Converted</name>
+        <label>Is Lead Already Converted?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Household_Others</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Is_Lead_Already_Converted_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_the_Lead.Contact__c</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
+            <connector>
+                <targetReference>Already_Converted</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Has_Household_Others</name>
+        <label>Has Household Others?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Convert_This_Lead</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Has_Household_Others_Yes</name>
+            <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_the_Lead.Company</leftValueReference>
-                <operator>IsBlank</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>Get_the_Lead.Company</leftValueReference>
-                <operator>WasSet</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>varLenOfCompany</leftValueReference>
-                <operator>GreaterThanOrEqualTo</operator>
-                <rightValue>
-                    <numberValue>2.0</numberValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>varIsPlaceholderCompany</leftValueReference>
-                <operator>EqualTo</operator>
+                <leftValueReference>Get_Household_Others</leftValueReference>
+                <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Get_Client_Business_Account_Record_Types</targetReference>
+                <targetReference>Get_Household_All</targetReference>
             </connector>
-            <label>Valid</label>
+            <label>Yes</label>
         </rules>
     </decisions>
-    <description>Added subagent to Create Contact element.</description>
+    <decisions>
+        <name>Is_Lead_Unconverted</name>
+        <label>Is Lead Unconverted?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Each_Selected_Lead</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Already converted - skip</defaultConnectorLabel>
+        <rules>
+            <name>Is_Lead_Unconverted_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Each_Selected_Lead.Contact__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Convert_Selected_Lead</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>2026-08-31: 가족 일괄 전환 선택 추가. 전환 로직은 Lead_Convert_Single 서브플로우로 분리하고, 이 플로우는 대상 선택과 안내 화면을 담당한다. Subflow 요소는 플랫폼상 fault path를 지원하지 않아, 오류 처리는 자식 플로우 내부에서 Log_Error로 수행한다.</description>
     <environments>Default</environments>
     <formulas>
-        <name>varIsPlaceholderCompany</name>
-        <dataType>Boolean</dataType>
-        <expression>OR(
-  UPPER(TRIM({!Get_the_Lead.Company})) = &quot;[NOT PROVIDED]&quot;,
-  UPPER(TRIM({!Get_the_Lead.Company})) = &quot;NOT PROVIDED&quot;)</expression>
-    </formulas>
-    <formulas>
-        <name>varLenOfCompany</name>
-        <dataType>Number</dataType>
-        <expression>LEN({!Get_the_Lead.Company})</expression>
-        <scale>2</scale>
+        <name>frmPrimaryHolderId</name>
+        <dataType>String</dataType>
+        <expression>IF(ISBLANK({!Get_the_Lead.Primaryholder__c}), {!Get_the_Lead.Id}, {!Get_the_Lead.Primaryholder__c})</expression>
     </formulas>
     <interviewLabel>Lead to Contact Conversion {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Lead to Contact Conversion</label>
     <loops>
-        <name>Generating_ContentDocumentLinks</name>
-        <label>Generating ContentDocumentLinks</label>
+        <name>Each_Selected_Lead</name>
+        <label>Each Selected Lead</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <collectionReference>Get_Related_Attachments</collectionReference>
+        <collectionReference>Household_Selector.selectedLeads</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
-            <targetReference>Clone_a_ContentDocumentLink</targetReference>
+            <targetReference>Is_Lead_Unconverted</targetReference>
         </nextValueConnector>
         <noMoreValuesConnector>
-            <targetReference>Insert_the_Cloned_Attachments</targetReference>
+            <targetReference>Batch_Conversion_Complete</targetReference>
         </noMoreValuesConnector>
     </loops>
-    <processMetadataValues>
-        <name>BuilderType</name>
-        <value>
-            <stringValue>LightningFlowBuilder</stringValue>
-        </value>
-    </processMetadataValues>
-    <processMetadataValues>
-        <name>CanvasMode</name>
-        <value>
-            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
-        </value>
-    </processMetadataValues>
-    <processMetadataValues>
-        <name>OriginBuilderType</name>
-        <value>
-            <stringValue>LightningFlowBuilder</stringValue>
-        </value>
-    </processMetadataValues>
     <processType>Flow</processType>
-    <recordCreates>
-        <name>Create_a_Contact</name>
-        <label>Create a Contact</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <connector>
-            <targetReference>Create_Note_on_Contact</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>Duplicate_Contact_Message</targetReference>
-        </faultConnector>
-        <inputAssignments>
-            <field>AccountId</field>
-            <value>
-                <elementReference>Create_an_Account</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Agent__c</field>
-            <value>
-                <elementReference>Get_the_Lead.Agent__c</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Birthdate</field>
-            <value>
-                <elementReference>Get_the_Lead.Birthdate__c</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Email</field>
-            <value>
-                <elementReference>Get_the_Lead.Email</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>FirstName</field>
-            <value>
-                <elementReference>Get_the_Lead.FirstName</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>GenderIdentity</field>
-            <value>
-                <elementReference>Get_the_Lead.Gender_Identity__c</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Korean_Name__c</field>
-            <value>
-                <elementReference>Get_the_Lead.Korean_Name__c</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>LastName</field>
-            <value>
-                <elementReference>Get_the_Lead.LastName</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>MailingCity</field>
-            <value>
-                <elementReference>Get_the_Lead.City</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>MailingPostalCode</field>
-            <value>
-                <elementReference>Get_the_Lead.PostalCode</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>MailingState</field>
-            <value>
-                <elementReference>Get_the_Lead.State</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>MailingStreet</field>
-            <value>
-                <elementReference>Get_the_Lead.Street</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>MiddleName</field>
-            <value>
-                <elementReference>Get_the_Lead.MiddleName</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>MobilePhone</field>
-            <value>
-                <elementReference>Get_the_Lead.MobilePhone</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Phone</field>
-            <value>
-                <elementReference>Get_the_Lead.Phone</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>SSN__c</field>
-            <value>
-                <elementReference>Get_the_Lead.SSN__c</elementReference>
-            </value>
-        </inputAssignments>
-        <object>Contact</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordCreates>
-    <recordCreates>
-        <name>Create_an_Account</name>
-        <label>Create an Account</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <connector>
-            <targetReference>Get_Related_Attachments</targetReference>
-        </connector>
-        <faultConnector>
-            <isGoTo>true</isGoTo>
-            <targetReference>Duplicate_Contact_Message</targetReference>
-        </faultConnector>
-        <inputAssignments>
-            <field>Industry</field>
-            <value>
-                <elementReference>Get_the_Lead.Industry</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Name</field>
-            <value>
-                <elementReference>Get_the_Lead.Company</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>NumberOfEmployees</field>
-            <value>
-                <elementReference>Get_the_Lead.NumberOfEmployees</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>RecordTypeId</field>
-            <value>
-                <elementReference>Get_Client_Business_Account_Record_Types.Id</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Website</field>
-            <value>
-                <elementReference>Get_the_Lead.Industry</elementReference>
-            </value>
-        </inputAssignments>
-        <object>Account</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordCreates>
-    <recordCreates>
-        <name>Insert_the_Cloned_Attachments</name>
-        <label>Insert the Cloned Attachments</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <connector>
-            <targetReference>Assign_Values_to_the_Lead</targetReference>
-        </connector>
-        <inputReference>varClonedContentDocumentLinks</inputReference>
-    </recordCreates>
-    <recordLookups>
-        <name>Get_Client_Business_Account_Record_Types</name>
-        <label>Get Client Business Account Record Types</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Create_an_Account</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>SobjectType</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Account</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>DeveloperName</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Client_Business</stringValue>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>RecordType</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
-        <name>Get_Related_Attachments</name>
-        <label>Get Related Attachments</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Create_a_Contact</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>LinkedEntityId</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>recordId</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>false</getFirstRecordOnly>
-        <object>ContentDocumentLink</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
     <recordLookups>
         <name>Get_the_Lead</name>
         <label>Get the Lead</label>
@@ -465,8 +139,11 @@
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Has_valid_Company_Information</targetReference>
+            <targetReference>Is_Lead_Already_Converted</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Log_Conversion_Error</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
@@ -479,27 +156,110 @@
         <object>Lead</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
-    <recordUpdates>
-        <name>Update_the_Lead</name>
-        <label>Update the Lead</label>
+    <recordLookups>
+        <name>Get_Household_Others</name>
+        <label>Get Household Others</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Has_Household_Others</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Log_Conversion_Error</targetReference>
+        </faultConnector>
+        <filterLogic>(1 OR 2) AND 3</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>frmPrimaryHolderId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Primaryholder__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>frmPrimaryHolderId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Id</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Lead</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Converted_Lead</name>
+        <label>Get Converted Lead</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Conversion_Complete</targetReference>
         </connector>
-        <inputReference>Get_the_Lead</inputReference>
-    </recordUpdates>
+        <faultConnector>
+            <targetReference>Log_Post_Conversion_Warning</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Lead</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Household_All</name>
+        <label>Get Household All</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Select_Household_Members</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Log_Conversion_Error</targetReference>
+        </faultConnector>
+        <filterLogic>1 OR 2</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>frmPrimaryHolderId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Primaryholder__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>frmPrimaryHolderId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Lead</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <screens>
         <name>Conversion_Complete</name>
         <label>Conversion Complete</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <allowBack>true</allowBack>
+        <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
-        <allowPause>true</allowPause>
+        <allowPause>false</allowPause>
         <fields>
             <name>Conversion_Completion_Message</name>
-            <fieldText>&lt;p&gt;✅ &lt;strong style=&quot;color: rgb(0, 221, 18); font-size: 20px;&quot;&gt;Lead converted successfully!&lt;/strong&gt;&lt;span style=&quot;color: rgb(0, 221, 18);&quot;&gt;&amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;A new Contact record has been created: &lt;strong&gt;{!Get_the_Lead.FirstName} {!Get_the_Lead.LastName}&lt;/strong&gt;&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p style=&quot;font-size:20px; line-height:1.5;&quot;&gt;&lt;strong style=&quot;color:#2e844a;&quot;&gt;&amp;#10003; 전환이 완료되었습니다&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;font-size:16px; line-height:1.6;&quot;&gt;새 컨택트가 만들어졌습니다 &amp;mdash; &lt;a href=&quot;/{!Get_Converted_Lead.Contact__c}&quot; target=&quot;_top&quot;&gt;&lt;strong&gt;{!Get_Converted_Lead.FirstName} {!Get_Converted_Lead.LastName}&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;&lt;p style=&quot;color:#5c5c5c; font-size:13px; line-height:1.6;&quot;&gt;이름을 클릭하면 컨택트 레코드로 이동합니다.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;font-size:13px; color:#3e3e3c; line-height:1.7;&quot;&gt;상담 노트와 첨부 파일, 메디케어 정보, 가족 관계가 함께 이관되었습니다.&lt;br&gt;이 리드는 삭제되지 않고 그대로 남아 있으며, 컨택트와 연결되어 있습니다.&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -510,6 +270,7 @@
                 </width>
             </styleProperties>
         </fields>
+        <nextOrFinishButtonLabel>완료</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
@@ -523,7 +284,7 @@
         <allowPause>false</allowPause>
         <fields>
             <name>Duplicates_Warning_Message</name>
-            <fieldText>&lt;p&gt;&lt;strong&gt;⚠️ Duplicate Contact Detected&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;We could not create a new Contact because a matching record already exists in Salesforce.&lt;/p&gt;&lt;p&gt;To avoid duplicates, please review the existing Contact before proceeding.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;If you believe this is incorrect or need assistance updating the record, please contact your Salesforce administrator.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Details: {!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+            <fieldText>&lt;div style=&quot;border-left:4px solid #ba0517; padding:4px 0 4px 14px;&quot;&gt;&lt;p style=&quot;font-size:19px; line-height:1.5; margin:0;&quot;&gt;&lt;strong style=&quot;color:#ba0517;&quot;&gt;&amp;#9888; 이미 등록된 컨택트가 있습니다&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;font-size:15px; line-height:1.6;&quot;&gt;같은 사람으로 보이는 컨택트가 이미 있어서 새로 만들지 않았습니다. &lt;strong&gt;이 리드는 그대로 남아 있습니다.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;font-size:14px; margin-bottom:2px;&quot;&gt;&lt;strong&gt;다음 중 하나를 해 주세요&lt;/strong&gt;&lt;/p&gt;&lt;ul style=&quot;font-size:14px; line-height:1.7; margin-top:2px;&quot;&gt;&lt;li&gt;기존 컨택트를 찾아 이 리드의 정보를 옮겨 적기&lt;/li&gt;&lt;li&gt;동명이인이라면 이름이나 생년월일을 구분되게 고친 뒤 다시 전환하기&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;div style=&quot;border-left:3px solid #c9c7c5; background:#f3f3f3; padding:10px 14px; margin-top:4px;&quot;&gt;&lt;p style=&quot;color:#514f4d; font-size:12px; line-height:1.6; margin:0;&quot;&gt;&lt;strong&gt;오류 상세&lt;/strong&gt;&lt;br&gt;대상 리드: {!Get_the_Lead.FirstName} {!Get_the_Lead.LastName} ({!recordId})&lt;br&gt;{!$Flow.FaultMessage}&lt;/p&gt;&lt;/div&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -534,9 +295,93 @@
                 </width>
             </styleProperties>
         </fields>
-        <nextOrFinishButtonLabel>Close</nextOrFinishButtonLabel>
+        <nextOrFinishButtonLabel>닫기</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <name>Conversion_Failed</name>
+        <label>전환 실패</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>Conversion_Failed_Message</name>
+            <fieldText>&lt;div style=&quot;border-left:4px solid #ba0517; padding:4px 0 4px 14px;&quot;&gt;&lt;p style=&quot;font-size:19px; line-height:1.5; margin:0;&quot;&gt;&lt;strong style=&quot;color:#ba0517;&quot;&gt;&amp;#9888; 전환하지 못했습니다&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;font-size:15px; line-height:1.6;&quot;&gt;문제가 생겨 컨택트를 만들지 못했습니다. &lt;strong&gt;이 리드는 그대로 남아 있고, 바뀐 것은 없습니다.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;font-size:14px; margin-bottom:2px;&quot;&gt;&lt;strong&gt;어떻게 하면 되나요&lt;/strong&gt;&lt;/p&gt;&lt;ul style=&quot;font-size:14px; line-height:1.7; margin-top:2px;&quot;&gt;&lt;li&gt;잠시 후 다시 시도해 보세요.&lt;/li&gt;&lt;li&gt;같은 오류가 계속되면 아래 내용을 그대로 복사해 관리자에게 보내 주세요. (오류는 자동으로도 기록됩니다)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;div style=&quot;border-left:3px solid #c9c7c5; background:#f3f3f3; padding:10px 14px; margin-top:4px;&quot;&gt;&lt;p style=&quot;color:#514f4d; font-size:12px; line-height:1.6; margin:0;&quot;&gt;&lt;strong&gt;오류 상세 — 관리자 전달용&lt;/strong&gt;&lt;br&gt;대상 리드: {!Get_the_Lead.FirstName} {!Get_the_Lead.LastName} ({!recordId})&lt;br&gt;{!$Flow.FaultMessage}&lt;/p&gt;&lt;/div&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <nextOrFinishButtonLabel>닫기</nextOrFinishButtonLabel>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <name>Already_Converted</name>
+        <label>이미 전환됨</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>Already_Converted_Message</name>
+            <fieldText>&lt;div style=&quot;border-left:4px solid #0176d3; padding:4px 0 4px 14px;&quot;&gt;&lt;p style=&quot;font-size:19px; line-height:1.5; margin:0;&quot;&gt;&lt;strong style=&quot;color:#0176d3;&quot;&gt;&amp;#8505; 이미 전환된 리드입니다&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;font-size:15px; line-height:1.6;&quot;&gt;이 리드는 이미 컨택트로 전환되어 있습니다 &amp;mdash; &lt;a href=&quot;/{!Get_the_Lead.Contact__c}&quot; target=&quot;_top&quot;&gt;&lt;strong&gt;{!Get_Converted_Lead.FirstName} {!Get_Converted_Lead.LastName}&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;&lt;p style=&quot;font-size:14px; line-height:1.6;&quot;&gt;중복 컨택트가 만들어지지 않도록 &lt;strong&gt;새로 만들지 않았습니다.&lt;/strong&gt; 이름을 클릭하면 기존 컨택트로 이동합니다.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <nextOrFinishButtonLabel>닫기</nextOrFinishButtonLabel>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <name>Select_Household_Members</name>
+        <label>전환할 가족 선택</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Each_Selected_Lead</targetReference>
+        </connector>
+        <fields>
+            <name>Select_Household_Members_Intro</name>
+            <fieldText>&lt;div style=&quot;border-left:4px solid #0176d3; padding:4px 0 4px 14px;&quot;&gt;&lt;p style=&quot;font-size:18px; line-height:1.5; margin:0;&quot;&gt;&lt;strong style=&quot;color:#0176d3;&quot;&gt;가족이 함께 등록되어 있습니다&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;font-size:15px; line-height:1.6;&quot;&gt;이 리드는 가족과 연결되어 있습니다. &lt;strong&gt;이번에 함께 컨택트로 전환할 사람을 골라 주세요.&lt;/strong&gt;&lt;/p&gt;&lt;p style=&quot;font-size:13px; color:#5c5c5c; line-height:1.6;&quot;&gt;선택하지 않은 사람은 리드로 그대로 남고, 나중에 따로 전환할 수 있습니다.&lt;br&gt;&amp;#39;이미 전환됨&amp;#39;으로 표시된 사람은 골라도 다시 만들어지지 않습니다.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Household_Selector</name>
+            <extensionName>c:householdSelector</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>leads</name>
+                <value>
+                    <elementReference>Get_Household_All</elementReference>
+                </value>
+            </inputParameters>
+            <isRequired>false</isRequired>
+            <storeOutputAutomatically>true</storeOutputAutomatically>
+        </fields>
+        <nextOrFinishButtonLabel>전환</nextOrFinishButtonLabel>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Batch_Conversion_Complete</name>
+        <label>가족 전환 완료</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>Batch_Conversion_Complete_Message</name>
+            <fieldText>&lt;div style=&quot;border-left:4px solid #2e844a; padding:4px 0 4px 14px;&quot;&gt;&lt;p style=&quot;font-size:20px; line-height:1.5; margin:0;&quot;&gt;&lt;strong style=&quot;color:#2e844a;&quot;&gt;&amp;#10003; 전환이 완료되었습니다&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;font-size:15px; line-height:1.6;&quot;&gt;선택하신 가족이 모두 컨택트로 전환되었습니다.&lt;/p&gt;&lt;p style=&quot;font-size:13px; color:#3e3e3c; line-height:1.7;&quot;&gt;상담 노트와 첨부 파일, 메디케어 정보, 가족 관계가 함께 이관되었습니다.&lt;br&gt;선택하지 않은 가족은 리드로 그대로 남아 있으며, 나중에 따로 전환할 수 있습니다.&lt;br&gt;리드 목록에서 각 컨택트로 이동할 수 있습니다.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <nextOrFinishButtonLabel>완료</nextOrFinishButtonLabel>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
     </screens>
     <start>
         <locationX>0</locationX>
@@ -546,27 +391,135 @@
         </connector>
     </start>
     <status>Active</status>
+    <subflows>
+        <name>Log_Conversion_Error</name>
+        <label>Log Conversion Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_Duplicate_Error</targetReference>
+        </connector>
+        <flowName>Log_Error</flowName>
+        <inputAssignments>
+            <name>varContext</name>
+            <value>
+                <stringValue>Lead to Contact conversion</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varErrorMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varRecordId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSeverity</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceFlow</name>
+            <value>
+                <stringValue>Lead_to_Contact_Conversion</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceStep</name>
+            <value>
+                <stringValue>Before Contact creation - conversion halted</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Log_Post_Conversion_Warning</name>
+        <label>Log Post Conversion Warning</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Conversion_Complete</targetReference>
+        </connector>
+        <flowName>Log_Error</flowName>
+        <inputAssignments>
+            <name>varContext</name>
+            <value>
+                <stringValue>Lead to Contact conversion</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varErrorMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varRecordId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSeverity</name>
+            <value>
+                <stringValue>Warning</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceFlow</name>
+            <value>
+                <stringValue>Lead_to_Contact_Conversion</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceStep</name>
+            <value>
+                <stringValue>After Contact creation - conversion kept, follow-up step failed</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Convert_This_Lead</name>
+        <label>Convert This Lead</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Converted_Lead</targetReference>
+        </connector>
+        <flowName>Lead_Convert_Single</flowName>
+        <inputAssignments>
+            <name>recordId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Convert_Selected_Lead</name>
+        <label>Convert Selected Lead</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Each_Selected_Lead</targetReference>
+        </connector>
+        <flowName>Lead_Convert_Single</flowName>
+        <inputAssignments>
+            <name>recordId</name>
+            <value>
+                <elementReference>Each_Selected_Lead.Id</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
     <variables>
         <name>recordId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
         <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <name>varClonedContentDocumentLink</name>
-        <dataType>SObject</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-        <objectType>ContentDocumentLink</objectType>
-    </variables>
-    <variables>
-        <name>varClonedContentDocumentLinks</name>
-        <dataType>SObject</dataType>
-        <isCollection>true</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-        <objectType>ContentDocumentLink</objectType>
     </variables>
 </Flow>

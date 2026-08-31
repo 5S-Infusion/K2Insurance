@@ -1,0 +1,20 @@
+.household-table {
+    --slds-c-datatable-color-border: #e3e8ea;
+}
+
+.summary-note,
+.empty-note {
+    color: #5c6b73;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    margin-top: 0.625rem;
+}
+
+.status-converted {
+    color: #5c6b73;
+}
+
+.status-pending {
+    color: #2e844a;
+    font-weight: 600;
+}
