@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payable_Amount__c</fullName>
+    <description>The subagent share of this line: Commission Amount times the commission rate on the linked policy. Deliberately blank, not zero, when the line has no policy or the policy has no rate, so an unknown share is never mistaken for nothing owed. There is no division by 100 here: a Percent field referenced by a Currency formula already arrives as its decimal fraction, so a rate shown as 40% evaluates as 0.4. Apex reading the same field through SOQL gets 40 instead and must divide.</description>
+    <formula>IF(
+  OR( ISBLANK(Policy_Number__c), ISBLANK(Policy_Number__r.Commission_Rate__c) ),
+  NULL,
+  Commission_Amount__c * Policy_Number__r.Commission_Rate__c
+)</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <inlineHelpText>폴리시 요율을 적용한 서브에이전트 지급 대상 금액입니다. 요율이 없으면 0이 아니라 빈칸으로 남습니다.</inlineHelpText>
+    <label>Payable Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

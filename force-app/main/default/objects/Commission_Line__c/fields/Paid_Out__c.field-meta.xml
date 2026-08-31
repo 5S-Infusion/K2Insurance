@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Paid_Out__c</fullName>
+    <description>Checked when this line carries a payout, which is what makes it paid. Purely derived from the Payout lookup so it can never disagree with it.</description>
+    <formula>NOT( ISBLANK(Payout__c) )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>지급 기록이 연결되어 있으면 자동으로 체크됩니다. 직접 수정할 수 없습니다.</inlineHelpText>
+    <label>Paid Out</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

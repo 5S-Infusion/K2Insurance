@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Paid_Subagent_Lines</fullName>
+    <columns>NAME</columns>
+    <columns>Payout__c</columns>
+    <columns>Commission_Statement__c</columns>
+    <columns>Payment_Period__c</columns>
+    <columns>Policy_Number__c</columns>
+    <columns>Commission_Amount__c</columns>
+    <columns>Commission_Rate__c</columns>
+    <columns>Payable_Amount__c</columns>
+    <columns>Rate_Missing__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Paid_Out__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <label>Paid Subagent Lines</label>
+</ListView>

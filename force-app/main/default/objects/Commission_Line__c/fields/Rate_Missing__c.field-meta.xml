@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Rate_Missing__c</fullName>
+    <description>Checked when the policy has a subagent but no commission rate, so the payable amount cannot be computed. These lines still have to be paid, just with an amount entered by hand.</description>
+    <formula>AND(
+  NOT( ISBLANK(Policy_Number__r.Subagent__c) ),
+  ISBLANK(Policy_Number__r.Commission_Rate__c)
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>서브에이전트는 있는데 폴리시에 Commission Rate가 없는 라인입니다. 지급액을 직접 입력해야 합니다.</inlineHelpText>
+    <label>Rate Missing</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

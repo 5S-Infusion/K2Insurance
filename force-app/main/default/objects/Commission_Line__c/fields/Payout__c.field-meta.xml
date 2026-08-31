@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payout__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The agent payout that settled this line. A line with a payout has been paid out to the subagent; a line without one has not. Set by the Agents tab when a payout is recorded, and cleared again if that payout is voided.</description>
+    <inlineHelpText>이 라인을 정산한 지급 기록입니다. 값이 있으면 서브에이전트에게 지급 완료, 비어 있으면 미지급입니다.</inlineHelpText>
+    <label>Payout</label>
+    <referenceTo>Agent_Payout__c</referenceTo>
+    <relationshipLabel>Commission Lines</relationshipLabel>
+    <relationshipName>Commission_Lines</relationshipName>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

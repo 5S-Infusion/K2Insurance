@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Agent_Required</fullName>
+    <active>true</active>
+    <description>A payout has to name the agent it was paid to.</description>
+    <errorConditionFormula>ISBLANK(Agent__c)</errorConditionFormula>
+    <errorDisplayField>Agent__c</errorDisplayField>
+    <errorMessage>Select the agent this payout was paid to.</errorMessage>
+</ValidationRule>

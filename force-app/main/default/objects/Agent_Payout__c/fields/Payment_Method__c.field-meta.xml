@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Method__c</fullName>
+    <description>How the money was sent. Optional, but filling it in makes the payment easy to trace against a bank statement later.</description>
+    <inlineHelpText>어떤 방법으로 지급했는지 선택하세요. 나중에 은행 내역과 대조할 때 도움이 됩니다.</inlineHelpText>
+    <label>Payment Method</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Check</fullName>
+                <default>false</default>
+                <label>Check</label>
+            </value>
+            <value>
+                <fullName>Zelle</fullName>
+                <default>false</default>
+                <label>Zelle</label>
+            </value>
+            <value>
+                <fullName>ACH / Bank Transfer</fullName>
+                <default>false</default>
+                <label>ACH / Bank Transfer</label>
+            </value>
+            <value>
+                <fullName>Cash</fullName>
+                <default>false</default>
+                <label>Cash</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

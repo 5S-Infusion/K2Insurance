@@ -1,0 +1,189 @@
+.line-section {
+    margin-bottom: var(--slds-g-spacing-3, 0.75rem);
+    padding: var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-4, 1rem) var(--slds-g-spacing-4, 1rem);
+    border: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+    border-radius: var(--slds-g-radius-border-3, 0.5rem);
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+}
+
+/* The caption says why these lines are here; the tally beside it says what the ticks currently
+   add up to, so unticking a row is answered on the same line it was asked on. */
+.line-section__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    margin-bottom: var(--slds-g-spacing-2, 0.5rem);
+}
+
+.line-section__caption {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.0625rem;
+    text-transform: uppercase;
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+.line-summary {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+.line-summary__included {
+    font-weight: 700;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+/* A middot separator, drawn rather than written, so no punctuation ends up outside a Custom Label. */
+.line-summary__excluded::before {
+    content: '\00B7';
+    margin-right: var(--slds-g-spacing-2, 0.5rem);
+    color: var(--slds-g-color-neutral-base-80, #c9c9c9);
+}
+
+/* Long client and policy names must not push the modal sideways. */
+.line-scroll {
+    overflow-x: auto;
+    max-height: 14rem;
+    overflow-y: auto;
+}
+
+.line-table {
+    width: 100%;
+}
+
+.line-table__lead {
+    min-width: 14rem;
+    text-align: left;
+}
+
+.line-table td,
+.line-table th {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    line-height: 1.45;
+}
+
+.line-row {
+    transition: opacity 0.1s ease-in-out;
+}
+
+/* An unticked row is still readable — the owner has to be able to see what they held back — but it
+   is plainly out of the payout. */
+.line-row_excluded {
+    opacity: 0.55;
+}
+
+.line-row_excluded .line-table__money {
+    text-decoration: line-through;
+}
+
+/* The include checkbox leads the row, so the tick is read before the money it decides. */
+.line-table__check {
+    width: 2.5rem;
+    text-align: center;
+}
+
+.line-check {
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
+.line-check:focus-visible {
+    outline: 2px solid var(--slds-g-color-brand-base-50, #0176d3);
+    outline-offset: 2px;
+}
+
+.line-table__money {
+    width: 8rem;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Every figure is tabular and a negative is written in accounting parentheses; the sign itself is
+   spoken from a Custom Label so the parentheses stay a purely visual convention. */
+.money {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.money_negative {
+    color: var(--slds-g-color-error-base-40, #ba0517);
+}
+
+.money_negative::before {
+    content: '(';
+}
+
+.money_negative::after {
+    content: ')';
+}
+
+/* The period, the client and the policy stack inside the row header, so the two currency columns
+   stay the only headed columns and can never be confused for one another. */
+.line-period {
+    display: inline-block;
+    margin-right: var(--slds-g-spacing-2, 0.5rem);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.line-client {
+    display: inline-block;
+    margin-right: var(--slds-g-spacing-2, 0.5rem);
+    font-weight: 400;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+.line-policy {
+    display: inline-block;
+    font-size: var(--slds-g-font-size-1, 0.75rem);
+    color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+.line-payout {
+    display: block;
+    font-size: var(--slds-g-font-size-1, 0.75rem);
+    color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+/* A missing policy rate is a gap, not a zero — it is named, never priced. */
+.line-rate-missing {
+    display: inline-block;
+    padding: 0 0.35rem;
+    border: 1px dashed var(--slds-g-color-warning-base-50, #a86403);
+    border-radius: var(--slds-g-radius-border-4, 0.75rem);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--slds-g-color-warning-base-30, #6b4600);
+}
+
+.line-empty {
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+@media (forced-colors: active) {
+    .line-rate-missing {
+        border: 1px dashed CanvasText;
+        color: CanvasText;
+    }
+    .money_negative {
+        color: CanvasText;
+    }
+    .line-row_excluded {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .line-row {
+        transition: none;
+    }
+}

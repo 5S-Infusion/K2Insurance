@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Period_Start_Not_After_End</fullName>
+    <active>true</active>
+    <description>The covered range has to run forward. Only checked once both ends are well formed, so the format rules report their own problem first.</description>
+    <errorConditionFormula>AND(
+  REGEX(Period_Start__c, &quot;20\\d\\d-(0[1-9]|1[0-2])&quot;),
+  REGEX(Period_End__c, &quot;20\\d\\d-(0[1-9]|1[0-2])&quot;),
+  VALUE( LEFT(Period_Start__c, 4) &amp; MID(Period_Start__c, 6, 2) ) &gt; VALUE( LEFT(Period_End__c, 4) &amp; MID(Period_End__c, 6, 2) )
+)</errorConditionFormula>
+    <errorDisplayField>Period_End__c</errorDisplayField>
+    <errorMessage>Period End cannot be earlier than Period Start.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Chargeback_Amount__c</fullName>
+    <description>Sum of only the negative lines inside this payout, stored as a negative number. It is already included in Lines Net Amount; it is broken out so the clawback is visible.</description>
+    <inlineHelpText>이 지급에 포함된 차지백(마이너스 라인) 합계입니다. 음수로 표시됩니다. 캐리어 순액에 이미 포함되어 있습니다.</inlineHelpText>
+    <label>Chargeback Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

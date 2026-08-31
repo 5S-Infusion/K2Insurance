@@ -1,0 +1,262 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        aria-labelledby="review-heading"
+        class="slds-modal slds-modal_medium slds-fade-in-open"
+        onkeydown={handleKeyDown}>
+        <div class="slds-modal__container">
+            <header class="slds-modal__header review-header">
+                <button
+                    class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                    title={label.cancel}
+                    data-id="close"
+                    onclick={handleCancel}
+                    disabled={isSaving}>
+                    <lightning-icon
+                        icon-name="utility:close"
+                        alternative-text={label.cancel}
+                        size="small"></lightning-icon>
+                </button>
+                <h1 id="review-heading" class="slds-modal__title slds-hyphenate">{heading}</h1>
+                <p class="review-subtitle">
+                    <span class="review-subtitle__agent">{agentName}</span>
+                    <span class="review-subtitle__period">{periodLabel}</span>
+                </p>
+            </header>
+
+            <div class="slds-modal__content review-body slds-is-relative">
+                <template lwc:if={isSaving}>
+                    <lightning-spinner
+                        alternative-text={label.saving}
+                        size="medium"
+                        variant="brand"></lightning-spinner>
+                </template>
+
+                <template lwc:if={errorMessage}>
+                    <div role="alert" class="review-alert review-alert_error">
+                        <lightning-icon
+                            icon-name="utility:error"
+                            variant="error"
+                            size="x-small"
+                            class="review-alert__icon"></lightning-icon>
+                        <span>{errorMessage}</span>
+                    </div>
+                </template>
+
+                <template lwc:if={staleNotice}>
+                    <div role="alert" class="review-alert review-alert_warning">
+                        <lightning-icon
+                            icon-name="utility:warning"
+                            variant="warning"
+                            size="x-small"
+                            class="review-alert__icon"></lightning-icon>
+                        <span>{staleNotice}</span>
+                    </div>
+                </template>
+
+                <template lwc:if={hasPayableLines}>
+                    <c-agent-line-table
+                        data-id="payable-lines"
+                        caption={label.linesToPay}
+                        selectable="true"
+                        excluded-ids={excludedIds}
+                        lines={payableLines}
+                        onexclusionchange={handleExclusionChange}></c-agent-line-table>
+                </template>
+
+                <template lwc:if={hasLateLines}>
+                    <c-agent-line-table
+                        data-id="late-lines"
+                        caption={label.lateLines}
+                        lines={lateLines}></c-agent-line-table>
+                </template>
+
+                <template lwc:if={hasChargebacks}>
+                    <c-agent-line-table
+                        data-id="chargeback-lines"
+                        caption={label.chargebacks}
+                        lines={chargebackLines}></c-agent-line-table>
+                </template>
+
+                <template lwc:if={hasAlreadyStamped}>
+                    <c-agent-line-table
+                        data-id="stamped-lines"
+                        caption={label.alreadyStamped}
+                        lines={alreadyStampedLines}></c-agent-line-table>
+                </template>
+
+                <template lwc:if={hasUnrated}>
+                    <div class="review-unrated" role="note" data-id="unrated-summary">
+                        <div class="review-unrated__head">
+                            <lightning-icon
+                                icon-name="utility:warning"
+                                variant="warning"
+                                size="x-small"
+                                class="review-unrated__icon"></lightning-icon>
+                            <span class="review-unrated__tag">{label.rateMissing}</span>
+                            <span class="review-unrated__figures">
+                                <lightning-formatted-number
+                                    value={unratedLineCount}></lightning-formatted-number>
+                                <span class={unratedNetAmount.moneyClass}>
+                                    <span class="slds-assistive-text">{unratedNetAmount.negativeText}</span>
+                                    <lightning-formatted-number format-style="currency"
+                                        value={unratedNetAmount.amount}></lightning-formatted-number>
+                                </span>
+                            </span>
+                        </div>
+                        <p class="review-unrated__help">{label.rateMissingHelp}</p>
+                    </div>
+
+                    <c-agent-line-table
+                        data-id="unrated-lines"
+                        caption={label.rateMissing}
+                        lines={rateMissingLines}></c-agent-line-table>
+                </template>
+
+                <div class="review-money">
+                    <dl>
+                        <div class="review-money__row">
+                            <dt>{label.linesToPay}</dt>
+                            <dd data-id="included-count">
+                                <lightning-formatted-number
+                                    value={includedLineCount}></lightning-formatted-number>
+                            </dd>
+                        </div>
+                        <div class="review-money__row">
+                            <dt>{label.carrierNet}</dt>
+                            <dd data-id="carrier-net">
+                                <span class={linesNetAmount.moneyClass}>
+                                    <span class="slds-assistive-text">{linesNetAmount.negativeText}</span>
+                                    <lightning-formatted-number format-style="currency"
+                                        value={linesNetAmount.amount}></lightning-formatted-number>
+                                </span>
+                            </dd>
+                        </div>
+                        <div class="review-money__row">
+                            <dt>{label.chargebacks}</dt>
+                            <dd>
+                                <span class={chargebackAmount.moneyClass}>
+                                    <span class="slds-assistive-text">{chargebackAmount.negativeText}</span>
+                                    <lightning-formatted-number format-style="currency"
+                                        value={chargebackAmount.amount}></lightning-formatted-number>
+                                </span>
+                            </dd>
+                        </div>
+                        <template lwc:if={hasExclusions}>
+                            <div class="review-money__row review-money__row_excluded"
+                                data-id="excluded-summary">
+                                <dt>{label.excludedLines}</dt>
+                                <dd>
+                                    <lightning-formatted-number
+                                        value={excludedCount}></lightning-formatted-number>
+                                    <span class={excludedNet.moneyClass}>
+                                        <span class="slds-assistive-text">{excludedNet.negativeText}</span>
+                                        <lightning-formatted-number format-style="currency"
+                                            value={excludedNet.amount}></lightning-formatted-number>
+                                    </span>
+                                </dd>
+                            </div>
+                        </template>
+                        <div class="review-money__row review-money__row_primary">
+                            <dt>{label.computedPayable}</dt>
+                            <dd data-id="computed-payable">
+                                <span class={computedPayable.moneyClass}>
+                                    <span class="slds-assistive-text">{computedPayable.negativeText}</span>
+                                    <lightning-formatted-number format-style="currency"
+                                        value={computedPayable.amount}></lightning-formatted-number>
+                                </span>
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <template lwc:if={isZeroOrNegativeNet}>
+                        <p class="review-zero-net" role="note" data-id="zero-net">{label.zeroNetNotice}</p>
+                    </template>
+                </div>
+
+                <div class="review-form">
+                    <lightning-input
+                        data-id="amount-paid"
+                        data-field="amountPaid"
+                        type="number"
+                        formatter="currency"
+                        step="0.01"
+                        label={label.amountPaid}
+                        value={amountPaid}
+                        disabled={isSaving}
+                        onchange={handleFormChange}></lightning-input>
+                    <lightning-input
+                        data-field="paidDate"
+                        type="date"
+                        label={label.paidDate}
+                        value={paidDate}
+                        disabled={isSaving}
+                        onchange={handleFormChange}></lightning-input>
+                    <lightning-combobox
+                        data-id="method"
+                        label={label.method}
+                        value={paymentMethod}
+                        options={methodOptions}
+                        disabled={isSaving}
+                        onchange={handleMethodChange}></lightning-combobox>
+                    <lightning-input
+                        data-field="referenceNumber"
+                        type="text"
+                        max-length="50"
+                        label={label.reference}
+                        value={referenceNumber}
+                        disabled={isSaving}
+                        onchange={handleFormChange}></lightning-input>
+                    <div class="review-form__wide">
+                        <lightning-textarea
+                            data-field="notes"
+                            max-length="255"
+                            label={label.notes}
+                            value={notes}
+                            disabled={isSaving}
+                            onchange={handleFormChange}></lightning-textarea>
+                    </div>
+                </div>
+
+                <div class="review-confirm">
+                    <input
+                        type="checkbox"
+                        id="confirm-pay"
+                        data-id="confirm"
+                        class="review-confirm__box"
+                        checked={confirmed}
+                        disabled={isSaving}
+                        onchange={handleConfirmChange} />
+                    <label for="confirm-pay" class="review-confirm__label">
+                        <span>{label.confirmPay}</span>
+                        <strong class={confirmAmount.moneyClass}>
+                            <span class="slds-assistive-text">{confirmAmount.negativeText}</span>
+                            <lightning-formatted-number format-style="currency"
+                                value={confirmAmount.amount}></lightning-formatted-number>
+                        </strong>
+                    </label>
+                </div>
+            </div>
+
+            <footer class="slds-modal__footer">
+                <button
+                    class="slds-button slds-button_neutral"
+                    data-id="cancel"
+                    onclick={handleCancel}
+                    disabled={isSaving}>
+                    {label.cancel}
+                </button>
+                <button
+                    class="slds-button slds-button_brand"
+                    data-id="record"
+                    onclick={handleRecord}
+                    disabled={isRecordDisabled}>
+                    {label.recordPayout}
+                </button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

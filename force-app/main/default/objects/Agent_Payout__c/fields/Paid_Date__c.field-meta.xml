@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Paid_Date__c</fullName>
+    <defaultValue>TODAY()</defaultValue>
+    <description>The date the payment was made. Defaults to today, but should be changed to the real payment date when an older payout is being entered after the fact.</description>
+    <inlineHelpText>실제로 지급한 날짜입니다. 오늘 날짜가 기본으로 들어가며, 과거 지급을 입력할 때는 실제 날짜로 바꾸세요.</inlineHelpText>
+    <label>Paid Date</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

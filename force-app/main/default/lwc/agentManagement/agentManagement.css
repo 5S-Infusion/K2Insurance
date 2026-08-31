@@ -1,0 +1,619 @@
+/* One spacing rhythm for the whole page, taken from the SLDS scale so density settings carry. */
+.board-shell {
+    padding: 0 var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-2, 0.5rem);
+}
+
+/* ---------- Load, refusal and empty states ----------
+   A blank table is the most dated first paint a Lightning page can have, so every one of the four
+   answers the board can give — loading, failed, refused, nothing to show — has its own surface. */
+.board-loading {
+    min-height: 8rem;
+}
+
+.board-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    padding: var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-4, 1rem);
+    border-radius: var(--slds-g-radius-border-3, 0.5rem);
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    line-height: 1.5;
+}
+
+.board-notice_error {
+    border-left: 3px solid var(--slds-g-color-error-base-40, #ba0517);
+    color: var(--slds-g-color-error-base-40, #ba0517);
+}
+
+.board-notice_denied {
+    border-left: 3px solid var(--slds-g-color-neutral-base-50, #747474);
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+.board-notice__icon {
+    flex: 0 0 auto;
+    margin-top: 0.05rem;
+}
+
+.board-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--slds-g-spacing-1, 0.25rem);
+    padding: var(--slds-g-spacing-7, 2rem) var(--slds-g-spacing-4, 1rem);
+    text-align: center;
+}
+
+.board-empty__icon {
+    margin-bottom: var(--slds-g-spacing-1, 0.25rem);
+}
+
+.board-empty__title {
+    font-size: var(--slds-g-font-size-4, 1rem);
+    font-weight: 700;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+.board-empty__help {
+    max-width: 32rem;
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    line-height: 1.5;
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+/* ---------- Money ----------
+   Every figure on the page is tabular so columns of digits line up, and a negative is written in
+   accounting parentheses rather than with a minus sign that is easy to miss. The sign is spoken
+   from a label, so the parentheses stay a purely visual convention. */
+.money {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.money_negative {
+    color: var(--slds-g-color-error-base-40, #ba0517);
+}
+
+.money_negative::before {
+    content: '(';
+}
+
+.money_negative::after {
+    content: ')';
+}
+
+.money_primary {
+    font-size: var(--slds-g-font-size-3, 0.875rem);
+    font-weight: 700;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+.money_primary.money_negative {
+    color: var(--slds-g-color-error-base-40, #ba0517);
+}
+
+.money_quiet {
+    font-size: var(--slds-g-font-size-1, 0.75rem);
+    color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+.money_micro {
+    font-size: var(--slds-g-font-size-1, 0.75rem);
+    font-weight: 600;
+}
+
+/* The board can carry thirteen month columns, so it scrolls inside its own container rather than
+   pushing the page sideways. The agent column stays pinned while it does. */
+.board-scroll {
+    overflow-x: auto;
+    padding-bottom: var(--slds-g-spacing-1, 0.25rem);
+}
+
+.board-table {
+    table-layout: auto;
+    width: 100%;
+}
+
+.board-table th.col-lead,
+.board-table td.col-lead {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    min-width: 12rem;
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+}
+
+.board-table th.col-state {
+    width: 3.5rem;
+    text-align: center;
+}
+
+.board-table th.col-money,
+.board-table th.col-count {
+    width: 8rem;
+    text-align: right;
+}
+
+.board-table th.col-text {
+    width: 8rem;
+}
+
+/* Outstanding is the board's answer, so its header carries the weight the others give up. */
+.board-table th.col-money_primary {
+    color: var(--slds-g-color-neutral-base-10, #181818);
+    font-weight: 700;
+}
+
+.board-table td {
+    text-align: center;
+    padding-top: var(--slds-g-spacing-2, 0.5rem);
+    padding-bottom: var(--slds-g-spacing-2, 0.5rem);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.45;
+}
+
+.board-table tr.board-row > th.col-lead,
+.board-table tr.board-row > td {
+    transition: background-color 0.1s ease-in-out;
+}
+
+.board-table tr.board-row:hover > th.col-lead,
+.board-table tr.board-row:hover > td {
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+}
+
+.board-table tr.row_selected > th.col-lead,
+.board-table tr.row_selected > td,
+.board-table tr.row_selected:hover > th.col-lead,
+.board-table tr.row_selected:hover > td {
+    background-color: var(--slds-g-color-brand-base-95, #eef4ff);
+}
+
+/* A selected row is called out on the pinned edge, so the choice stays visible however far the
+   board is scrolled sideways. */
+.board-table tr.row_selected > th.col-lead {
+    box-shadow: inset 3px 0 0 0 var(--slds-g-color-brand-base-50, #0176d3);
+}
+
+/* The whole lead cell is the hit target, so a row is selectable from the keyboard without
+   attaching a click handler to a non-interactive <tr>. */
+.board-agent {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-1, 0.25rem);
+    width: 100%;
+    padding: 0.125rem 0;
+    text-align: left;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+/* The agent name is the unit of action on this page, so it is the largest thing in the row. */
+.board-agent__name {
+    font-size: var(--slds-g-font-size-3, 0.875rem);
+    font-weight: 700;
+}
+
+.board-agent:hover .board-agent__name {
+    text-decoration: underline;
+}
+
+.board-agent:focus-visible {
+    outline: 2px solid var(--slds-g-color-brand-base-50, #0176d3);
+    outline-offset: 1px;
+}
+
+/* The late-arrival alarm belongs to the agent, not to one cell, so it rides the lead cell in
+   every preset. */
+.board-late {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.125rem;
+    padding: 0 0.3rem;
+    border: 1px solid var(--slds-g-color-error-base-40, #ba0517);
+    border-radius: var(--slds-g-radius-border-4, 0.75rem);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--slds-g-color-error-base-40, #ba0517);
+}
+
+.board-badge {
+    margin-left: var(--slds-g-spacing-1, 0.25rem);
+    font-size: 0.625rem;
+}
+
+/* ---------- Cell state language ----------
+   Glyph first, weight second, colour third: every state survives greyscale and forced colors.
+   Unpaid is the heaviest mark on the board and paid the quietest — the page's question is who is
+   still owed money, so the green-for-done convention is inverted on purpose. */
+
+.cell {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--slds-g-spacing-1, 0.25rem);
+    min-width: 1.5rem;
+    padding: 0.05rem 0.35rem;
+    line-height: 1.4;
+}
+
+.cell_nodata {
+    color: var(--slds-g-color-neutral-base-80, #c9c9c9);
+    font-weight: 400;
+}
+
+.cell_unpaid {
+    border-left: 3px solid var(--slds-g-color-brand-base-50, #0176d3);
+    color: var(--slds-g-color-neutral-base-10, #181818);
+    font-weight: 700;
+}
+
+.cell_credit {
+    border-left: 3px solid var(--slds-g-color-error-base-40, #ba0517);
+    color: var(--slds-g-color-error-base-40, #ba0517);
+    font-weight: 700;
+}
+
+/* A 45-degree hatch, so a late arrival is unmistakable even where colour is stripped out. */
+.cell_late {
+    border-left: 3px solid var(--slds-g-color-warning-base-50, #a86403);
+    color: var(--slds-g-color-warning-base-30, #6b4600);
+    font-weight: 700;
+    background-image: repeating-linear-gradient(
+        45deg,
+        var(--slds-g-color-warning-base-90, #fbe9d0) 0,
+        var(--slds-g-color-warning-base-90, #fbe9d0) 2px,
+        transparent 2px,
+        transparent 5px
+    );
+}
+
+.cell_orphan {
+    border: 1px dashed var(--slds-g-color-neutral-base-50, #747474);
+    color: var(--slds-g-color-neutral-base-30, #444444);
+    font-weight: 600;
+}
+
+.cell_paid {
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+    color: var(--slds-g-color-neutral-base-50, #747474);
+    font-weight: 400;
+}
+
+.cell_covered {
+    color: var(--slds-g-color-neutral-base-80, #c9c9c9);
+    font-weight: 400;
+}
+
+/* A cell that has lines behind it is the way into the drill-down. The button carries no chrome of
+   its own so the glyph stays the only mark in the cell. */
+.cell-button {
+    padding: 0;
+    line-height: inherit;
+}
+
+.cell-button:focus-visible {
+    outline: 2px solid var(--slds-g-color-brand-base-50, #0176d3);
+    outline-offset: 1px;
+}
+
+.cell-button:hover .cell {
+    text-decoration: underline;
+}
+
+.cell-quiet {
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+/* Colour is discarded in forced-colors mode; borders and system colours carry the signal instead. */
+@media (forced-colors: active) {
+    .cell {
+        forced-color-adjust: none;
+        color: CanvasText;
+        background: Canvas;
+    }
+    .cell_unpaid {
+        border-left: 3px solid Highlight;
+    }
+    .cell_credit {
+        border-left: 3px solid CanvasText;
+        text-decoration: underline;
+    }
+    .cell_late {
+        background-image: none;
+        border: 2px solid Highlight;
+    }
+    .cell_orphan {
+        border: 1px dashed CanvasText;
+    }
+    .cell_paid,
+    .cell_covered,
+    .cell_nodata {
+        color: GrayText;
+    }
+    .board-late {
+        border: 2px solid CanvasText;
+        color: CanvasText;
+    }
+    .cell-button:focus-visible {
+        outline: 2px solid CanvasText;
+    }
+    .money_negative {
+        color: CanvasText;
+    }
+    .board-table tr.row_selected > th.col-lead {
+        box-shadow: inset 3px 0 0 0 Highlight;
+    }
+}
+
+/* ---------- Legend ----------
+   Always on screen, never behind a tooltip: the glyphs only work if their key is visible. */
+.board-legend {
+    margin-top: var(--slds-g-spacing-2, 0.5rem);
+    padding-top: var(--slds-g-spacing-2, 0.5rem);
+    border-top: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+}
+
+.board-legend__title {
+    margin-bottom: var(--slds-g-spacing-1, 0.25rem);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.0625rem;
+    text-transform: uppercase;
+    color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+.board-legend__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--slds-g-spacing-1, 0.25rem) var(--slds-g-spacing-4, 1rem);
+    padding-bottom: var(--slds-g-spacing-1, 0.25rem);
+}
+
+.board-legend__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.board-legend__text {
+    font-size: var(--slds-g-font-size-1, 0.75rem);
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+.legend-swatch {
+    min-width: 1.25rem;
+    justify-content: center;
+}
+
+/* Names the way in, for the first visit and for anyone who has scrolled the board and forgotten. */
+.board-hint {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    margin-top: var(--slds-g-spacing-2, 0.5rem);
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+.board-hint__icon {
+    flex: 0 0 auto;
+}
+
+/* ---------- Cell drill-down ----------
+   The lines behind one cell, read straight from the server rather than reconstructed from a
+   payout proposal. It sits under the board so the row it came from stays in view. */
+.board-drill {
+    margin-top: var(--slds-g-spacing-2, 0.5rem);
+    padding: var(--slds-g-spacing-3, 0.75rem);
+    border: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+    border-radius: var(--slds-g-radius-border-3, 0.5rem);
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+}
+
+.board-drill__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    margin-bottom: var(--slds-g-spacing-2, 0.5rem);
+}
+
+.board-drill__title {
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    font-weight: 700;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+.board-drill__loading {
+    min-height: 4rem;
+}
+
+/* ---------- Selection panel ----------
+   Picking an agent, naming the range and asking for the review are one step, so they read as one
+   bar rather than as three loose controls. */
+.board-selection {
+    margin-top: var(--slds-g-spacing-3, 0.75rem);
+    padding: var(--slds-g-spacing-4, 1rem);
+    border: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+    border-left: 3px solid var(--slds-g-color-brand-base-50, #0176d3);
+    border-radius: var(--slds-g-radius-border-3, 0.5rem);
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+}
+
+.board-selection__head {
+    margin-bottom: var(--slds-g-spacing-3, 0.75rem);
+}
+
+.board-selection__eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.0625rem;
+    text-transform: uppercase;
+    color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+.board-selection__title {
+    font-size: var(--slds-g-font-size-5, 1.125rem);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+.board-selection__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--slds-g-spacing-3, 0.75rem);
+    padding: var(--slds-g-spacing-3, 0.75rem);
+    border-radius: var(--slds-g-radius-border-3, 0.5rem);
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+}
+
+.board-selection__field {
+    flex: 1 1 10rem;
+    min-width: 8rem;
+    max-width: 14rem;
+}
+
+/* Sits on the baseline of the two pickers it joins, not on the row's centre. */
+.board-selection__arrow {
+    margin-bottom: 0.6rem;
+}
+
+.board-selection__action {
+    margin-left: auto;
+}
+
+.board-selection__totals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--slds-g-spacing-6, 1.5rem);
+    margin-top: var(--slds-g-spacing-3, 0.75rem);
+}
+
+.board-selection__total dt {
+    font-size: 0.6875rem;
+    letter-spacing: 0.0625rem;
+    text-transform: uppercase;
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+.board-selection__total dd {
+    font-size: var(--slds-g-font-size-4, 1rem);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+/* The payable is the figure the review modal will seed the payment from, so it leads. */
+.board-selection__total_primary dd {
+    font-size: var(--slds-g-font-size-7, 1.5rem);
+    font-weight: 700;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+.board-unrated {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    margin-top: var(--slds-g-spacing-3, 0.75rem);
+    padding: var(--slds-g-spacing-2, 0.5rem) var(--slds-g-spacing-3, 0.75rem);
+    border-left: 3px solid var(--slds-g-color-warning-base-50, #a86403);
+    border-radius: var(--slds-g-radius-border-2, 0.25rem);
+    background-color: var(--slds-g-color-warning-base-95, #fef5e7);
+    font-variant-numeric: tabular-nums;
+}
+
+.board-unrated__icon {
+    align-self: center;
+}
+
+.board-unrated__tag {
+    font-size: var(--slds-g-font-size-1, 0.75rem);
+    font-weight: 700;
+    color: var(--slds-g-color-warning-base-30, #6b4600);
+}
+
+.board-unrated__help {
+    flex-basis: 100%;
+    font-size: var(--slds-g-font-size-1, 0.75rem);
+    line-height: 1.5;
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+/* ---------- Payout history ---------- */
+.board-history {
+    margin-top: var(--slds-g-spacing-4, 1rem);
+    padding-top: var(--slds-g-spacing-3, 0.75rem);
+    border-top: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+}
+
+.board-history__title {
+    margin-bottom: 0.375rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.0625rem;
+    text-transform: uppercase;
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+.board-history__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--slds-g-spacing-3, 0.75rem);
+    padding: var(--slds-g-spacing-1, 0.25rem) 0;
+    border-bottom: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+}
+
+.board-history__name {
+    font-weight: 600;
+}
+
+.board-history__period,
+.board-history__date {
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+.board-history__amount {
+    margin-left: auto;
+    font-weight: 600;
+}
+
+.board-history__voided {
+    color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+.board-modal__subtitle {
+    margin-top: 0.125rem;
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+@media (max-width: 30rem) {
+    .board-selection__field {
+        flex-basis: 100%;
+        max-width: none;
+    }
+    .board-selection__arrow {
+        display: none;
+    }
+    .board-selection__action {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* Nothing on this page animates for its own sake; the two hover tints are all there is, and they
+   are dropped entirely when the viewer has asked for less motion. */
+@media (prefers-reduced-motion: reduce) {
+    .board-table tr.board-row > th.col-lead,
+    .board-table tr.board-row > td {
+        transition: none;
+    }
+}

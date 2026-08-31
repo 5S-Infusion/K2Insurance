@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Unrated_Line_Count__c</fullName>
+    <description>How many of the stamped lines had no commission rate on their policy, so their payable amount could not be computed. They are still settled by this payout.</description>
+    <inlineHelpText>폴리시에 Commission Rate가 없어 금액을 계산할 수 없었던 라인 수입니다.</inlineHelpText>
+    <label>Unrated Line Count</label>
+    <precision>8</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

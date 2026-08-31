@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Period_End__c</fullName>
+    <description>Last payment period this payout covers, in YYYY-MM, inclusive. Use the same value as Period Start for a single-month payout.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>YYYY-MM 형식으로 입력하세요 (예: 2026-06). 마지막 달도 포함됩니다. 한 달만 지급하면 시작 기간과 같은 값을 넣으세요.</inlineHelpText>
+    <label>Period End</label>
+    <length>7</length>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

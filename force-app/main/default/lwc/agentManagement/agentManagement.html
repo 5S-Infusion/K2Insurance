@@ -1,0 +1,493 @@
+<template>
+    <lightning-card title={label.title} icon-name="custom:custom16">
+        <div slot="actions">
+            <lightning-button-group>
+                <template for:each={presetButtons} for:item="preset">
+                    <lightning-button
+                        key={preset.key}
+                        data-preset={preset.name}
+                        data-id="preset"
+                        variant={preset.variant}
+                        label={preset.label}
+                        onclick={handlePresetChange}></lightning-button>
+                </template>
+            </lightning-button-group>
+        </div>
+
+        <div class="board-shell">
+            <template lwc:if={hasError}>
+                <div role="alert" class="board-notice board-notice_error">
+                    <lightning-icon
+                        icon-name="utility:error"
+                        variant="error"
+                        size="small"
+                        class="board-notice__icon"></lightning-icon>
+                    <p>{label.loadError}</p>
+                </div>
+            </template>
+
+            <template lwc:elseif={isDenied}>
+                <div role="alert" class="board-notice board-notice_denied">
+                    <lightning-icon
+                        icon-name="utility:lock"
+                        size="small"
+                        class="board-notice__icon"></lightning-icon>
+                    <p>{label.noAccess}</p>
+                </div>
+            </template>
+
+            <template lwc:elseif={isLoading}>
+                <div class="board-loading slds-is-relative" data-id="board-loading">
+                    <lightning-spinner
+                        alternative-text={label.loading}
+                        size="small"
+                        variant="brand"></lightning-spinner>
+                </div>
+            </template>
+
+            <template lwc:elseif={hasAgents}>
+                <div class="board-scroll">
+                    <table
+                        class="slds-table slds-table_cell-buffer slds-table_bordered board-table"
+                        aria-label={label.title}>
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th scope="col" class="col-lead">
+                                    <div class="slds-truncate">{label.colAgent}</div>
+                                </th>
+                                <template for:each={columns} for:item="col">
+                                    <th key={col.key} scope="col" class={col.headerClass}>
+                                        <div class="slds-truncate" title={col.label}>
+                                            {col.label}
+                                            <template lwc:if={col.isInProgress}>
+                                                <span class="slds-badge board-badge">{label.inProgressHalf}</span>
+                                            </template>
+                                        </div>
+                                    </th>
+                                </template>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={displayRows} for:item="row">
+                                <tr key={row.agentId} class={row.rowClass}>
+                                    <th scope="row" class="col-lead">
+                                        <button
+                                            type="button"
+                                            class="slds-button board-agent"
+                                            data-agent={row.agentId}
+                                            data-id="agent-row"
+                                            aria-pressed={row.isSelected}
+                                            onclick={handleSelectAgent}>
+                                            <span class="slds-truncate board-agent__name">{row.agentName}</span>
+                                            <template lwc:if={row.hasLate}>
+                                                <span class="board-late" title={label.badgeLate}>
+                                                    <span aria-hidden="true">▲</span>
+                                                    <span class="slds-assistive-text">{label.badgeLate}</span>
+                                                    <lightning-formatted-number
+                                                        value={row.latePeriodCount}></lightning-formatted-number>
+                                                </span>
+                                            </template>
+                                        </button>
+                                    </th>
+                                    <template for:each={row.cells} for:item="cell">
+                                        <td key={cell.key} data-label={cell.label}>
+                                            <template lwc:if={cell.isState}>
+                                                <template lwc:if={cell.isDrillable}>
+                                                    <button
+                                                        type="button"
+                                                        class="slds-button cell-button"
+                                                        data-id="cell"
+                                                        data-agent={cell.agentId}
+                                                        data-periods={cell.periodsCsv}
+                                                        data-caption={cell.drillCaption}
+                                                        title={cell.stateLabel}
+                                                        onclick={handleDrill}>
+                                                        <span class={cell.cssClass}>
+                                                            <span aria-hidden="true">{cell.glyph}</span>
+                                                            <span class="slds-assistive-text">{cell.a11yLabel}</span>
+                                                            <template lwc:if={cell.isCredit}>
+                                                                <span class={cell.credit.moneyClass}>
+                                                                    <span class="slds-assistive-text"
+                                                                        >{cell.credit.negativeText}</span
+                                                                    >
+                                                                    <lightning-formatted-number
+                                                                        format-style="currency"
+                                                                        value={cell.credit.amount}></lightning-formatted-number>
+                                                                </span>
+                                                            </template>
+                                                        </span>
+                                                    </button>
+                                                </template>
+                                                <template lwc:else>
+                                                    <span class={cell.cssClass} title={cell.stateLabel}>
+                                                        <span aria-hidden="true">{cell.glyph}</span>
+                                                        <span class="slds-assistive-text">{cell.a11yLabel}</span>
+                                                    </span>
+                                                </template>
+                                            </template>
+                                            <template lwc:elseif={cell.isCurrency}>
+                                                <div class="slds-text-align_right">
+                                                    <span class={cell.money.moneyClass}>
+                                                        <span class="slds-assistive-text"
+                                                            >{cell.money.negativeText}</span
+                                                        >
+                                                        <lightning-formatted-number format-style="currency"
+                                                            value={cell.money.amount}></lightning-formatted-number>
+                                                    </span>
+                                                </div>
+                                            </template>
+                                            <template lwc:elseif={cell.isCount}>
+                                                <div class="slds-text-align_right">
+                                                    <template lwc:if={cell.hasValue}>
+                                                        <span class="cell cell_late" title={label.badgeLate}>
+                                                            <span aria-hidden="true">▲</span>
+                                                            <span class="slds-assistive-text">{label.badgeLate}</span>
+                                                            <lightning-formatted-number
+                                                                value={cell.value}></lightning-formatted-number>
+                                                        </span>
+                                                    </template>
+                                                    <template lwc:else>
+                                                        <span class="cell cell_nodata" aria-hidden="true">—</span>
+                                                    </template>
+                                                </div>
+                                            </template>
+                                            <template lwc:elseif={cell.isLastPaid}>
+                                                <template lwc:if={cell.hasValue}>
+                                                    <div class="slds-text-align_right cell-quiet">
+                                                        <lightning-formatted-date-time
+                                                            value={cell.paidDate}
+                                                            year="numeric"
+                                                            month="2-digit"
+                                                            day="2-digit"
+                                                            time-zone="UTC"></lightning-formatted-date-time>
+                                                    </div>
+                                                    <div class="slds-text-align_right">
+                                                        <span class={cell.money.moneyClass}>
+                                                            <span class="slds-assistive-text"
+                                                                >{cell.money.negativeText}</span
+                                                            >
+                                                            <lightning-formatted-number format-style="currency"
+                                                                value={cell.money.amount}></lightning-formatted-number>
+                                                        </span>
+                                                    </div>
+                                                    <template lwc:if={cell.hasPayoutName}>
+                                                        <div
+                                                            class="slds-text-align_right slds-text-body_small cell-quiet">
+                                                            {cell.payoutName}
+                                                        </div>
+                                                    </template>
+                                                </template>
+                                                <template lwc:else>
+                                                    <div class="slds-text-align_right">
+                                                        <span class="cell cell_nodata" aria-hidden="true">—</span>
+                                                    </div>
+                                                </template>
+                                            </template>
+                                            <template lwc:elseif={cell.isDelta}>
+                                                <div class="slds-text-align_right">
+                                                    <template lwc:if={cell.hasDelta}>
+                                                        <span class={cell.money.moneyClass}>
+                                                            <span class="slds-assistive-text"
+                                                                >{cell.money.negativeText}</span
+                                                            >
+                                                            <lightning-formatted-number format-style="currency"
+                                                                value={cell.money.amount}></lightning-formatted-number>
+                                                        </span>
+                                                    </template>
+                                                    <template lwc:else>
+                                                        <span class="cell-quiet slds-text-body_small"
+                                                            >{cell.insufficient}</span
+                                                        >
+                                                    </template>
+                                                </div>
+                                            </template>
+                                            <template lwc:else>
+                                                <div class="slds-truncate cell-quiet">{cell.value}</div>
+                                            </template>
+                                        </td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="board-legend">
+                    <p class="board-legend__title">{label.legendTitle}</p>
+                    <ul class="board-legend__list" aria-label={label.legendTitle}>
+                        <template for:each={legend} for:item="item">
+                            <li key={item.key} class="board-legend__item">
+                                <span class={item.cssClass} aria-hidden="true">{item.glyph}</span>
+                                <span class="board-legend__text">{item.text}</span>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+
+                <template lwc:if={showSelectHint}>
+                    <p class="board-hint" data-id="select-hint">
+                        <lightning-icon
+                            icon-name="utility:info"
+                            size="xx-small"
+                            class="board-hint__icon"></lightning-icon>
+                        {label.selectAgentHint}
+                    </p>
+                </template>
+
+                <template lwc:if={showDrill}>
+                    <div class="board-drill">
+                        <div class="board-drill__head">
+                            <p class="board-drill__title">{drillCaption}</p>
+                            <lightning-button-icon
+                                data-id="drill-close"
+                                icon-name="utility:close"
+                                variant="bare"
+                                size="small"
+                                alternative-text={label.cancel}
+                                title={label.cancel}
+                                onclick={handleCloseDrill}></lightning-button-icon>
+                        </div>
+                        <template lwc:if={drillError}>
+                            <div role="alert" class="slds-text-color_error">{drillError}</div>
+                        </template>
+                        <template lwc:elseif={isDrillLoading}>
+                            <div class="board-drill__loading slds-is-relative">
+                                <lightning-spinner
+                                    alternative-text={label.loading}
+                                    size="small"
+                                    variant="brand"></lightning-spinner>
+                            </div>
+                        </template>
+                        <template lwc:else>
+                            <c-agent-line-table
+                                data-id="drill-lines"
+                                caption={drillCaption}
+                                lines={drillLines}></c-agent-line-table>
+                        </template>
+                    </div>
+                </template>
+            </template>
+
+            <template lwc:else>
+                <div class="board-empty" data-id="board-empty">
+                    <lightning-icon
+                        icon-name="utility:money"
+                        size="small"
+                        class="board-empty__icon"></lightning-icon>
+                    <p class="board-empty__title">{label.noAgents}</p>
+                    <p class="board-empty__help">{label.noAgentsHelp}</p>
+                </div>
+            </template>
+
+            <template lwc:if={hasSelection}>
+                <div class="board-selection">
+                    <div class="board-selection__head">
+                        <p class="board-selection__eyebrow">{label.selectedAgent}</p>
+                        <p class="board-selection__title">{selectedAgentName}</p>
+                    </div>
+
+                    <div class="board-selection__bar">
+                        <div class="board-selection__field">
+                            <lightning-combobox
+                                data-id="period-from"
+                                label={label.periodFrom}
+                                value={periodFrom}
+                                options={fromOptions}
+                                onchange={handleFromChange}></lightning-combobox>
+                        </div>
+                        <lightning-icon
+                            icon-name="utility:chevronright"
+                            size="xx-small"
+                            class="board-selection__arrow"></lightning-icon>
+                        <div class="board-selection__field">
+                            <lightning-combobox
+                                data-id="period-to"
+                                label={label.periodTo}
+                                value={periodTo}
+                                options={toOptions}
+                                onchange={handleToChange}></lightning-combobox>
+                        </div>
+                        <div class="board-selection__action">
+                            <lightning-button
+                                data-id="review"
+                                variant="brand"
+                                label={label.review}
+                                disabled={isReviewDisabled}
+                                onclick={handleReview}></lightning-button>
+                        </div>
+                    </div>
+
+                    <dl class="board-selection__totals">
+                        <div class="board-selection__total">
+                            <dt>{label.colCarrierNet}</dt>
+                            <dd>
+                                <span class={selectionCarrierNet.moneyClass}>
+                                    <span class="slds-assistive-text">{selectionCarrierNet.negativeText}</span>
+                                    <lightning-formatted-number format-style="currency"
+                                        value={selectionCarrierNet.amount}></lightning-formatted-number>
+                                </span>
+                            </dd>
+                        </div>
+                        <div class="board-selection__total board-selection__total_primary">
+                            <dt>{label.colPayable}</dt>
+                            <dd>
+                                <span class={selectionPayable.moneyClass}>
+                                    <span class="slds-assistive-text">{selectionPayable.negativeText}</span>
+                                    <lightning-formatted-number format-style="currency"
+                                        value={selectionPayable.amount}></lightning-formatted-number>
+                                </span>
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <template lwc:if={hasSelectionUnrated}>
+                        <div class="board-unrated" role="note">
+                            <lightning-icon
+                                icon-name="utility:warning"
+                                variant="warning"
+                                size="xx-small"
+                                class="board-unrated__icon"></lightning-icon>
+                            <span class="board-unrated__tag">{label.rateMissing}</span>
+                            <lightning-formatted-number value={selectionUnratedCount}></lightning-formatted-number>
+                            <span class={selectionUnratedNet.moneyClass}>
+                                <span class="slds-assistive-text">{selectionUnratedNet.negativeText}</span>
+                                <lightning-formatted-number format-style="currency"
+                                    value={selectionUnratedNet.amount}></lightning-formatted-number>
+                            </span>
+                            <p class="board-unrated__help">{label.rateMissingHelp}</p>
+                        </div>
+                    </template>
+
+                    <template lwc:if={selectionError}>
+                        <div role="alert" class="board-notice board-notice_error slds-var-m-top_x-small">
+                            <lightning-icon
+                                icon-name="utility:error"
+                                variant="error"
+                                size="xx-small"
+                                class="board-notice__icon"></lightning-icon>
+                            <p>{selectionError}</p>
+                        </div>
+                    </template>
+
+                    <template lwc:if={hasPayoutHistory}>
+                        <div class="board-history">
+                            <p class="board-history__title">{label.payoutHistory}</p>
+                            <ul>
+                                <template for:each={payoutHistory} for:item="payout">
+                                    <li key={payout.key} class="board-history__row">
+                                        <span class="board-history__name">{payout.name}</span>
+                                        <span class="board-history__period">{payout.periodLabel}</span>
+                                        <span class="board-history__date">
+                                            <span class="slds-assistive-text">{label.paidDate}</span>
+                                            <lightning-formatted-date-time
+                                                value={payout.paidDate}
+                                                year="numeric"
+                                                month="2-digit"
+                                                day="2-digit"
+                                                time-zone="UTC"></lightning-formatted-date-time>
+                                        </span>
+                                        <span class="board-history__amount">
+                                            <span class="slds-assistive-text">{label.amountPaid}</span>
+                                            <span class={payout.money.moneyClass}>
+                                                <span class="slds-assistive-text">{payout.money.negativeText}</span>
+                                                <lightning-formatted-number format-style="currency"
+                                                    value={payout.money.amount}></lightning-formatted-number>
+                                            </span>
+                                        </span>
+                                        <template lwc:if={payout.isVoided}>
+                                            <span class="board-history__voided">{label.alreadyVoided}</span>
+                                        </template>
+                                        <template lwc:elseif={payout.isVoidable}>
+                                            <lightning-button
+                                                variant="destructive-text"
+                                                data-id="void"
+                                                data-payout={payout.payoutId}
+                                                data-name={payout.name}
+                                                label={label.void}
+                                                onclick={handleVoidClick}></lightning-button>
+                                        </template>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+
+    <template lwc:if={showReview}>
+        <c-agent-payout-review
+            preflight={preflight}
+            method-options={methodOptions}
+            is-saving={isSaving}
+            error-message={reviewError}
+            onrecordpayout={handleRecordPayout}
+            onclosereview={handleCloseReview}></c-agent-payout-review>
+    </template>
+
+    <template lwc:if={showVoidModal}>
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="void-heading"
+            class="slds-modal slds-fade-in-open"
+            onkeydown={handleVoidKeyDown}>
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title={label.cancel}
+                        onclick={closeVoidModal}
+                        disabled={isSaving}>
+                        <lightning-icon
+                            icon-name="utility:close"
+                            alternative-text={label.cancel}
+                            size="small"></lightning-icon>
+                    </button>
+                    <h1 id="void-heading" class="slds-modal__title slds-hyphenate">{label.void}</h1>
+                    <p class="board-modal__subtitle">{voidTargetName}</p>
+                </header>
+                <div class="slds-modal__content slds-var-p-around_medium slds-is-relative">
+                    <template lwc:if={isSaving}>
+                        <lightning-spinner
+                            alternative-text={label.saving}
+                            size="small"
+                            variant="brand"></lightning-spinner>
+                    </template>
+                    <lightning-textarea
+                        data-id="void-reason"
+                        label={label.voidReason}
+                        value={voidReason}
+                        max-length="255"
+                        disabled={isSaving}
+                        onchange={handleVoidReasonChange}></lightning-textarea>
+                    <template lwc:if={voidError}>
+                        <div role="alert" class="board-notice board-notice_error slds-var-m-top_x-small">
+                            <lightning-icon
+                                icon-name="utility:error"
+                                variant="error"
+                                size="xx-small"
+                                class="board-notice__icon"></lightning-icon>
+                            <p>{voidError}</p>
+                        </div>
+                    </template>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeVoidModal} disabled={isSaving}>
+                        {label.cancel}
+                    </button>
+                    <button
+                        class="slds-button slds-button_destructive"
+                        data-id="confirm-void"
+                        onclick={handleConfirmVoid}
+                        disabled={isSaving}>
+                        {label.void}
+                    </button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

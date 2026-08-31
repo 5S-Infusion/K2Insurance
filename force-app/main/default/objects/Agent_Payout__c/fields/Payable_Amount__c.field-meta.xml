@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payable_Amount__c</fullName>
+    <description>Sum of Commission Amount times the policy commission rate, across the stamped lines that actually have a rate on the policy. Lines whose policy has no rate contribute nothing here and are reported under Unrated Line Count instead.</description>
+    <inlineHelpText>폴리시 요율을 적용해 계산한 지급 대상 금액입니다. 요율이 없는 라인은 여기에 포함되지 않습니다.</inlineHelpText>
+    <label>Payable Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Agent__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <description>The subagent who was paid. Only Accounts with the Agent record type can be selected. An Agent account cannot be deleted while a payout points at it, so payment history is never lost.</description>
+    <inlineHelpText>돈을 받은 에이전트를 선택하세요. Agent 레코드 타입 계정만 선택할 수 있습니다.</inlineHelpText>
+    <label>Agent</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>Only Company records with Record Type Agent are available for selection.</errorMessage>
+        <filterItems>
+            <field>Account.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Agent</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Account</referenceTo>
+    <relationshipLabel>Agent Payouts</relationshipLabel>
+    <relationshipName>Agent_Payouts</relationshipName>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

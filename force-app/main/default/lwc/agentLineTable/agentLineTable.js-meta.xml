@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <isExposed>false</isExposed>
+    <masterLabel>Agent Line Table</masterLabel>
+    <description>List of commission lines for one section of the agent payout review, showing the carrier net and, where the policy carries a rate, the payable amount, with an optional per-line include checkbox.</description>
+</LightningComponentBundle>

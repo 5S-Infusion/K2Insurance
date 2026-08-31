@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Unrated_Net_Amount__c</fullName>
+    <description>Carrier net on the stamped lines that had no policy commission rate. This is the amount the system could not turn into a payable figure, so whatever was paid on it was decided by hand.</description>
+    <inlineHelpText>요율이 없는 라인들의 캐리어 순액입니다. 시스템이 지급액을 계산하지 못한 부분입니다.</inlineHelpText>
+    <label>Unrated Net Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

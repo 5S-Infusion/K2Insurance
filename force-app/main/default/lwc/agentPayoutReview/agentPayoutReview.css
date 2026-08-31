@@ -1,0 +1,265 @@
+.review-header {
+    padding-bottom: var(--slds-g-spacing-3, 0.75rem);
+}
+
+.review-subtitle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    margin-top: 0.125rem;
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+.review-subtitle__agent {
+    font-weight: 700;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+/* Tinted canvas so the white section cards read as separate, layered panels — the same language
+   the employee roster's onboarding modal already speaks. */
+.review-body {
+    padding: var(--slds-g-spacing-4, 1rem);
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+}
+
+.review-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    margin-bottom: var(--slds-g-spacing-3, 0.75rem);
+    padding: var(--slds-g-spacing-2, 0.5rem) var(--slds-g-spacing-3, 0.75rem);
+    border-left: 3px solid var(--slds-g-color-error-base-40, #ba0517);
+    border-radius: var(--slds-g-radius-border-2, 0.25rem);
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    line-height: 1.5;
+}
+
+.review-alert__icon {
+    flex: 0 0 auto;
+    margin-top: 0.05rem;
+}
+
+.review-alert_error {
+    color: var(--slds-g-color-error-base-40, #ba0517);
+}
+
+.review-alert_warning {
+    border-left-color: var(--slds-g-color-warning-base-50, #a86403);
+    color: var(--slds-g-color-warning-base-30, #6b4600);
+}
+
+/* ---------- What could not be valued ----------
+   Two thirds of the org's lines sit on a policy with no commission rate, so when this block is on
+   screen it is the most consequential thing in the modal and is built to be impossible to skim
+   past: full-width warning panel, icon, count and carrier amount on one line. */
+.review-unrated {
+    margin-bottom: var(--slds-g-spacing-3, 0.75rem);
+    padding: var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-4, 1rem);
+    border: 1px solid var(--slds-g-color-warning-base-50, #a86403);
+    border-left-width: 3px;
+    border-radius: var(--slds-g-radius-border-3, 0.5rem);
+    background-color: var(--slds-g-color-warning-base-95, #fef5e7);
+}
+
+.review-unrated__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+}
+
+.review-unrated__icon {
+    flex: 0 0 auto;
+}
+
+.review-unrated__tag {
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    font-weight: 700;
+    color: var(--slds-g-color-warning-base-30, #6b4600);
+}
+
+.review-unrated__figures {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--slds-g-spacing-3, 0.75rem);
+    margin-left: auto;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--slds-g-color-warning-base-30, #6b4600);
+}
+
+.review-unrated__help {
+    margin-top: var(--slds-g-spacing-1, 0.25rem);
+    font-size: var(--slds-g-font-size-1, 0.75rem);
+    line-height: 1.5;
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+/* The money block is the only place in the modal where a number decides anything, so it reads as
+   one panel rather than as another list of lines. */
+.review-money {
+    margin-bottom: var(--slds-g-spacing-3, 0.75rem);
+    padding: var(--slds-g-spacing-4, 1rem);
+    border: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+    border-radius: var(--slds-g-radius-border-3, 0.5rem);
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+}
+
+.review-money__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--slds-g-spacing-4, 1rem);
+    padding: 0.3rem 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.review-money__row dt {
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+.review-money__row dd {
+    font-size: var(--slds-g-font-size-3, 0.875rem);
+}
+
+/* The computed payable is what seeds the amount, so it carries the weight of the block. */
+.review-money__row_primary {
+    margin-top: var(--slds-g-spacing-1, 0.25rem);
+    padding-top: var(--slds-g-spacing-2, 0.5rem);
+    border-top: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+}
+
+.review-money__row_primary dt {
+    font-weight: 700;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+/* What was taken out is shown beside what is left, so unticking a line never makes money vanish
+   quietly — the excluded row is quieter than the totals, but it is always there. */
+.review-money__row_excluded dt,
+.review-money__row_excluded dd {
+    color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+.review-money__row_excluded dd {
+    display: flex;
+    gap: var(--slds-g-spacing-3, 0.75rem);
+}
+
+/* ---------- Money ----------
+   Tabular figures so the column of amounts lines up, and accounting parentheses for a negative;
+   the sign itself is spoken from a Custom Label, so the parentheses stay purely visual. */
+.money {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.money_negative {
+    color: var(--slds-g-color-error-base-40, #ba0517);
+}
+
+.money_negative::before {
+    content: '(';
+}
+
+.money_negative::after {
+    content: ')';
+}
+
+.money_primary {
+    font-size: var(--slds-g-font-size-7, 1.5rem);
+    font-weight: 700;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+.money_primary.money_negative {
+    color: var(--slds-g-color-error-base-40, #ba0517);
+}
+
+.money_gate {
+    font-size: var(--slds-g-font-size-4, 1rem);
+}
+
+.review-zero-net {
+    margin-top: var(--slds-g-spacing-3, 0.75rem);
+    padding: var(--slds-g-spacing-2, 0.5rem) var(--slds-g-spacing-3, 0.75rem);
+    border-left: 3px solid var(--slds-g-color-neutral-base-50, #747474);
+    border-radius: var(--slds-g-radius-border-2, 0.25rem);
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    line-height: 1.5;
+    color: var(--slds-g-color-neutral-base-30, #444444);
+}
+
+.review-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-4, 1rem);
+    padding: var(--slds-g-spacing-4, 1rem);
+    border: 1px solid var(--slds-g-color-border-base-1, #e5e5e5);
+    border-radius: var(--slds-g-radius-border-3, 0.5rem);
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+}
+
+.review-form__wide {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 30rem) {
+    .review-form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* The single hard gate before money is recorded. It names the amount, and it is cleared whenever
+   that amount or the server's numbers change. Tinted, so the last thing before the footer is
+   plainly a different kind of control from the form above it. */
+.review-confirm {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--slds-g-spacing-3, 0.75rem);
+    margin-top: var(--slds-g-spacing-3, 0.75rem);
+    padding: var(--slds-g-spacing-4, 1rem);
+    border: 1px solid var(--slds-g-color-brand-base-50, #0176d3);
+    border-radius: var(--slds-g-radius-border-3, 0.5rem);
+    background-color: var(--slds-g-color-brand-base-95, #eef4ff);
+}
+
+.review-confirm__box {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.1rem;
+    flex: 0 0 auto;
+    cursor: pointer;
+}
+
+.review-confirm__box:focus-visible {
+    outline: 2px solid var(--slds-g-color-brand-base-50, #0176d3);
+    outline-offset: 2px;
+}
+
+.review-confirm__label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.375rem;
+    font-size: var(--slds-g-font-size-2, 0.8125rem);
+    line-height: 1.5;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+    cursor: pointer;
+}
+
+@media (forced-colors: active) {
+    .review-alert,
+    .review-unrated,
+    .review-zero-net,
+    .review-confirm {
+        border-left: 3px solid CanvasText;
+    }
+    .money_negative {
+        color: CanvasText;
+    }
+}

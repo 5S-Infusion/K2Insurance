@@ -1056,4 +1056,508 @@
         <shortDescription>Employee Roster add employee - missing policy validation</shortDescription>
         <value>Select a policy, or turn off the group health enrollment.</value>
     </labels>
+    <labels>
+        <fullName>AgentManagement_LoadError</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - could not load agent data</shortDescription>
+        <value>에이전트 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_SaveError</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - payout save failed, nothing was written</shortDescription>
+        <value>지급 기록을 저장하지 못했습니다. 변경 사항은 저장되지 않았습니다.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_AgentRequired</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - no agent selected</shortDescription>
+        <value>에이전트를 선택해 주세요.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_PeriodRequired</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - no period selected</shortDescription>
+        <value>지급할 기간을 하나 이상 선택해 주세요.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_PeriodInvalid</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - period is not YYYY-MM</shortDescription>
+        <value>기간 형식이 올바르지 않습니다.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_NothingToPay</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - selected periods hold no unpaid lines</shortDescription>
+        <value>선택한 기간에 미지급 라인이 없습니다.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_StaleTotals</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - on-screen totals no longer match the server</shortDescription>
+        <value>화면의 금액이 최신이 아닙니다. 새로 계산한 금액을 확인한 뒤 다시 시도해 주세요.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_VoidReasonRequired</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - void attempted without a reason</shortDescription>
+        <value>취소 사유를 입력해 주세요.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_AlreadyVoided</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - payout is already voided</shortDescription>
+        <value>이미 취소된 지급입니다.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_TooManyLines</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - selection exceeds the line cap</shortDescription>
+        <value>선택한 라인이 너무 많습니다. 기간을 나누어 기록해 주세요.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_Title</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - page title</shortDescription>
+        <value>에이전트</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_PresetPay</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - pay preset</shortDescription>
+        <value>지급</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_PresetPeriod</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - by period preset</shortDescription>
+        <value>기간별</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_PresetHalf</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - half year preset</shortDescription>
+        <value>반기</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_ColAgent</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - agent column</shortDescription>
+        <value>에이전트</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_ColOutstanding</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - outstanding amount column</shortDescription>
+        <value>미지급액</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_ColOldestUnpaid</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - oldest unpaid period column</shortDescription>
+        <value>가장 오래된 미지급</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_ColLate</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - late arrival column</shortDescription>
+        <value>정산 후 도착</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_ColLastPaid</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - last payout column</shortDescription>
+        <value>최근 지급</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_ColDelta</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - monthly average change column</shortDescription>
+        <value>증감 (월평균)</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_ColCarrierNet</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - carrier net column</shortDescription>
+        <value>캐리어 순액</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_ColPayable</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - payable amount column</shortDescription>
+        <value>지급 대상액</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_BadgeLate</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - late arrival badge</shortDescription>
+        <value>정산 후 도착</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_RateMissing</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - policy has no commission rate</shortDescription>
+        <value>요율 미설정</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_RateMissingHelp</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - explains why an amount could not be computed</shortDescription>
+        <value>폴리시에 Commission Rate가 없어 지급액을 계산할 수 없습니다. 금액을 직접 입력해 주세요.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_CarrierNetToK2</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - carrier net paid to K2</shortDescription>
+        <value>캐리어가 K2에 지급한 순액</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_Chargebacks</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - chargebacks inside the net</shortDescription>
+        <value>그 중 차지백</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_ComputedPayable</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - payable after applying the policy rate</shortDescription>
+        <value>요율 적용 지급 대상액</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_AmountPaid</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - amount actually paid</shortDescription>
+        <value>지급 금액</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_PaidDate</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - paid date</shortDescription>
+        <value>지급일</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_Method</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - payment method</shortDescription>
+        <value>지급 방법</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_Reference</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - reference or check number</shortDescription>
+        <value>참조 / 수표번호</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_Notes</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - notes</shortDescription>
+        <value>메모</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_ConfirmPay</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - payout confirmation checkbox</shortDescription>
+        <value>위 금액을 이 에이전트에게 지급합니다.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_RecordPayout</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - record payout button</shortDescription>
+        <value>지급 기록</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_Cancel</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - cancel button</shortDescription>
+        <value>취소</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_Review</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - review button</shortDescription>
+        <value>검토</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_Void</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - void payout button</shortDescription>
+        <value>지급 취소</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_VoidReason</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - void reason field</shortDescription>
+        <value>취소 사유</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_PeriodFrom</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - period range start</shortDescription>
+        <value>시작 기간</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_PeriodTo</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - period range end</shortDescription>
+        <value>종료 기간</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_InProgressHalf</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - current half year still in progress</shortDescription>
+        <value>진행 중</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_DeltaInsufficient</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - not enough history to compare</shortDescription>
+        <value>비교하기에 데이터가 부족합니다.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_NoAgents</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - no subagent has any commission line</shortDescription>
+        <value>커미션 라인이 있는 서브에이전트가 없습니다.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_NoLines</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - nothing to show in the line table</shortDescription>
+        <value>표시할 라인이 없습니다.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_AlreadyStamped</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - line already belongs to another payout</shortDescription>
+        <value>이미 다른 지급에 묶인 라인</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_LateLines</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - lines that arrived after the period was settled</shortDescription>
+        <value>이미 정산한 기간에 나중에 들어온 라인</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_PayoutHistory</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - payout history section</shortDescription>
+        <value>지급 이력</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_ZeroNetNotice</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - net is zero or negative, recording moves no money</shortDescription>
+        <value>이 선택은 순액이 0 이하입니다. 기록하면 해당 라인은 정산 처리되고 실제로 나가는 돈은 없습니다.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_IncludeLine</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - per-line include checkbox on the payout review</shortDescription>
+        <value>지급 포함</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_LinesToPay</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - the lines this payout will settle</shortDescription>
+        <value>지급할 라인</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_ExcludedLines</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - the lines the owner unticked and left unpaid</shortDescription>
+        <value>제외한 라인</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_NoAccess</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - the access probe answered that this user may not read agent data</shortDescription>
+        <value>이 페이지를 볼 권한이 없습니다. 관리자에게 권한을 요청해 주세요.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_NoAgentsHelp</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - what to do next when no subagent has commission lines</shortDescription>
+        <value>폴리시에 서브에이전트를 지정하고 커미션 명세서를 가져오면 여기에 표시됩니다.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_Loading</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - spinner alternative text while the board loads</shortDescription>
+        <value>불러오는 중</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_Saving</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - spinner alternative text while a payout is being written</shortDescription>
+        <value>저장 중</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_MethodLoadError</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - the payment method picklist could not be loaded</shortDescription>
+        <value>지급 방법 목록을 불러오지 못했습니다. 지급 방법은 비워 둔 채로 기록할 수 있습니다.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_NegativeAmount</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - assistive text before a negative amount</shortDescription>
+        <value>마이너스</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_CountIncluded</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - follows a number in the include/exclude summary</shortDescription>
+        <value>건 포함</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_CountExcluded</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - follows a number in the include/exclude summary</shortDescription>
+        <value>건 제외</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_SelectAgentHint</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - tells the owner that an agent name is the way into a payout</shortDescription>
+        <value>에이전트 이름을 클릭하면 기간을 고르고 지급을 기록할 수 있습니다.</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_SelectedAgent</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - eyebrow above the selected agent name in the action panel</shortDescription>
+        <value>선택한 에이전트</value>
+    </labels>
+    <labels>
+        <fullName>AgentManagement_LegendTitle</fullName>
+        <categories>AgentManagement</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agents tab - heading above the board's state-glyph legend</shortDescription>
+        <value>기호 설명</value>
+    </labels>
 </CustomLabels>

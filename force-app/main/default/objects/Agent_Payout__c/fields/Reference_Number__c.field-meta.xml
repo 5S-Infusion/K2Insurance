@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reference_Number__c</fullName>
+    <description>Check number, Zelle confirmation, or bank reference for this payment. Free text and not required to be unique, because the same reference can legitimately appear twice.</description>
+    <inlineHelpText>수표번호나 이체 확인번호를 적으세요. 중복되어도 괜찮습니다.</inlineHelpText>
+    <label>Reference Number</label>
+    <length>50</length>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

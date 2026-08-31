@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payout_Stamp_Valid</fullName>
+    <active>true</active>
+    <description>A line may only be attached to a live payout that belongs to the very subagent on its own policy. Checked only when the stamp is being set or changed, so later edits to a policy can never brick an already settled line.</description>
+    <errorConditionFormula>AND(
+  OR( ISNEW(), ISCHANGED(Payout__c) ),
+  NOT( ISBLANK(Payout__c) ),
+  OR(
+    ISBLANK(Policy_Number__c),
+    ISBLANK(Policy_Number__r.Subagent__c),
+    Payout__r.Agent__c &lt;&gt; Policy_Number__r.Subagent__c,
+    TEXT(Payout__r.Status__c) = &quot;Voided&quot;
+  )
+)</errorConditionFormula>
+    <errorDisplayField>Payout__c</errorDisplayField>
+    <errorMessage>This commission line cannot be attached to that payout. The line must have a policy, the policy must have a subagent, that subagent must be the agent on the payout, and the payout must not be voided.</errorMessage>
+</ValidationRule>

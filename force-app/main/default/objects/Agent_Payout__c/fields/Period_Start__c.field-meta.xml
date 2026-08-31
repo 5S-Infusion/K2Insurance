@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Period_Start__c</fullName>
+    <description>First payment period this payout covers, in YYYY-MM. Together with Period End it declares the covered range, so a commission line that arrives later inside this range can be flagged as a late arrival.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>YYYY-MM 형식으로 입력하세요 (예: 2026-01). 이 지급이 커버하는 첫 달입니다.</inlineHelpText>
+    <label>Period Start</label>
+    <length>7</length>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

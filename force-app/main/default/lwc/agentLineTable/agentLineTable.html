@@ -1,0 +1,93 @@
+<template>
+    <section class="line-section">
+        <div class="line-section__head">
+            <p class="line-section__caption">{caption}</p>
+            <template lwc:if={showSummary}>
+                <p class="line-summary" data-id="line-summary">
+                    <span class="line-summary__included">
+                        <lightning-formatted-number value={includedCount}></lightning-formatted-number>
+                        <span>{label.countIncluded}</span>
+                    </span>
+                    <span class="line-summary__excluded">
+                        <lightning-formatted-number value={excludedCount}></lightning-formatted-number>
+                        <span>{label.countExcluded}</span>
+                    </span>
+                </p>
+            </template>
+        </div>
+
+        <template lwc:if={hasLines}>
+            <div class="line-scroll">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered line-table" aria-label={caption}>
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <template lwc:if={selectable}>
+                                <th scope="col" class="line-table__check">
+                                    <span class="slds-assistive-text">{label.includeLine}</span>
+                                </th>
+                            </template>
+                            <th scope="col" class="line-table__lead">
+                                <span class="slds-assistive-text">{caption}</span>
+                            </th>
+                            <th scope="col" class="line-table__money">
+                                <div class="slds-truncate" title={label.colCarrierNet}>{label.colCarrierNet}</div>
+                            </th>
+                            <th scope="col" class="line-table__money">
+                                <div class="slds-truncate" title={label.colPayable}>{label.colPayable}</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={rows} for:item="row">
+                            <tr key={row.key} class={row.rowClass}>
+                                <template lwc:if={selectable}>
+                                    <td class="line-table__check">
+                                        <input
+                                            type="checkbox"
+                                            class="line-check"
+                                            data-id="line-check"
+                                            data-line={row.lineId}
+                                            aria-label={label.includeLine}
+                                            checked={row.included}
+                                            onchange={handleLineToggle} />
+                                    </td>
+                                </template>
+                                <th scope="row" class="line-table__lead">
+                                    <span class="line-period">{row.period}</span>
+                                    <span class="line-client">{row.clientName}</span>
+                                    <span class="line-policy">{row.policyName}</span>
+                                    <template lwc:if={row.hasPayoutName}>
+                                        <span class="line-payout">{row.payoutName}</span>
+                                    </template>
+                                </th>
+                                <td class="line-table__money">
+                                    <span class={row.carrierNet.moneyClass}>
+                                        <span class="slds-assistive-text">{row.carrierNet.negativeText}</span>
+                                        <lightning-formatted-number format-style="currency"
+                                            value={row.carrierNet.amount}></lightning-formatted-number>
+                                    </span>
+                                </td>
+                                <td class="line-table__money">
+                                    <template lwc:if={row.hasPayable}>
+                                        <span class={row.payable.moneyClass}>
+                                            <span class="slds-assistive-text">{row.payable.negativeText}</span>
+                                            <lightning-formatted-number format-style="currency"
+                                                value={row.payable.amount}></lightning-formatted-number>
+                                        </span>
+                                    </template>
+                                    <template lwc:else>
+                                        <span class="line-rate-missing">{label.rateMissing}</span>
+                                    </template>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+        <template lwc:else>
+            <p class="line-empty">{label.noLines}</p>
+        </template>
+    </section>
+</template>

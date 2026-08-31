@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Period_Start_Format</fullName>
+    <active>true</active>
+    <description>Period Start must be a real year-month so the covered range can be compared as text.</description>
+    <errorConditionFormula>NOT( REGEX(Period_Start__c, &quot;20\\d\\d-(0[1-9]|1[0-2])&quot;) )</errorConditionFormula>
+    <errorDisplayField>Period_Start__c</errorDisplayField>
+    <errorMessage>Period Start must be in YYYY-MM format (e.g., 2026-01).</errorMessage>
+</ValidationRule>
